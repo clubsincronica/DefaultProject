@@ -1,5 +1,5 @@
 import { readFileSync, existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
@@ -153,7 +153,7 @@ export function checkDuplicates(files, root = ROOT) {
   const out = [];
   for (const [k, arr] of byHash) {
     const files2 = [...new Set(arr.map(a => a.file))];
-    if (files2.length > 1) out.push({ severity: 'baja', kind: 'duplicate', detail: 'logica duplicada (hash ' + k + ') en: ' + arr.map(a => a.file + '#' + a.name).join(', ') });
+    if (files2.length > 1) out.push({ severity: 'baja', kind: 'duplicate', file: arr[0].file, detail: 'logica duplicada (hash ' + k + ') en: ' + arr.map(a => a.file + '#' + a.name).join(', ') });
   }
   return out;
 }
@@ -252,4 +252,33 @@ export function writeTasks(dateStr, sections, root = ROOT) {
   return { json: pj, md: pm };
 }
 
-// main() added in Task 8
+export function main(dateStr) {
+  const date = dateStr || new Date().toISOString().slice(0, 10);
+  const cfg = loadConfig();
+  const files = scanFiles(cfg);
+  const secret = checkSecrets(files);
+  const brokenImport = checkImports(files);
+  const absPath = checkHardcodedPaths(files);
+  const junk = [...checkJunkFiles(files), ...checkDuplicates(files)];
+  const sections = { secret, brokenImport, absPath, junk };
+  const prompt = buildLlmPrompt([...secret, ...brokenImport, ...absPath, ...junk], cfg);
+  const llm = runJcode(prompt);
+  if (llm) {
+    sections.quality = (llm.match(/## Calidad[\s\S]*?(?=^##|$)/m) || [llm])[0];
+    sections.drift = (llm.match(/## Drift[\s\S]*?(?=^##|$)/m) || [llm])[0];
+  }
+  const rp = writeReport(date, sections);
+  const tp = writeTasks(date, sections);
+  console.log('Reporte: ' + rp);
+  console.log('Tareas: ' + tp.json + ' / ' + tp.md);
+  return { report: rp, tasks: tp };
+}
+
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try {
+    main(process.argv[2]);
+  } catch (e) {
+    console.error(e.message);
+    process.exit(1);
+  }
+}

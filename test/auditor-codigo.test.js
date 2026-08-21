@@ -118,3 +118,11 @@ test('writeReport and writeTasks emit structured files', () => {
   const tasks = JSON.parse(readFileSync(tp.json, 'utf8'));
   assert.equal(tasks.length, 1);
 });
+
+test('integration: detects the 3 junk files in pipeline-viral/scripts', () => {
+  const cfg = loadConfig();
+  const files = scanFiles(cfg);
+  const junk = checkJunkFiles(files);
+  const names = junk.map(j => j.file);
+  assert.ok(names.some(n => n.includes('pipeline-viral/scripts/200') || n.includes('pipeline-viral\\scripts\\200')), 'should flag empty "200" file');
+});
