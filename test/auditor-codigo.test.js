@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles } from '../auditor-codigo.js';
+import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles, checkDuplicates } from '../auditor-codigo.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -81,4 +81,17 @@ test('checkJunkFiles flags 0-byte and broken names', () => {
   assert.ok(kinds.includes('empty-file'));
   assert.ok(kinds.includes('suspicious-name'));
   assert.equal(out.filter(o => o.file.endsWith('ok.js')).length, 0);
+});
+
+test('checkDuplicates detects identical function bodies across files', () => {
+  const base = mkdtempSync(join(tmpdir(), 'aud-dup-'));
+  const fa = join(base, 'a.js');
+  const fb = join(base, 'b.js');
+  const same = `function dupe() { const x = 1; return x + 2; }`;
+  writeFileSync(fa, same);
+  writeFileSync(fb, same);
+  const out = checkDuplicates([fa, fb], base);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].kind, 'duplicate');
+  assert.ok(out[0].detail.includes('a.js') && out[0].detail.includes('b.js'));
 });

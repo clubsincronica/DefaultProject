@@ -113,4 +113,48 @@ export function checkJunkFiles(files, root = ROOT) {
   return out;
 }
 
+function extractFunctions(src) {
+  const fns = [];
+  const re = /\bfunction\s+([A-Za-z0-9_$]+)\s*\(/g;
+  let m;
+  while ((m = re.exec(src))) {
+    const start = m.index;
+    const i = src.indexOf('{', re.lastIndex);
+    if (i === -1) continue;
+    let depth = 0, j = i;
+    for (; j < src.length; j++) {
+      if (src[j] === '{') depth++;
+      else if (src[j] === '}') { depth--; if (depth === 0) { j++; break; } }
+    }
+    fns.push({ name: m[1], body: src.slice(i, j) });
+  }
+  return fns;
+}
+
+function hash(s) {
+  let h = 5381;
+  const n = s.replace(/\s+/g, '');
+  for (let i = 0; i < n.length; i++) h = ((h << 5) + h + n.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+export function checkDuplicates(files, root = ROOT) {
+  const byHash = new Map();
+  for (const f of files) {
+    let content;
+    try { content = readFileSync(f, 'utf8'); } catch { continue; }
+    for (const fn of extractFunctions(content)) {
+      const k = hash(fn.body);
+      if (!byHash.has(k)) byHash.set(k, []);
+      byHash.get(k).push({ file: relative(root, f), name: fn.name });
+    }
+  }
+  const out = [];
+  for (const [k, arr] of byHash) {
+    const files2 = [...new Set(arr.map(a => a.file))];
+    if (files2.length > 1) out.push({ severity: 'baja', kind: 'duplicate', detail: 'logica duplicada (hash ' + k + ') en: ' + arr.map(a => a.file + '#' + a.name).join(', ') });
+  }
+  return out;
+}
+
 // main() added in Task 8
