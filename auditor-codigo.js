@@ -1,6 +1,6 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, relative, resolve } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 
 export const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -83,6 +83,32 @@ export function checkImports(files, root = ROOT) {
         out.push({ file: relative(root, f), line: 0, severity: 'alta', kind: 'broken-import', detail: 'import relativo roto: ' + spec });
       }
     }
+  }
+  return out;
+}
+
+const ABS_RE = /(?:[A-Za-z]:[\\/]|\\\\[?]\\[^\\]+\\[^\\]+|[\\/](?:Users|home|root)[\\/][^'"\s`]+)/;
+
+export function checkHardcodedPaths(files, root = ROOT) {
+  const out = [];
+  for (const f of files) {
+    let content;
+    try { content = readFileSync(f, 'utf8'); } catch { continue; }
+    content.split(/\r?\n/).forEach((ln, i) => {
+      if (ABS_RE.test(ln)) out.push({ file: relative(root, f), line: i + 1, severity: 'media', kind: 'absolute-path', detail: 'path absoluto hardcodeado' });
+    });
+  }
+  return out;
+}
+
+export function checkJunkFiles(files, root = ROOT) {
+  const out = [];
+  for (const f of files) {
+    let st;
+    try { st = statSync(f); } catch { continue; }
+    const name = f.split(sep).pop();
+    if (st.size === 0) out.push({ file: relative(root, f), line: 0, severity: 'baja', kind: 'empty-file', detail: 'archivo 0-byte' });
+    if (/[{}()<>]/.test(name) || /^\d+$/.test(name)) out.push({ file: relative(root, f), line: 0, severity: 'baja', kind: 'suspicious-name', detail: 'nombre de archivo sospechoso/roto: ' + name });
   }
   return out;
 }

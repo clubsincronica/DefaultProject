@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports } from '../auditor-codigo.js';
+import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles } from '../auditor-codigo.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -57,4 +57,28 @@ test('checkImports accepts an existing relative import', () => {
   const f = join(base, 'a.js');
   writeFileSync(f, `import { x } from './b.js';`);
   assert.equal(checkImports([f], base).length, 0);
+});
+
+test('checkHardcodedPaths flags C:/Users path', () => {
+  const base = mkdtempSync(join(tmpdir(), 'aud-abs-'));
+  const f = join(base, 'a.js');
+  writeFileSync(f, `const p = 'C:/Users/tom_w/foo.exe';`);
+  const out = checkHardcodedPaths([f], base);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].kind, 'absolute-path');
+});
+
+test('checkJunkFiles flags 0-byte and broken names', () => {
+  const base = mkdtempSync(join(tmpdir(), 'aud-junk-'));
+  const empty = join(base, '200');
+  writeFileSync(empty, '');
+  const broken = join(base, '{try{const');
+  writeFileSync(broken, 'x');
+  const good = join(base, 'ok.js');
+  writeFileSync(good, 'x');
+  const out = checkJunkFiles([empty, broken, good], base);
+  const kinds = out.map(o => o.kind);
+  assert.ok(kinds.includes('empty-file'));
+  assert.ok(kinds.includes('suspicious-name'));
+  assert.equal(out.filter(o => o.file.endsWith('ok.js')).length, 0);
 });
