@@ -1,6 +1,7 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, resolve, sep } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 export const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -155,6 +156,64 @@ export function checkDuplicates(files, root = ROOT) {
     if (files2.length > 1) out.push({ severity: 'baja', kind: 'duplicate', detail: 'logica duplicada (hash ' + k + ') en: ' + arr.map(a => a.file + '#' + a.name).join(', ') });
   }
   return out;
+}
+
+const JCODE = 'C:/Users/tom_w/AppData/Local/jcode/bin/jcode.exe';
+const PROVIDERS = [
+  { profile: 'nim-api', keyEnv: 'JCODE_NIM_KEY' },
+  { profile: 'omni', keyEnv: 'JCODE_OMNI_KEY' },
+];
+
+export function providerKey(keyEnv, cfgPath) {
+  if (process.env[keyEnv]) return process.env[keyEnv];
+  const cfg = cfgPath || join(ROOT, 'club-sincronica', 'scripts', 'jcode-auditor.config.json');
+  if (existsSync(cfg)) { try { return JSON.parse(readFileSync(cfg, 'utf8'))[keyEnv]; } catch {} }
+  return '';
+}
+
+export function runJcode(prompt) {
+  let lastErr = '';
+  for (const prov of PROVIDERS) {
+    const key = providerKey(prov.keyEnv);
+    if (!key) { console.warn('  [fallback] ' + prov.profile + ': sin clave'); continue; }
+    const env = { ...process.env, [prov.keyEnv]: key };
+    try {
+      const out = execFileSync(JCODE, ['--provider-profile', prov.profile, 'run', prompt], { env, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+      const cleaned = out.replace(/\n?\[Tokens\] upload:.*$/s, '').trim();
+      if (!cleaned || /\[provider guardrail\]/.test(cleaned)) { lastErr = prov.profile + ': vacio'; continue; }
+      return cleaned;
+    } catch (e) {
+      lastErr = '[' + prov.profile + '] ' + ((e.stderr || e.message || '').toString().slice(0, 200));
+      continue;
+    }
+  }
+  return null;
+}
+
+export function buildLlmPrompt(findings, config, root = ROOT) {
+  const count = (k) => findings.filter(f => f.kind === k).length;
+  const codeFiles = config.projects.flatMap(p => {
+    const d = join(root, p);
+    return existsSync(d) ? walk(d, config.exclude).filter(f => /\.(js|mjs|ts|tsx)$/.test(f)) : [];
+  });
+  const top = codeFiles.map(f => ({ f, size: statSync(f).size })).sort((a, b) => b.size - a.size).slice(0, 8);
+  const codeSamples = top.map(({ f }) => '=== ' + relative(root, f) + ' ===\n' + readFileSync(f, 'utf8').slice(0, 6000)).join('\n');
+  const docs = (config.docs || []).filter(d => existsSync(join(root, d)))
+    .map(d => '=== ' + d + ' ===\n' + readFileSync(join(root, d), 'utf8').slice(0, 4000)).join('\n');
+  return [
+    'Eres el auditor de codigo de Club Sincronica (scaffolding de 3 proyectos Node/React, presupuesto cero).',
+    'No uses herramientas. Responde SOLO con markdown con secciones: ## Calidad y ## Drift docs.',
+    'REGLA: cada mejora lleva tag [regla] y bloque Refs con ruta de archivo exacta. Max 5 mejoras.',
+    '',
+    '=== HALLAZGOS ESTATICOS ===',
+    JSON.stringify({ secretos: count('secret'), brokenImports: count('broken-import'), absPaths: count('absolute-path'), junk: count('empty-file') + count('suspicious-name'), duplicados: count('duplicate') }, null, 2),
+    '',
+    '=== MUESTRA DE CODIGO (top 8 por tamaño) ===',
+    codeSamples,
+    '',
+    '=== DOCS DEL PROYECTO ===',
+    docs,
+  ].join('\n');
 }
 
 // main() added in Task 8

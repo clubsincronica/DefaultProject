@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles, checkDuplicates } from '../auditor-codigo.js';
+import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles, checkDuplicates, buildLlmPrompt } from '../auditor-codigo.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -94,4 +94,12 @@ test('checkDuplicates detects identical function bodies across files', () => {
   assert.equal(out.length, 1);
   assert.equal(out[0].kind, 'duplicate');
   assert.ok(out[0].detail.includes('a.js') && out[0].detail.includes('b.js'));
+});
+
+test('buildLlmPrompt includes findings count and code/docs samples', () => {
+  const cfg = { projects: [], docs: ['README-ESTRUCTURA.md'], exclude: [] };
+  const findings = [{ kind: 'secret', severity: 'alta', file: 'x', detail: 'd' }];
+  const p = buildLlmPrompt(findings, cfg, join(ROOT, '..'));
+  assert.ok(p.includes('HALLAZGOS ESTATICOS'));
+  assert.ok(p.includes('secret'));
 });
