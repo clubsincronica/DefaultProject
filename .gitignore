@@ -1,0 +1,21 @@
+# Project repos (each tracked separately with its own .git)
+club-sincronica/
+pipeline-viral/
+remotion-poc/
+Project/
+toolbox/
+
+# Generated / heavy / secrets
+node_modules/
+graphify-out/
+_legado/
+out/
+dist/
+build/
+.venv-tts/
+*.db
+*.env
+credentials/
+
+# Tooling
+.opencode/
