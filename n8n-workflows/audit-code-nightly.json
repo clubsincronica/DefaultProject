@@ -1,0 +1,70 @@
+{
+  "name": "Audit Code Nightly",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 2 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Diario 02:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "command": "cmd /c \"node C:\\Users\\tom_w\\Documents\\Default Project\\auditor-codigo.js\""
+      },
+      "id": "run-auditor",
+      "name": "Run auditor-codigo",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "filePath": "=C:\\Users\\tom_w\\Documents\\Default Project\\audit-code-{{$now.format('yyyy-MM-dd')}}.md"
+      },
+      "id": "log-reporte",
+      "name": "Log reporte",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [480, 0]
+    }
+  ],
+  "connections": {
+    "Diario 02:00": {
+      "main": [
+        [
+          {
+            "node": "Run auditor-codigo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run auditor-codigo": {
+      "main": [
+        [
+          {
+            "node": "Log reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

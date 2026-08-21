@@ -19,3 +19,8 @@ credentials/
 
 # Tooling
 .opencode/
+
+# Auditor output (generated)
+audit-code-*.md
+audit-code-tasks.json
+audit-code-tareas.md

@@ -1,0 +1,10 @@
+{
+  "name": "auditor-codigo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Auditor de codigo cross-project para el scaffolding de Club Sincronica",
+  "scripts": {
+    "test": "node --test test/auditor-codigo.test.js"
+  }
+}
