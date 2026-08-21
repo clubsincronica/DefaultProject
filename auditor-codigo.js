@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -214,6 +214,42 @@ export function buildLlmPrompt(findings, config, root = ROOT) {
     '=== DOCS DEL PROYECTO ===',
     docs,
   ].join('\n');
+}
+
+function fmtFindings(arr) {
+  if (!arr || !arr.length) return '_Sin hallazgos._\n';
+  return arr.map(f => '- [' + f.severity + '] `' + f.file + '` — ' + f.detail + (f.ref ? ' (Refs: ' + f.ref + ')' : '')).join('\n') + '\n';
+}
+
+export function writeReport(dateStr, sections, root = ROOT) {
+  const blocks = [
+    '# Auditoría de Código — ' + dateStr + '\n',
+    '## Secretos\n' + fmtFindings(sections.secret),
+    '## Dependencias cruzadas\n' + fmtFindings(sections.brokenImport),
+    '## Paths hardcodeados\n' + fmtFindings(sections.absPath),
+    '## Archivos basura\n' + fmtFindings(sections.junk),
+    '## Calidad (LLM)\n' + (sections.quality || 'no disponible') + '\n',
+    '## Drift docs (LLM)\n' + (sections.drift || 'no disponible') + '\n',
+  ];
+  const p = join(root, 'audit-code-' + dateStr + '.md');
+  writeFileSync(p, blocks.join('\n'), 'utf8');
+  return p;
+}
+
+export function writeTasks(dateStr, sections, root = ROOT) {
+  const flat = ['secret', 'brokenImport', 'absPath', 'junk', 'duplicate'].flatMap(k =>
+    (sections[k] || []).map(f => ({
+      project: f.file.split(/[\\/]/)[0],
+      dimension: k, severity: f.severity, file: f.file, description: f.detail,
+    }))
+  );
+  const pj = join(root, 'audit-code-tasks.json');
+  writeFileSync(pj, JSON.stringify(flat, null, 2) + '\n', 'utf8');
+  const md = '# Tareas de auditoría — ' + dateStr + '\n\n' +
+    (flat.length ? flat.map((t, i) => (i + 1) + '. [' + t.severity + '] (' + t.project + ') ' + t.dimension + ': `' + t.file + '` — ' + t.description).join('\n') : '_Sin tareas._') + '\n';
+  const pm = join(root, 'audit-code-tareas.md');
+  writeFileSync(pm, md, 'utf8');
+  return { json: pj, md: pm };
 }
 
 // main() added in Task 8

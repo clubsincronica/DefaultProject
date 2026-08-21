@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles, checkDuplicates, buildLlmPrompt } from '../auditor-codigo.js';
+import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports, checkHardcodedPaths, checkJunkFiles, checkDuplicates, buildLlmPrompt, writeReport, writeTasks } from '../auditor-codigo.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -102,4 +102,19 @@ test('buildLlmPrompt includes findings count and code/docs samples', () => {
   const p = buildLlmPrompt(findings, cfg, join(ROOT, '..'));
   assert.ok(p.includes('HALLAZGOS ESTATICOS'));
   assert.ok(p.includes('secret'));
+});
+
+test('writeReport and writeTasks emit structured files', () => {
+  const base = mkdtempSync(join(tmpdir(), 'aud-out-'));
+  const sections = {
+    secret: [{ severity: 'alta', file: 'x.js:1', detail: 'patron nvapi-****' }],
+    brokenImport: [], absPath: [], junk: [],
+  };
+  const rp = writeReport('2026-08-21', sections, base);
+  const tp = writeTasks('2026-08-21', sections, base);
+  assert.ok(existsSync(rp));
+  assert.ok(existsSync(tp.json) && existsSync(tp.md));
+  assert.ok(readFileSync(rp, 'utf8').includes('## Secretos'));
+  const tasks = JSON.parse(readFileSync(tp.json, 'utf8'));
+  assert.equal(tasks.length, 1);
 });
