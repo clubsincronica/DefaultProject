@@ -31,7 +31,7 @@ export function scanFiles(config, root = ROOT) {
 
 export function scanFilesWithRoot(config, root) { return scanFiles(config, root); }
 
-const SECRET_RE = /(api[_]?key|secret|token|password|passwd|nvapi-[A-Za-z0-9]+|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16})|https?:\/\/[^:\s]+:[^@\s]+@/i;
+const SECRET_RE = /(nvapi-[A-Za-z0-9]+|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|https?:\/\/[^:\s]+:[^@\s]+@)|(?:api[_]?key|secret|token|password|passwd)\s*[:=]\s*['"][^'"]{4,}['"]/i;
 
 export function maskValue(s) {
   if (!s || s.length <= 4) return '****';
@@ -108,8 +108,9 @@ export function checkJunkFiles(files, root = ROOT) {
     let st;
     try { st = statSync(f); } catch { continue; }
     const name = f.split(sep).pop();
-    if (st.size === 0) out.push({ file: relative(root, f), line: 0, severity: 'baja', kind: 'empty-file', detail: 'archivo 0-byte' });
-    if (/[{}()<>]/.test(name) || /^\d+$/.test(name)) out.push({ file: relative(root, f), line: 0, severity: 'baja', kind: 'suspicious-name', detail: 'nombre de archivo sospechoso/roto: ' + name });
+    const suspicious = /[{}()<>]/.test(name) || /^\d+$/.test(name);
+    if (suspicious) out.push({ file: relative(root, f), line: 0, severity: 'baja', kind: 'suspicious-name', detail: 'nombre de archivo sospechoso/roto: ' + name });
+    else if (st.size === 0) out.push({ file: relative(root, f), line: 0, severity: 'baja', kind: 'empty-file', detail: 'archivo 0-byte' });
   }
   return out;
 }
@@ -274,7 +275,7 @@ export function main(dateStr) {
   return { report: rp, tasks: tp };
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     main(process.argv[2]);
   } catch (e) {

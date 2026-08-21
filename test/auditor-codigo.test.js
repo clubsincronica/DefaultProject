@@ -70,7 +70,7 @@ test('checkHardcodedPaths flags C:/Users path', () => {
 
 test('checkJunkFiles flags 0-byte and broken names', () => {
   const base = mkdtempSync(join(tmpdir(), 'aud-junk-'));
-  const empty = join(base, '200');
+  const empty = join(base, 'readme.tmp');
   writeFileSync(empty, '');
   const broken = join(base, '{try{const');
   writeFileSync(broken, 'x');
