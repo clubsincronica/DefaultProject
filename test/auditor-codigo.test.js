@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { mkdtempSync, writeFileSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets } from '../auditor-codigo.js';
+import { loadConfig, scanFiles, scanFilesWithRoot, checkSecrets, checkImports } from '../auditor-codigo.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -40,4 +40,21 @@ test('checkSecrets skips credentials dir', () => {
   mkdirSync(join(base, 'credentials'), { recursive: true });
   writeFileSync(f, `{"token":"sk-abcdefghijklmnopqrstuvwx"}`);
   assert.equal(checkSecrets([f], base).length, 0);
+});
+
+test('checkImports flags a missing relative import', () => {
+  const base = mkdtempSync(join(tmpdir(), 'aud-imp-'));
+  const f = join(base, 'a.js');
+  writeFileSync(f, `import { x } from './no-existe.js';`);
+  const out = checkImports([f], base);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].kind, 'broken-import');
+});
+
+test('checkImports accepts an existing relative import', () => {
+  const base = mkdtempSync(join(tmpdir(), 'aud-imp2-'));
+  writeFileSync(join(base, 'b.js'), '');
+  const f = join(base, 'a.js');
+  writeFileSync(f, `import { x } from './b.js';`);
+  assert.equal(checkImports([f], base).length, 0);
 });

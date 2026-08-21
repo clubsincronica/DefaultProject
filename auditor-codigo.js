@@ -1,6 +1,6 @@
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 
 export const ROOT = dirname(fileURLToPath(import.meta.url));
 
@@ -55,6 +55,34 @@ export function checkSecrets(files, root = ROOT) {
         });
       }
     });
+  }
+  return out;
+}
+
+function resolveModule(baseDir, spec) {
+  const cands = [spec, spec + '.js', spec + '.mjs', spec + '.ts', spec + '.cjs', join(spec, 'index.js'), join(spec, 'index.ts')];
+  for (const c of cands) {
+    const t = resolve(baseDir, c);
+    if (existsSync(t) && statSync(t).isFile()) return t;
+  }
+  return null;
+}
+
+const IMPORT_RE = /(?:import\s+(?:[^'"]*?\s+from\s+)?|require\(\s*)['"]([^'"]+)['"]/g;
+
+export function checkImports(files, root = ROOT) {
+  const out = [];
+  for (const f of files) {
+    let content;
+    try { content = readFileSync(f, 'utf8'); } catch { continue; }
+    let m; IMPORT_RE.lastIndex = 0;
+    while ((m = IMPORT_RE.exec(content))) {
+      const spec = m[1];
+      if (!spec.startsWith('.')) continue;
+      if (!resolveModule(dirname(f), spec)) {
+        out.push({ file: relative(root, f), line: 0, severity: 'alta', kind: 'broken-import', detail: 'import relativo roto: ' + spec });
+      }
+    }
   }
   return out;
 }
