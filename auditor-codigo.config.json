@@ -1,0 +1,16 @@
+{
+  "projects": [
+    "club-sincronica/scripts",
+    "pipeline-viral/scripts",
+    "remotion-poc/src",
+    "remotion-poc/scripts"
+  ],
+  "docs": [
+    "README-ESTRUCTURA.md",
+    "SECRETS-MAP.md",
+    "club-sincronica/AGENTS.md",
+    "pipeline-viral/AGENTS.md",
+    "pipeline-viral/PLAN-VIRAL.md"
+  ],
+  "exclude": ["node_modules", ".git", "credentials", "graphify-out", "_legado", "out", "dist", "build"]
+}
