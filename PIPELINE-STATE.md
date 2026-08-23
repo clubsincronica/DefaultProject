@@ -7,10 +7,10 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 
 ## club-sincronica (shorts diarios)
 
-- **Etapa actual:** producción diaria (Fase 1, aprobación humana).
+- **Etapa actual:** producción diaria (Fase 1, aprobación humana). **EN CURSO (2026-08-24):** alinear la estructura de los videos al ejemplo canónico del 24 ago.
 - **Hitos:** pipeline diario en `club-sincronica/AGENTS.md` (orden: guion → grabación → transcripción → storyboard → música → publicación).
 - **Publicación:** Buffer (FB/IG/TikTok/LinkedIn) + YouTube Shorts (ruta directa).
-- **LOTE DE REFERENCIA:** los videos del **17–24 ago** son el EJEMPLO CANÓNICO. Sus mejoras son la norma a preservar; NO se revierten.
+- **LOTE DE REFERENCIA:** los videos del **17–24 ago** son el EJEMPLO CANÓNICO. Sus mejoras son la norma a preservar; NO se revierten. El storyboard canónico es `storyboard-audio.js` (desde transcripción real).
 - **DO-NOT-REPEAT:**
   - NO volver a `render.js` para el storyboard. El camino canónico es el storyboard DESDE la transcripción real del audio grabado (`storyboard-audio.js`), no desde el guion escrito.
   - NO perder las mejoras del lote 17–24 ago: son el estándar. Si al regenerar archivos desde plantilla se pisan esas ediciones, DETENER y reportar, no continuar.
@@ -18,7 +18,7 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** produciendo H65 (siguiente tras H64).
+- **Etapa actual:** **EN CURSO H65** (siguiente tras H64).
 - **Último publicado:** **Harmonic 64 = kins 253-256** (confirmado por usuario 2026-08-24). Es el BLUEPRINT canónico.
 - **BLUEPRINT:** H64 es el molde ideal de los videos Kin Harmonic (estructura de acts, soundscape, render). Úsalo como referencia para H65+, pero ADAPTA por kin (NO copiar literal).
 - **Scripts clave:** `soundscape.js`, `voice-layer.js`, `visual-meditation.js`, `visual-watercolor.js`, `strudel-render.js`, `deliver.js`, `make-thumbnail.js`.
