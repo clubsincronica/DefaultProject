@@ -10,9 +10,12 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 - **Etapa actual:** producción diaria (Fase 1, aprobación humana). **EN CURSO (2026-08-24):** alinear la estructura de los videos al ejemplo canónico del 24 ago.
 - **Hitos:** pipeline diario en `club-sincronica/AGENTS.md` (orden: guion → grabación → transcripción → storyboard → música → publicación).
 - **Publicación:** Buffer (FB/IG/TikTok/LinkedIn) + YouTube Shorts (ruta directa).
-- **LOTE DE REFERENCIA:** los videos del **17–24 ago** son el EJEMPLO CANÓNICO. Sus mejoras son la norma a preservar; NO se revierten. El storyboard canónico es `storyboard-audio.js` (desde transcripción real).
-- **DO-NOT-REPEAT:**
-  - NO volver a `render.js` para el storyboard. El camino canónico es el storyboard DESDE la transcripción real del audio grabado (`storyboard-audio.js`), no desde el guion escrito.
+- **LOTE DE REFERENCIA:** los videos del **17–24 ago** son el EJEMPLO CANÓNICO (calidad: composición inteligente con aspecto garantizado, vía `render.js` v2). El estándar actual = `storyboard-audio.js` (beats desde transcripción) + `render.js` (composición con reglas de marca) EN ARMONÍA.
+- **DO-NOT-REPEAT (reglas duras, ver `club-sincronica/docs/ESTRUCTURA-CANONICA.md`):**
+  - **NO usar `storyboard-audio.js` solo y descartar `render.js`.** La regresión del 25-31 ago vino de eso: se perdieron duración mínima, oráculo temprano, aspecto y reglas de marca. Canónico = AMBOS: `storyboard-audio.js` da los beats reales; `render.js` (`pickEl` + `elAspecto`) compone con reglas de marca.
+  - Duración mínima de frame 3.0 s (clamp); oráculo debe aparecer temprano (umbral +3 s tras cartouche), NO tardío.
+  - Aspecto GARANTIZADO por `render.js`: `elAspecto` con símbolos centrados bajo título, separación 160 px, escala 1.6, conjunción a escala media; `cartaAstral` máx 2 aspectos; `kinCarta` ≤ 25 % del frame; fallback de aspecto presente.
+  - Sin mojibake: encoding `Â·` → `-`. Numerales maya `GAP 26`. Radio de oráculo 240. Subtítulos 42/36/30 px. Ortografía: "Club Sincrónica" / "Kin Maya" (NUNCA "King Maya", "Quim Maya", "quimaya").
   - NO perder las mejoras del lote 17–24 ago: son el estándar. Si al regenerar archivos desde plantilla se pisan esas ediciones, DETENER y reportar, no continuar.
 - **Issues conocidos:** (vacío)
 
