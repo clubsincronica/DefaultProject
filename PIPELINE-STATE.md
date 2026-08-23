@@ -1,4 +1,4 @@
-# PIPELINE-STATE.md — estado vivo de los 3 pipelines
+﻿# PIPELINE-STATE.md — estado vivo de los 3 pipelines
 
 Fuente de verdad del estado actual. Cárgala y ACTUALÍZALA antes/depués de cada sesión de trabajo.
 Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deben repetirse).
@@ -11,7 +11,7 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 - **Hitos:** pipeline diario en `club-sincronica/AGENTS.md` (orden: guion → grabación → transcripción → storyboard → música → publicación).
 - **Publicación:** Buffer (FB/IG/TikTok/LinkedIn) + YouTube Shorts (ruta directa).
 - **LOTE DE REFERENCIA:** los videos del **17–24 ago** son el EJEMPLO CANÓNICO (calidad: composición inteligente con aspecto garantizado, vía `render.js` v2). El estándar actual = `storyboard-audio.js` (beats desde transcripción) + `render.js` (composición con reglas de marca) EN ARMONÍA.
-- **DO-NOT-REPEAT (reglas duras, ver `club-sincronica/docs/ESTRUCTURA-CANONICA.md`):**
+- **DO-NOT-REPEAT (reglas duras, ver `docs/ESTRUCTURA-CANONICA.md`):**
   - **NO usar `storyboard-audio.js` solo y descartar `render.js`.** La regresión del 25-31 ago vino de eso: se perdieron duración mínima, oráculo temprano, aspecto y reglas de marca. Canónico = AMBOS: `storyboard-audio.js` da los beats reales; `render.js` (`pickEl` + `elAspecto`) compone con reglas de marca.
   - Duración mínima de frame 3.0 s (clamp); oráculo debe aparecer temprano (umbral +3 s tras cartouche), NO tardío.
   - Aspecto GARANTIZADO por `render.js`: `elAspecto` con símbolos centrados bajo título, separación 160 px, escala 1.6, conjunción a escala media; `cartaAstral` máx 2 aspectos; `kinCarta` ≤ 25 % del frame; fallback de aspecto presente.
