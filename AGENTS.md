@@ -12,6 +12,8 @@ Antes de cualquier trabajo, identifica el proyecto por estas palabras y CARGA su
   - Contexto: `pipeline-viral/AGENTS.md` + `pipeline-viral/PLAN-VIRAL.md`.
 - **remotion-poc** (lab de render Remotion, puente): `remotion`, `poc`, `render lab`.
   - Lee de los otros dos; es el puente de render.
+- **bible** (estructura canónica / "la biblia" — retoma desde donde quedamos): `bible`, `bible club`, `bible viral`, `canon`, `estructura canonica`, `keyword bible`.
+  - Carga SIEMPRE: `docs/ESTRUCTURA-CANONICA.md` (bible de club-sincronica) + `PIPELINE-STATE.md` (estado vivo + DO-NOT-REPEAT). "bible viral" aún no tiene doc propio: usar la sección pipeline-viral de `PIPELINE-STATE.md` (H64 = blueprint).
 
 ## REGLA DE CONTINUIDAD (evita regresiones)
 
