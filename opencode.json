@@ -101,29 +101,20 @@
         }
       }
     },
-    "mistral": {
-      "npm": "@ai-sdk/mistral",
-      "name": "Mistral API",
-      "options": {},
+    "glm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "GLM-5.2 (Z.AI)",
+      "options": {
+        "baseURL": "https://api.z.ai/api/paas/v4"
+      },
       "models": {
-        "mistral/mistral-small-2508": {
-          "name": "Mistral Small 2508",
-          "limit": { "context": 128000, "output": 32768 }
+        "zhipu/glm-5.2": {
+          "name": "GLM-5.2",
+          "limit": { "context": 1048576, "output": 131072 }
         },
-        "mistral/mistral-large-2508": {
-          "name": "Mistral Large 2508",
-          "limit": { "context": 128000, "output": 32768 }
-        }
-      }
-    },
-    "cohere": {
-      "npm": "@ai-sdk/cohere",
-      "name": "Cohere API",
-      "options": {},
-      "models": {
-        "cohere/command-r": {
-          "name": "Cohere Command R",
-          "limit": { "context": 128000, "output": 4096 }
+        "zhipu/glm-4.7-flash": {
+          "name": "GLM-4.7 Flash (free)",
+          "limit": { "context": 1048576, "output": 131072 }
         }
       }
     },

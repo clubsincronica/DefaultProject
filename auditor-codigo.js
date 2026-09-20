@@ -61,7 +61,7 @@ export function checkSecrets(files, root = ROOT) {
 }
 
 function resolveModule(baseDir, spec) {
-  const cands = [spec, spec + '.js', spec + '.mjs', spec + '.ts', spec + '.cjs', join(spec, 'index.js'), join(spec, 'index.ts')];
+  const cands = [spec, spec + '.js', spec + '.mjs', spec + '.ts', spec + '.tsx', spec + '.cjs', join(spec, 'index.js'), join(spec, 'index.ts'), join(spec, 'index.tsx')];
   for (const c of cands) {
     const t = resolve(baseDir, c);
     if (existsSync(t) && statSync(t).isFile()) return t;

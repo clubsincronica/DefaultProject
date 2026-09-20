@@ -45,10 +45,7 @@ Rutas de publicación en club-sincronica:
 |---------|---------------------|-----------|------------------------|
 | `canal.env` | `EMAIL` + `PASSWORD` (app password SMTP Gmail) | `scripts/load-env.js` → `scripts/notify-email.js`, `scripts/deliver.js` | Gmail SMTP (notificación + entrega de MP3 a Google Drive vía rclone) |
 
-⚠️ **YouTube para pipeline-viral NO está automatizado todavía.** No existe `upload-youtube.js`
-ni cliente OAuth para el canal `pipeline.viral.canales@gmail.com`. Hoy la subida larga es manual
-desde `publicacion.md` + thumbnail. El diseño prevé crear un `client_secret.json` nuevo en
-pipeline-viral/credentials/ en Fase 2.
+⚠️ **YouTube para pipeline-viral:** `scripts/upload-youtube.js` existe y funciona (subida resumible, thumbnails, `--dry-run`). Actualmente reutiliza el OAuth de club-sincronica (`../club-sincronica/scripts/google-oauth.js`). Para Fase 2: crear `client_secret.json` propio en `pipeline-viral/credentials/` y dotar al script de OAuth independiente.
 
 ---
 
