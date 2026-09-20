@@ -1,0 +1,10 @@
+{
+  "enabledPlugins": [
+    "dataview",
+    "calendar",
+    "excalidraw",
+    "templater-obsidian",
+    "daily-notes",
+    "graph-analysis"
+  ]
+}
