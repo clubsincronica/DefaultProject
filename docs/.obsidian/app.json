@@ -1,0 +1,9 @@
+{
+  "strictLineBreaks": false,
+  "showFrontmatter": true,
+  "livePreview": true,
+  "readableLineLength": true,
+  "showLineNumber": true,
+  "useMarkdownLinks": false,
+  "newFileLocation": "current"
+}

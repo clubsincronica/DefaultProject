@@ -1,3 +1,18 @@
+---
+title: Estructura Canónica - "La Biblia" de Club Sincrónica
+date: 2026-08-25
+updated: 2026-09-20
+tags:
+  - canon
+  - rules
+  - quality
+  - club-sincronica
+aliases:
+  - La Biblia
+  - Canon Structure
+  - Quality Standards
+---
+
 # ESTRUCTURA-CANONICA.md — "La Biblia" de Club Sincrónica (shorts diarios)
 
 **Ancla de calidad:** lote **17–24 ago 2026** (composición inteligente con aspecto garantizado, vía `render.js` v2).
@@ -62,3 +77,9 @@ guion → grabación (voz real) → transcripción + subtítulos → **storyboar
 - `club-sincronica/AGENTS.md` — reglas de marca completas.
 - `club-sincronica/content/output/BATCH-REPORT-2026-08-25-2026-09-01.md` — informe de la regresión y sus correcciones (origen de las reglas de esta sección 2).
 - `club-sincronica/content/output/2026-08-24/` — ejemplo canónico publicado (benchmark visual).
+
+## Related Notes
+
+- [[Marca]] - Brand identity guidelines
+- [[Tzolkin-Overview]] - Core calendar system
+- [[Pipeline-Viral]] - Content production pipeline
