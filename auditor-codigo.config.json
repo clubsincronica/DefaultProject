@@ -10,7 +10,8 @@
     "SECRETS-MAP.md",
     "club-sincronica/AGENTS.md",
     "pipeline-viral/AGENTS.md",
-    "pipeline-viral/PLAN-VIRAL.md"
+    "docs/ESTRUCTURA-CANONICA.md",
+    "docs/Plugins-Setup.md"
   ],
   "exclude": ["node_modules", ".git", "credentials", "graphify-out", "_legado", "out", "dist", "build"]
 }
