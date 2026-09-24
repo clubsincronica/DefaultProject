@@ -46,7 +46,10 @@ Historial de fixes: `docs/Changelog.md`
 - **Etapa actual:** Phase 1 en construcción (tooling + template + builder + canción #1 "Je Veux").
 - **Spec:** `docs/superpowers/specs/2026-09-24-cancionero-rojo-karaoke-design.md`.
 - **Pipeline:** ver `cancionero-rojo/AGENTS.md`.
-- **DO-NOT-REPEAT:** (acumular aquí los fixes de ejecución)
+- **DO-NOT-REPEAT:**
+  1. `node --test <dir>` NO recursa desde Node 21 (win32): usar `node --test` (bare) — script `npm test` corregido 2026-09-24.
+  2. `parts` en `structure.json` van EN MINÚSCULAS (`keys`, `strings`, `texture`…): los nombres PascalCase (`Keys`, `Strings`) son SOLO de tracks de Ableton. Mapeo case-insensitive pendiente en builder (Task 13).
+  3. El plan/planilla tenía rosters con mayúsculas y omitía check de `scene.name` — fixes A1/A2 (commits `294d1d4`, `6627859`). Revisar briefs del plan por bugs antes de ejecutarlos.
 
 ---
 
