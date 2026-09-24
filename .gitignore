@@ -29,3 +29,7 @@ audit-code-tareas.md
 cancionero-rojo/**/*.wav
 cancionero-rojo/**/*.mp3
 cancionero-rojo/**/.tmp/
+
+# Python caches (cancionero-rojo scripts)
+cancionero-rojo/**/__pycache__/
+*.pyc
