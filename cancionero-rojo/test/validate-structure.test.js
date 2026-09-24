@@ -22,6 +22,10 @@ test('duplicate scene name → error', () => {
   const errs = validateStructure({ ...valid, scenes: [...valid.scenes, { name: 'Verse', bars: 4 }] });
   assert.ok(errs.some(e => e.includes('duplicat')));
 });
+test('scene without name → error', () => {
+  const errs = validateStructure({ ...valid, scenes: [{ bars: 4 }] });
+  assert.ok(errs.some(e => e.includes('scene name')));
+});
 test('parts outside roster → error', () => {
   const errs = validateStructure({ ...valid, parts: { midi: ['keys', 'organ'], audio: ['texture'] } });
   assert.ok(errs.some(e => e.includes('organ')));

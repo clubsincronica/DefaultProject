@@ -12,6 +12,7 @@ export function validateStructure(s) {
     errs.push('scenes must be 1..16 entries');
   const names = new Set();
   for (const sc of s.scenes ?? []) {
+    if (typeof sc.name !== 'string' || !sc.name) errs.push('scene name missing');
     if (names.has(sc.name)) errs.push(`scene name duplicat: ${sc.name}`);
     names.add(sc.name);
     if (typeof sc.bars !== 'number' || sc.bars < 1) errs.push(`scene ${sc.name}: bars must be >= 1`);
