@@ -18,7 +18,8 @@ feedback → re-author sección → rebuild → PIPELINE-STATE.md.
 - Assets por sección: stems/<part>--<section>.wav, clips/<part>--<section>.mid.
 - Strudel: strudel-render.js resuelve el patrón con `join(ROOT, <patrón>)` donde
   ROOT = raíz de pipeline-viral → paths ABSOLUTOS rompen (ERR_MODULE_NOT_FOUND).
-  render-stems.js ya arma esa ruta relativa; manual: pasar ruta relativa a `pipeline-viral/`.
+  render-stems.js ya arma esa ruta relativa; manual:
+  `node pipeline-viral/scripts/strudel-render.js <ruta relativa a pipeline-viral/> <secs> <out.wav>`
 - Sin Demucs/separación de voz. WAV/MP3 en .gitignore.
 - Canción #1: "Je Veux" (Zaz) tonalidad original Am.
 
