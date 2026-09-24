@@ -1027,7 +1027,40 @@ if (process.argv[1]?.endsWith('inspect-als.js') && process.argv[2]) {
 11. Escuchar: gritar en el micro (Input In) → comprueba que suena con FX; mover APC fader → volumen.
 ```
 
-- [ ] **Step 2: USER builds the template** (blocking human gate — do not proceed until `ableton/template.als` exists)
+- [ ] **Step 2: `scripts/build-template.js` generates `ableton/template.als`** (F1/human-gate amendment
+  2026-09-24: recipe's manual build replaced by donor-based programmatic build; user only verifies).
+
+  Source: `C:\Users\tom_w\Music\_Serato_\Program\Live\Resources\Core Library\Lessons\Sets\Live 10 Suite Empty.als`
+  (official Live 10 Suite = exact target version; 12 midi + 3 audio, returns=2, scenes=7, has
+  Echo/AutoFilter/Eq8/Compressor2/Reverb/Operator + DrumRacks + MidiClip/MidiNote donors).
+
+  Spec (each transform verified by re-running `inspect-als.js` + `test/template.test.js`):
+  1. gunzip → XML string; single renumber pass at the end: collect every `Id="N"` in the file,
+     reassign duplicated-subtree Ids from `maxId+1` (never collide; keep originals untouched).
+  2. Tracks: keep 4 midi (`Keys`,`Guitar`,`Bass`,`Perc`) + 3 audio (`10 Vocals 1`,`11 Vocals 2`,
+     `12 Wavetable Pads`) + DUPLICATE the `10 Vocals 1` subtree once (4th audio = `Texture`).
+     Delete all other tracks. Reorder + rename to roster order: Mic Lead, Mic Guest, Keys, Guitar,
+     Bass, Perc, Strings, Texture (`<UserName><EffectiveName Value=...>` etc. — grep donor for the
+     name elements; ALL name variants must be updated).
+  3. Strip content: remove every clip from every session slot (keep empty `<ClipSlot>` elements),
+     strip arrangement content (ClipEvent/ArrangerAutomation children — template arrangement must be
+     EMPTY for Task 13), clear scene names.
+  4. Mics: `Mic Lead` = input channel 1, `Mic Guest` = channel 2 (Ext. In), Input Monitoring = **In**
+     (grep donor vocal tracks for input-routing/monitor elements — they were recorded, so routing
+     XML exists; set channel index + monitor manually).
+  5. Sends: mics A=15 B=15; Strings/Texture A=20 (find send value elements in mixer XML).
+  6. Scenes: 7 → 16 (duplicate `<Scene>` pattern with renumbered Ids, empty names).
+  7. Returns: verify names = `A-Reverb`/`B-Delay`; rename if donor differs.
+  8. Master chain: ensure `AutoFilter` (freq ~18k) + `Echo` (dry/wet 0) on master; if donor's are on
+     tracks, transplant subtree (renumber Ids). If missing entirely → transplant from another donor
+     (grep shows AutoFilter/Echo exist in Suite Empty somewhere).
+  9. Device deviations from recipe (record in xml-map.md / recipe appendix): mic FX = donor chains
+     (Eq8+Compressor2 equivalents — user may swap to Channel EQ later); MIDI-track instruments =
+     donor instruments (Operator/DrumRack stand-ins — swap by ear later); Strings/Texture have NO
+     instruments (recipe step 3 was wrong: they're AUDIO stem tracks per pipeline — plan bug fixed
+     here). Perc ← DrumRack is natural.
+  10. gzip → `ableton/template.als`.
+
 - [ ] **Step 3: Verify with inspector**
 
 ```powershell
@@ -1056,6 +1089,14 @@ test('template.als has the 8 roster tracks and 16 scenes', { skip: !existsSync(T
 
 - [ ] **Step 5: Run `npm test` → PASS (template test runs, not skipped)**
 - [ ] **Step 6: Commit** — `git add -A cancionero-rojo; git commit -m "feat(cancionero-rojo): template recipe + template.als (16 scenes, 8 tracks)"`
+- [ ] **Step 7: USER verification gate (the only human steps left)** — open template.als in Live 10:
+  - MUST open WITHOUT repair dialog (if repair appears: report Live's message + affected element →
+    debug generator → regenerate; this is still the Approach-A viability gate)
+  - Preferences > Link/MIDI: Xone K2 + APC mini ports (Track/Remote ON) — lives in Live prefs, not .als
+  - Map Mode per recipe steps 10-11 (physical controllers), instrument swap by ear, mic shout-test,
+    then save (over the generated template.als — Live rewrites it natively, which is the safest final form)
+  - Update recipe doc: mark which steps the generator covered vs which remain manual (fix recipe step 3
+    Strings/Texture instrument contradiction — they are AUDIO stem tracks, no instruments)
 
 ---
 
