@@ -74,7 +74,11 @@ Assets are **per-section**: one WAV per texture per section (session clips loop 
 default → holding a verse repeats automatically); one MIDI clip per section.
 
 Key/tempo fixed at authoring: all MIDI and stems written in the final key (singer range).
-Single tempo per song in v1. The mic channels, routing, FX and controller mappings live
+**Tempo model (amended 2026-09-24):** one base tempo per song + optional **per-scene
+tempo overrides** (Live scenes carry their own tempo — Session launch switches global
+tempo natively). Song #1 Je Veux = bossa, **slow → mid tempo path** (exact BPMs pinned in
+the style session); Arrangement play-through runs at base tempo (scene-jump path is where
+the tempo movement lives; arrangement tempo automation = future). The mic channels, routing, FX and controller mappings live
 **only in the template** — the builder never touches them.
 
 ## 4. Composition methodology
@@ -211,6 +215,7 @@ has played in Live 10.
 ## 11. Out of scope (v1)
 
 - K2 scene triggering (APC Mini handles scenes; K2 L3 left spare for later).
-- Tempo changes within a song; count-in click; lyric video/visuals.
+- Arrangement tempo automation (per-scene Session tempo is v1; linear tempo ramps in
+  Arrangement view are future work); count-in click; lyric video/visuals.
 - Automatic structure detection from reference MP3.
 - Songs beyond the songbook canon (Listá de Canciones doc).

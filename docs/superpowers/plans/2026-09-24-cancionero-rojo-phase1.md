@@ -15,7 +15,10 @@
 - Music production target: **Ableton Live 10 Suite** (installed at `C:\Users\tom_w\Music\_Serato_\Program\Live\Program\Ableton Live 10 Suite.exe`). Files must open in Live 10 without repair dialogs.
 - Template roster is exactly 8 channel tracks, names fixed: `Mic Lead`, `Mic Guest`, `Keys`, `Guitar`, `Bass`, `Perc`, `Strings`, `Texture`; returns `A-Reverb`, `B-Delay`; 16 blank scenes; 4/4.
 - **Builder contract:** injected code may only touch clip content, scene names, tempo, locators/markers. Never devices, mappings, routing, mic tracks, returns, master.
-- Song #1 key: **original key of Je Veux = Am**. Single tempo per song (set during style session).
+- Song #1 key: **original key of Je Veux = Am**. Tempo model: **base tempo + optional
+  per-scene overrides** (`scenes[].tempo`) — Je Veux style = **bossa, slow → mid path**
+  (exact BPMs pinned in the T14 style session). Session scene launches change tempo
+  natively; Arrangement play-through runs at base tempo (v1).
 - Assets are **per-section**: `stems/<part>--<section>.wav`, `clips/<part>--<section>.mid`.
 - **No vocal separation** (Demucs explicitly out of scope).
 - Strudel renderer invoked as `node <root>/pipeline-viral/scripts/strudel-render.js <ABSOLUTE pattern path> <seconds> <out.wav>` (absolute path bypasses the renderer's ROOT-relative resolution).
@@ -149,11 +152,11 @@ Schema (authoritative):
   "title": "Je Veux",
   "artist": "Zaz",
   "key": "Am",
-  "tempo": 130,
+  "tempo": 100,
   "timeSig": "4/4",
   "scenes": [
-    { "name": "Intro", "bars": 4 },
-    { "name": "Verse", "bars": 16 },
+    { "name": "Intro", "bars": 4, "tempo": 72 },
+    { "name": "Verse", "bars": 16, "tempo": 72 },
     { "name": "Chorus", "bars": 16 },
     { "name": "Outro", "bars": 4 }
   ],
@@ -161,6 +164,8 @@ Schema (authoritative):
   "parts": { "midi": ["keys"], "audio": ["strings", "texture"] }
 }
 ```
+
+- `scenes[].tempo` is **optional** (inherits base `tempo`); when present must be 40-260.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -192,6 +197,12 @@ test('duplicate scene name → error', () => {
 test('parts outside roster → error', () => {
   const errs = validateStructure({ ...valid, parts: { midi: ['keys', 'organ'], audio: ['texture'] } });
   assert.ok(errs.some(e => e.includes('organ')));
+});
+test('optional scene tempo: valid 40-260 ok, out of range error', () => {
+  const withTempo = { ...valid, scenes: valid.scenes.map(s => ({ ...s, tempo: 72 })) };
+  assert.deepEqual(validateStructure(withTempo), []);
+  const bad = { ...valid, scenes: [{ name: 'Intro', bars: 4, tempo: 400 }] };
+  assert.ok(validateStructure(bad).some(e => e.includes('tempo')));
 });
 ```
 
@@ -232,6 +243,8 @@ export function validateStructure(s) {
     if (names.has(sc.name)) errs.push(`scene name duplicat: ${sc.name}`);
     names.add(sc.name);
     if (typeof sc.bars !== 'number' || sc.bars < 1) errs.push(`scene ${sc.name}: bars must be >= 1`);
+    if (sc.tempo !== undefined && (typeof sc.tempo !== 'number' || sc.tempo < 40 || sc.tempo > 260))
+      errs.push(`scene ${sc.name}: tempo must be 40-260`);
   }
   for (const ref of s.arrangement ?? []) if (!names.has(ref)) errs.push(`arrangement references unknown scene: ${ref}`);
   if ((s.arrangement ?? []).length === 0) errs.push('arrangement empty');
@@ -766,8 +779,9 @@ import { dirname } from 'node:path';
 import { buildNotes } from './lib/step-grid.js';
 import { writeSmf } from './lib/smf-writer.js';
 
-const args = Object.fromEntries(process.argv.slice(3).reduce((a, x, i, arr) =>
-  i % 2 === 0 ? [...a, [x.replace(/^--/, ''), arr[i + 1]]] : a, []));
+const argv = process.argv.slice(2);
+const args = {};
+for (let i = 0; i < argv.length; i += 2) args[argv[i].replace(/^--/, '')] = argv[i + 1];
 // usage: node scripts/orca-to-mid.js --grid --chords --scene --totalBars --tempo --out
 const gridText = readFileSync(args.grid, 'utf8');
 const chords = JSON.parse(readFileSync(args.chords, 'utf8'));
@@ -1353,7 +1367,10 @@ test('dry-run validates and reports without writing', async () => {
 //      → injectMidiIntoTrack(xml, part, sceneIndex, makeClipXml(...))
 // 6. for each audio part × scene: stems/<part>--<scene>.wav must exist
 //      → injectAudioIntoTrack(xml, part, sceneIndex, makeAudioClipXml(...))
-// 7. tempo: xml.replace(/<Tempo><Manual Value="[\d.]+"/, `<Tempo><Manual Value="${structure.tempo}"`)
+// 7. tempo: base → xml.replace(/<Tempo><Manual Value="[\d.]+"/, `<Tempo><Manual Value="${structure.tempo}"`)
+// 7b. scene tempo overrides: for scenes[i].tempo present → dentro del bloque <Scene Id="i">,
+//      set <Tempo><Manual Value="${sc.tempo}"/> (crear el elemento tras <Name> si no existe;
+//      confirmar la ruta exacta en el template con Select-String "<Tempo>" — Task 10 Step 7)
 // 8. locators: inject one <Locator> per arrangement entry boundary (time = cumulative beats)
 // 9. arrangement: clone clip-event donors per arrangement slot, Time = cumulative beats,
 //    clip content = same as session (read sidecars/wav refs)
@@ -1380,9 +1397,12 @@ test('dry-run validates and reports without writing', async () => {
 
 - [ ] **Step 1: Style session with user** (interactive gate). Checklist — record answers in `structure.json`:
   1. Sections + bars: proposal to confirm = Intro 4 / Verse 16 / Chorus 16 / Outro 4 (adjust by listening to reference)
-  2. Tempo: pick by ear against `sources/reference/je-veux.mp3` (user confirms; write number)
+  2. **Feel: BOSSA (decided 2026-09-24). Tempo path: SLOW → MID** — pin exact BPMs by ear against
+     `sources/reference/je-veux.mp3`: base `tempo` = mid value (arrangement default);
+     slow scenes (likely Intro+Verse) get `"tempo": <slow>` overrides, e.g. slow ≈ 68-76, mid ≈ 96-112
+     (user confirms both numbers in session)
   3. Arrangement order: proposal `["Intro","Verse","Chorus","Verse","Chorus","Outro"]` (user confirms/edits)
-  4. Feel: genre-faithful chanson + taste accents (user: electro-swing touch yes/no on percussion choice)
+  4. Percussion flavor: bossa (rim/brush + shaker feel) — grid uses recipe mapping (C1 kick, D1 snare/rim, F#1 hat) with bossa clave pattern; electro-swing accent = user decides yes/no in session
   5. Parts: midi `["keys","perc"]`, audio `["strings","texture"]` (extend if feel demands)
 - [ ] **Step 2: Author `chords.json`** from fetched sheet (`sources/sheets/je-veux.txt` via Task 5 `splitSections`+`parseChordLine`), align chords to bars (one chord per bar unless line clearly holds 2), validate: `node scripts/validate-structure.js songs/je-veux` extended flag or one-off node assert: every scene's `bars.length === scene.bars`.
 - [ ] **Step 3: Write `structure.json`** (values from Step 1) → `node -e "import('./scripts/validate-structure.js').then(m=>{const s=require('./songs/je-veux/structure.json');const e=m.validateStructure(s);if(e.length){console.error(e);process.exit(1)}console.log('OK')})"` (ESM note: use `node --input-type=module -e "..."` with `readFileSync` instead of require)
