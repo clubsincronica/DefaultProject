@@ -1404,6 +1404,11 @@ test('dry-run validates and reports without writing', async () => {
   3. Arrangement order: proposal `["Intro","Verse","Chorus","Verse","Chorus","Outro"]` (user confirms/edits)
   4. Percussion flavor: bossa (rim/brush + shaker feel) — grid uses recipe mapping (C1 kick, D1 snare/rim, F#1 hat) with bossa clave pattern; electro-swing accent = user decides yes/no in session
   5. Parts: midi `["keys","perc"]`, audio `["strings","texture"]` (extend if feel demands)
+  6. **Chord-symbol audit (Task 5 review gate):** every symbol in `sources/sheets/je-veux.txt`
+     must resolve to a real `QUALITIES` entry — the parser silently falls back to major triad
+     for tokenizer-accepted-but-untabled qualities (`min`, `add9`, `7sus4`…). Grep the sheet's
+     symbols, test each via `parseChord`/`voicing` (node REPL), extend `QUALITIES` (with tests)
+     for any missing one BEFORE authoring `structure.json`.
 - [ ] **Step 2: Author `chords.json`** from fetched sheet (`sources/sheets/je-veux.txt` via Task 5 `splitSections`+`parseChordLine`), align chords to bars (one chord per bar unless line clearly holds 2), validate: `node scripts/validate-structure.js songs/je-veux` extended flag or one-off node assert: every scene's `bars.length === scene.bars`.
 - [ ] **Step 3: Write `structure.json`** (values from Step 1) → `node -e "import('./scripts/validate-structure.js').then(m=>{const s=require('./songs/je-veux/structure.json');const e=m.validateStructure(s);if(e.length){console.error(e);process.exit(1)}console.log('OK')})"` (ESM note: use `node --input-type=module -e "..."` with `readFileSync` instead of require)
 - [ ] **Step 4: Author grids** — `orca/keys--verse.grid` etc. (format Task 6): style = chanson comping (root on 1, chord stabs on off-beats — model after the sheet's "papalapapapala" lilt); `orca/perc--verse.grid` with `# part=perc dur=2 program=0` (C1/D1 hits per recipe mapping). Minimum: 1 keys grid + 1 perc grid per unique scene (Intro/Outro may reuse).
