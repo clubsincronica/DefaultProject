@@ -50,6 +50,7 @@ Historial de fixes: `docs/Changelog.md`
   1. `node --test <dir>` NO recursa desde Node 21 (win32): usar `node --test` (bare) — script `npm test` corregido 2026-09-24.
   2. `parts` en `structure.json` van EN MINÚSCULAS (`keys`, `strings`, `texture`…): los nombres PascalCase (`Keys`, `Strings`) son SOLO de tracks de Ableton. Mapeo case-insensitive pendiente en builder (Task 13).
   3. El plan/planilla tenía rosters con mayúsculas y omitía check de `scene.name` — fixes A1/A2 (commits `294d1d4`, `6627859`). Revisar briefs del plan por bugs antes de ejecutarlos.
+  4. `strudel-render.js` NO acepta rutas absolutas de patrón (`join(ROOT, pat)` las rompe): pasar ruta RELATIVA a `pipeline-viral/` (lo hace `render-stems.js`). Regla "ABSOLUTE path" en AGENTS.md era incorrecta — fix `1041957`.
 
 ---
 
