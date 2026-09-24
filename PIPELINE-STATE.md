@@ -30,6 +30,7 @@ Historial de fixes: `docs/Changelog.md`
 11. **Pan law:** `aformat` mono→estereo aplica -3dB. Compensado con `volume=1.41254` en assemble.js.
 12. **Subtitle layout:** render.js: `ty=-40`, `blockCenter=1500`, maxLines=4. frames.js: `ty=80`, `blockCenter=1420`. Subtítulos NUNCA suben de Y=1416 (margen seguro sobre gráficos).
 13. **Guion NO inventa aspectos:** validate-astro.js es gate ANTES de storyboard.
+14. **Maya numeral compacto:** `gap=6` (no 12 ni 22), `GAP=10` (no 14). Tono 13 = 44px (antes 80-100px). Frames.js y render.js deben tener los MISMOS valores. Nunca subir gap por encima de 8.
 
 ### Issues abiertos
 
@@ -40,9 +41,18 @@ Historial de fixes: `docs/Changelog.md`
 
 ---
 
+## cancionero-rojo (karaoke backing tracks Ableton)
+
+- **Etapa actual:** Phase 1 en construcción (tooling + template + builder + canción #1 "Je Veux").
+- **Spec:** `docs/superpowers/specs/2026-09-24-cancionero-rojo-karaoke-design.md`.
+- **Pipeline:** ver `cancionero-rojo/AGENTS.md`.
+- **DO-NOT-REPEAT:** (acumular aquí los fixes de ejecución)
+
+---
+
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** H1-H6 COMPLETADO. H7-H10 GUIONES COMPLETADOS (2026-09-17, modo B artesanal, voz real continua 600s). **H7 y H8 VOZ REAL GRABADA + WHISPER + TRIM 600s** (2026-09-17). Pendiente H9-H10 grabación.
+- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24). H9-H10 guiones completos, pendiente grabación.
 - **Ultimo publicado:** Harmonic 64 = kins 253-256 (BLUEPRINT canonico).
 - **Pipeline:** `pipeline-viral/AGENTS.md` (tzolkin → chakra-freq → journey-composer → soundscape → breath-sync → [voz real continua 600s + whisper trim si silencias extra] → visual-meditation → assemble-meditation).
 - **Scripts clave:** `soundscape.js`, `voice-layer.js` (H1-H6), `visual-meditation.js`, `strudel-render.js`, `deliver.js`, `meditar.js` (opts.voiceFile), `kin-data.js` BLOCKS 7-10, `meditar-h7..h10.mjs`, `whisper-h7-h8.py` (detección secuencial power word), `trim-voice-by-whisper.js` (asplit+atrim+adelay+amix 600s).
@@ -76,7 +86,7 @@ Historial de fixes: `docs/Changelog.md`
 ### Issues abiertos
 
 - **Buffer posts viejos con video mudo** — 3 posts (FB, TikTok, IG) para borrar manual en dashboard.
-- **YouTube OAuth compartido** con club-sincronica. Fase 2: OAuth independiente.
+- **YouTube OAuth compartido** con club-sincronica — FIX 2026-09-24: refresh_token revocado, se re-autorizó via authorize-loopback. Se corrigió redirect_uri mismatch (trailing slash `http://localhost:8123/` vs `http://localhost:8123`) en client_secret.json y google-oauth.js. H7 y H8 publicados exitosamente.
 
 ---
 

@@ -1,0 +1,12 @@
+{
+  "name": "cancionero-rojo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/",
+    "build": "node ableton/builder/build.js"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.5.0"
+  }
+}

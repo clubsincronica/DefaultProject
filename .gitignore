@@ -24,3 +24,8 @@ credentials/
 audit-code-*.md
 audit-code-tasks.json
 audit-code-tareas.md
+
+# cancionero-rojo audio assets
+cancionero-rojo/**/*.wav
+cancionero-rojo/**/*.mp3
+cancionero-rojo/**/.tmp/
