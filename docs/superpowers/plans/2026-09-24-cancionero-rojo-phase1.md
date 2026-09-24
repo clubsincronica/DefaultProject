@@ -978,7 +978,7 @@ if (process.argv[1]?.endsWith('inspect-als.js') && process.argv[2]) {
 
 - [ ] **Step 4: Run, verify PASS**
 - [ ] **Step 5: Real-file run (donor discovery)** — `node scripts/inspect-als.js "C:\Users\tom_w\Music\Pistas\Metodo Mezcla 10\Jeckyl and Hyde Mezcla Project\Jeckyl and Hyde Mezcla.als"` and same for `C:\Users\tom_w\Music\Proyectos\Zamba Samurai\Zamba Samurai 25 Mayo.als`
-  - Expected: prints track lists (proves gunzip+parse on real Live 10 files). Record which file has BOTH audio and MIDI clips — it is the donor source for Task 10. If parse output looks wrong (encoding/structure), fix regexes here before proceeding.
+  - Expected: prints track lists (proves gunzip+parse on real Live 10 files). Record the donor matrix — which file has MIDI clips, audio clips, arrangement content, locators (F1 finding 2026-09-24: Jeckyl+Zamba are audio-only; MIDI donors = Live 10's own `Resources\Core Library\Lessons\Sets\Live 10 Suite Empty.als` / demo songs — see Task 10 Step 6). If parse output looks wrong (encoding/structure), fix regexes here before proceeding.
 - [ ] **Step 6: Commit** — `git add -A cancionero-rojo; git commit -m "feat(cancionero-rojo): .als inventory inspector (donor discovery)"`
 
 ---
@@ -1199,12 +1199,15 @@ grab(/<Locator Id="[\d]+"[\s\S]*?<\/Locator>/, 'locator',
   s => s.replace(/(<Name Value=")[^"]*(")/, '$1{{LOC_NAME}}$2'));
 ```
 
-- [ ] **Step 6: Run extraction on both donor candidates** (files from Task 8 Step 5):
+- [ ] **Step 6: Run extraction — MidiClip donor FIRST** (F1 amendment 2026-09-24: Jeckyl/Zamba are audio-only — `MidiClip`/`MidiNote` = 0 in both; discovered by Task 8):
 
 ```powershell
+node scripts/extract-donors.js "C:\Users\tom_w\Music\_Serato_\Program\Live\Resources\Core Library\Lessons\Sets\Live 10 Suite Empty.als"
 node scripts/extract-donors.js "C:\Users\tom_w\Music\Proyectos\Zamba Samurai\Zamba Samurai 25 Mayo.als"
 node scripts/extract-donors.js "C:\Users\tom_w\Music\Pistas\Metodo Mezcla 10\Jeckyl and Hyde Mezcla Project\Jeckyl and Hyde Mezcla.als"
 ```
+
+(The first — official Live 10 Suite set: 12 midi + 3 audio tracks, returns=2, locators=1, has MidiClip+MidiNote — yields `midi-clip.xml`, likely `clip-event-midi.xml` and `locator.xml`; the two originals cover audio/arrangement fragments. Later runs overwrite same-named fragments: keep whichever source yields each fragment and record provenance in xml-map.md.)
 
 Expected: `ableton/donors/` has `midi-clip.xml` + `audio-clip.xml` + `locator.xml` (+ `clip-event.xml` if present — grep an .als for `ClipEvent`; if absent, arrangement injection in Task 13 falls back to **cloning the donor session clip into arrangement structure discovered in Task 13 Step 1**).
 
