@@ -1,0 +1,6 @@
+{
+  "sections": {
+    "Verse":   { "bars": ["Am", "G", "F", "E", "Am", "G", "F", "E"] },
+    "Chorus":  { "bars": ["Am", "G", "F", "G", "E", "Am", "G", "E"] }
+  }
+}
