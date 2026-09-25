@@ -43,7 +43,7 @@ Historial de fixes: `docs/Changelog.md`
 
 ## cancionero-rojo (karaoke backing tracks Ableton)
 
-- **Etapa actual:** Phase 1 en construcción (tooling + template + builder + canción #1 "Je Veux").
+- **Etapa actual:** Phase 1 en construcción (tooling + template + builder + canción #1 "Je Veux"). Task 9: `ableton/template.als` GENERADO por `scripts/build-template.js` (donor Live 10 Suite Empty; 8 tracks roster, 16 escenas, 2 returns) — falta Step 7: gate humano (abrir en Live 10 sin repair, mapeo MIDI, swap por oído).
 - **Spec:** `docs/superpowers/specs/2026-09-24-cancionero-rojo-karaoke-design.md`.
 - **Pipeline:** ver `cancionero-rojo/AGENTS.md`.
 - **DO-NOT-REPEAT:**
@@ -51,12 +51,17 @@ Historial de fixes: `docs/Changelog.md`
   2. `parts` en `structure.json` van EN MINÚSCULAS (`keys`, `strings`, `texture`…): los nombres PascalCase (`Keys`, `Strings`) son SOLO de tracks de Ableton. Mapeo case-insensitive pendiente en builder (Task 13).
   3. El plan/planilla tenía rosters con mayúsculas y omitía check de `scene.name` — fixes A1/A2 (commits `294d1d4`, `6627859`). Revisar briefs del plan por bugs antes de ejecutarlos.
   4. `strudel-render.js` NO acepta rutas absolutas de patrón (`join(ROOT, pat)` las rompe): pasar ruta RELATIVA a `pipeline-viral/` (lo hace `render-stems.js`). Regla "ABSOLUTE path" en AGENTS.md era incorrecta — fix `1041957`.
+  5. Renumerar Ids de clones de `.als` por clave `(nombre,id)`: renumerar solo por id hizo que un `FileRef Id="0"` pisara `TrackSendHolder Id="0"`. `(nombre,id)` repetido DENTRO de un clon = índice local → NO renumerar. Reglas completas en `cancionero-rojo/ableton/xml-map.md`.
+  6. `build-template.js` es la ÚNICA fuente de `ableton/template.als` (regenera y valida; no escribe si falla). NO editar el .als a mano: el próximo build lo pisa. Sends que la receta no lista → floor `0.0003162277571` (borra cruft de la lección donor).
 
 ---
 
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24). H9-H10 guiones completos, pendiente grabación.
+- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. H9-H10 guiones completos, pendiente grabación.
+  - H7: https://youtu.be/weebjoc890g (Meditación sobre Armónica 7, Remotion final 309MB)
+  - H8: https://youtu.be/JeS82kwTpZ0 (Meditación sobre Armónica 8, Remotion final 313MB)
+  - NOTA: Se subieron videos intermedios (~21MB) antes de corregir; re-subir con Remotion final y borrar los videos incorrectos.
 - **Ultimo publicado:** Harmonic 64 = kins 253-256 (BLUEPRINT canonico).
 - **Pipeline:** `pipeline-viral/AGENTS.md` (tzolkin → chakra-freq → journey-composer → soundscape → breath-sync → [voz real continua 600s + whisper trim si silencias extra] → visual-meditation → assemble-meditation).
 - **Scripts clave:** `soundscape.js`, `voice-layer.js` (H1-H6), `visual-meditation.js`, `strudel-render.js`, `deliver.js`, `meditar.js` (opts.voiceFile), `kin-data.js` BLOCKS 7-10, `meditar-h7..h10.mjs`, `whisper-h7-h8.py` (detección secuencial power word), `trim-voice-by-whisper.js` (asplit+atrim+adelay+amix 600s).
@@ -82,8 +87,8 @@ Historial de fixes: `docs/Changelog.md`
 | H4 | 13-16 | Sep 8-11 | 141.27 Hz (Garganta) | COMPLETADO |
 | H5 | 17-20 | Sep 12-15 | 172.06 Hz (Corona) | YouTube ✓, Buffer programado 2026-09-15 |
 | H6 | 21-24 | Sep 16-19 | 141.27 Hz (Garganta) | YouTube ✓, Buffer programado 2026-09-16 |
-| H7 | 25-28 | Sep 20-23 | 141.27 Hz (Garganta) | Guion ✓, Voz ✓ raw 571s → trimmed 600s (whisper +15-47s, realineado) |
-| H8 | 29-32 | Sep 24-27 | 172.06 Hz (Corona) | Guion ✓, Voz ✓ raw 605s → trimmed 600s (whisper +7-22s, realineado) |
+| H7 | 25-28 | Sep 20-23 | 141.27 Hz (Garganta) | **YouTube ✓ (weebjoc890g), Buffer ✓ (2026-09-25)** |
+| H8 | 29-32 | Sep 24-27 | 172.06 Hz (Corona) | **YouTube ✓ (JeS82kwTpZ0), Buffer ✓ (2026-09-25)** |
 | H9 | 33-36 | Sep 28-Oct 1 | 194.18 Hz (Raíz) | Guion ✓ (190/193/190/215w), pendiente WAV 600s |
 | H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | Guion ✓ (193/188/207/234w), pendiente WAV 600s |
 
@@ -91,6 +96,9 @@ Historial de fixes: `docs/Changelog.md`
 
 - **Buffer posts viejos con video mudo** — 3 posts (FB, TikTok, IG) para borrar manual en dashboard.
 - **YouTube OAuth compartido** con club-sincronica — FIX 2026-09-24: refresh_token revocado, se re-autorizó via authorize-loopback. Se corrigió redirect_uri mismatch (trailing slash `http://localhost:8123/` vs `http://localhost:8123`) en client_secret.json y google-oauth.js. H7 y H8 publicados exitosamente.
+- **Cloudinary free tier limit** — videos >100MB dan 413 error. Se usaron versiones `-compressed.mp4` del Remotion-poc (600s, ~50MB). URL Cloudinary tienen doble `club-sincronica/` en path por config de folder+public_id en upload-cloudinary-sdk.js.
+- **Facebook Reels rechaza videos >90s** — H7 y H8 (600s) rechazados por Buffer para Facebook. **FIX 2026-09-24**: se usan teasers (~6s) como video regular (type: 'post') para Facebook, con link al video completo de YouTube. Teasers subidos a Cloudinary.
+- **Pipeline-viral credentials** — canal.env con `pipeline.viral.canales@gmail.com` aún sin OAuth propio. Se usa el OAuth compartido de club-sincronica.
 
 ---
 
