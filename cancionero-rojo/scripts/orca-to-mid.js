@@ -11,7 +11,10 @@ const gridText = readFileSync(args.grid, 'utf8');
 const chords = JSON.parse(readFileSync(args.chords, 'utf8'));
 const scene = chords.sections[args.scene];
 if (!scene) { console.error(`scene not in chords.json: ${args.scene}`); process.exit(1); }
-const { notes, warnings, header } = buildNotes(gridText, scene, { totalBars: parseInt(args.totalBars, 10) });
+const headerPre = {};
+for (const l of gridText.split(/\r?\n/).filter(l => l.trim() !== '')) if (l.startsWith('#')) for (const m of l.matchAll(/(\w+)=([^\s#]+)/g)) headerPre[m[1]] = m[2];
+const effectivePart = (headerPre.part ?? 'keys').toLowerCase();
+const { notes, warnings, header } = buildNotes(gridText, scene, { totalBars: parseInt(args.totalBars, 10), part: effectivePart });
 for (const w of warnings) console.warn('WARN', w);
 const buf = writeSmf({ tempo: parseFloat(args.tempo), timeSig: [4, 4], notes, program: parseInt(args.program ?? header.program ?? '0', 10) });
 mkdirSync(dirname(args.out), { recursive: true });
