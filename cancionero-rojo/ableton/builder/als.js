@@ -93,10 +93,15 @@ export function setSceneNames(state, names) {
   if (scenes.length < names.length) throw new Error(`only ${scenes.length} scenes, need ${names.length}`);
   names.forEach((nm, i) => {
     const sceneObj = scenes[i];
+    // Template stores name as <Scene Value=""> attribute (Live 10). Also support legacy <Name><EffectiveName> fixtures.
+    if (sceneObj[':@']) {
+      sceneObj[':@']['@_Value'] = nm;
+    }
     const sceneChildren = sceneObj.Scene;
     if (!Array.isArray(sceneChildren)) return;
     let nameNode = sceneChildren.find((x) => x.Name);
     if (!nameNode) {
+      // create Name child for legacy parsers, but primary is @_Value above
       sceneChildren.unshift({ Name: [{ EffectiveName: [], ':@': { '@_Value': nm } }] });
       return;
     }
@@ -106,8 +111,6 @@ export function setSceneNames(state, names) {
     if (effNode) {
       if (!effNode[':@']) effNode[':@'] = {};
       effNode[':@']['@_Value'] = nm;
-      // also handle legacy representation where attribute stored as child element
-      // ensure no stale '@_Value' inside array child
       if (Array.isArray(effNode.EffectiveName) && effNode.EffectiveName.length > 0) {
         const first = effNode.EffectiveName[0];
         if (first && typeof first === 'object' && '@_Value' in first) {

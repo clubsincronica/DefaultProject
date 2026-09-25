@@ -75,14 +75,27 @@ Expected `donors/` tras `node scripts/extract-donors.js "<Live 10 Suite Empty.al
 
 | Concepto | Ruta exacta | Valor template |
 |---|---|---|
-| Escenas lista | `LiveSet > MasterTrack > SessionView > Scenes` | 16 × `<Scene Id="..." Value="">` |
-| Escena body (builder) | `Scene > Name > EffectiveName Value="{{SCENE_NAME}}"` | `setSceneNames` escribe `:@.@_Value` |
-| Tempo global | `LiveSet > MasterTrack > Tempo > Manual Value` + `AutomationTarget Id` | `100` (Manual) |
+| Escenas lista | `LiveSet > SceneNames > Scene` (NO MasterTrack, NO SessionView) | 16 × `<Scene Id="..." Value="">` (template): `LiveSet/SceneNames/Scene[@Value]` |
+| Escena body (builder) | `Scene[@Value="{{SCENE_NAME}}"]` (template) / `Scene > Name > EffectiveName Value` (fixture legacy) | `setSceneNames` escribe `:@.@_Value` en `Scene` + `Name/EffectiveName` si existe |
+| Tempo global | `LiveSet > MasterTrack > Tempo > Manual Value` + `AutomationTarget Id` → **REAL es `LiveSet > Tempo > Manual Value` (sibling de Tracks, no de MasterTrack)** | `100` (Manual) — descubierto Task 13: `Select-String "<Tempo>"` da `LiveSet/Tempo` |
+| Scene tempo override | `Scene Id="i" > <Tempo><Manual Value="{{SC_TEMPO}}"/>` (no existe en template → crear tras `<LomId>`/antes de `</Scene>`) | inyecta `inject-arrangement.js:injectSceneTempos` |
 | TimeSignature | `LiveSet > TimeSignature > TimeSignatures > RemoteableTimeSignature > Numerator/Denominator` | 4/4 |
 | Track body by name | `LiveSet > Tracks > *[EffectiveName Value="<Mic Lead|Keys|...>"]` | `findTrackBody(xml,name)` busca `EffectiveName Value` y devuelve `{start,end}` del `<...Track>` |
 | Slots order | `Track > DeviceChain > MainSequencer|FreezeSequencer > ClipSlotList > ClipSlot Id="0".."15"` | orden slot = escena index |
-| Arrangement container | `Track > DeviceChain > MainSequencer > ClipTimeable > ArrangerAutomation > Events` | `<Events />` vacío; Task 13 inyecta `<MidiClipEvent>`/`<AudioClipEvent>` clonando donor session clip |
-| Locator container | `LiveSet > Locators > Locators` | 1 × `<Locator Id="2" Time="{{TIME}}" Name="{{LOC_NAME}}">` |
+| Arrangement container | `Track > DeviceChain > MainSequencer > ClipTimeable > ArrangerAutomation > Events` | `<Events />` vacío (19 ocurrencias en template: 8 tracks ×2 sequencers + master?); Task 13 inyecta `<MidiClip>`/`<AudioClip>` clonando donor session clip con `Time="{{CUM_BEATS}}"` (fallback porque `<ClipEvent>` ausente en donors/template) |
+| Locator container | `LiveSet > Locators > Locators` | 1 × `<Locator Id="2" Time="{{TIME}}" Name="{{LOC_NAME}}">` → Task 13 añade 1 por boundary (`Time = cumul beats`) |
+
+### Task 13 — Arrangement container discovery (2026-09-25)
+
+```powershell
+Select-String -Path ableton/template.als -Pattern "ArrangerAutomation"  # 19 × <ArrangerAutomation><Events /></ArrangerAutomation>
+Select-String -Path ableton/template.als -Pattern "ClipEvent"          # 0 (template vacío — esperado)
+Select-String -Path ableton/template.als -Pattern "Locators"           # 2 tags, <Locators><Locators> + </Locators></Locators>
+Select-String -Path ableton/template.als -Pattern "<Tempo>"            # 1 global: LiveSet/Tempo/Manual Value="100"
+Select-String -Path ableton/donors/clip-event*.xml -Pattern "ClipEvent" # NOT FOUND → fallback Task 13: clonar <MidiClip>/<AudioClip> donor en ArrangerAutomation/Events con Time=cumulative
+```
+- Si `<ClipEvent` ausente (template vacío): usar `ableton/donors/midi-clip.xml` + `audio-clip.xml` como donors de arrangement (mismo contenido que session, `Time` = beats acumulados).
+- `ableton/builder/inject-arrangement.js` provee `injectLocators`, `injectSceneTempos`, `injectArrangement` (IDs fresh desde 3000). Verificado: template sin `ClipEvent` → arranjo se rellena con clones session.
 
 ## Master (`<MasterTrack>` sin Id)
 
