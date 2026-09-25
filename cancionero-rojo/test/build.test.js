@@ -12,7 +12,16 @@ const FIXTURE_SLUG = '_fixture';
 
 function setupFixture() {
   const dir = join(ROOT, 'songs', FIXTURE_SLUG);
-  rmSync(dir, { recursive: true, force: true });
+  try { rmSync(dir, { recursive: true, force: true }); } catch (e) {
+    if (e.code === 'EBUSY') {
+      // Windows lock on empty output dir (AV/indexer) — clean contents individually
+      for (const sub of ['output','clips','stems']) {
+        try { rmSync(join(dir, sub), { recursive: true, force: true }); } catch {}
+      }
+      try { rmSync(join(dir, 'structure.json'), { force: true }); } catch {}
+      try { rmSync(join(dir, 'chords.json'), { force: true }); } catch {}
+    } else throw e;
+  }
   mkdirSync(join(dir, 'clips'), { recursive: true });
   mkdirSync(join(dir, 'stems'), { recursive: true });
   const structure = {

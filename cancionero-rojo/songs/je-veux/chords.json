@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "Intro": { "bars": ["Am", "G", "F", "E"] },
+    "Verse": { "bars": ["Am", "G", "F", "C", "E", "Am", "G", "F", "C", "E", "Am", "G", "F", "C", "F", "G"] },
+    "Chorus": { "bars": ["Am", "G", "F", "G", "E", "Am", "G", "F", "G", "E", "Am", "G", "F", "G", "E", "Am"] },
+    "Outro": { "bars": ["Am", "G", "F", "E"] }
+  }
+}

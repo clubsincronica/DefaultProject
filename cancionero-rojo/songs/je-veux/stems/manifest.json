@@ -1,0 +1,50 @@
+[
+  {
+    "part": "strings",
+    "section": "Intro",
+    "file": "stems/strings--Intro.wav",
+    "seconds": 9.795918367346939
+  },
+  {
+    "part": "strings",
+    "section": "Verse",
+    "file": "stems/strings--Verse.wav",
+    "seconds": 39.183673469387756
+  },
+  {
+    "part": "strings",
+    "section": "Chorus",
+    "file": "stems/strings--Chorus.wav",
+    "seconds": 39.183673469387756
+  },
+  {
+    "part": "strings",
+    "section": "Outro",
+    "file": "stems/strings--Outro.wav",
+    "seconds": 9.795918367346939
+  },
+  {
+    "part": "texture",
+    "section": "Intro",
+    "file": "stems/texture--Intro.wav",
+    "seconds": 9.795918367346939
+  },
+  {
+    "part": "texture",
+    "section": "Verse",
+    "file": "stems/texture--Verse.wav",
+    "seconds": 39.183673469387756
+  },
+  {
+    "part": "texture",
+    "section": "Chorus",
+    "file": "stems/texture--Chorus.wav",
+    "seconds": 39.183673469387756
+  },
+  {
+    "part": "texture",
+    "section": "Outro",
+    "file": "stems/texture--Outro.wav",
+    "seconds": 9.795918367346939
+  }
+]

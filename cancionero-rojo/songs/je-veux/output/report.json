@@ -1,0 +1,29 @@
+{
+  "slug": "je-veux",
+  "scenes": [
+    "Intro",
+    "Verse",
+    "Chorus",
+    "Outro"
+  ],
+  "tempo": 98,
+  "tracksCovered": {
+    "Keys": 4,
+    "Perc": 4,
+    "Strings": 4,
+    "Texture": 4
+  },
+  "stems": 8,
+  "mids": 8,
+  "missing": [],
+  "template": "OK",
+  "arrangement": [
+    "Intro",
+    "Verse",
+    "Chorus",
+    "Verse",
+    "Chorus",
+    "Outro"
+  ],
+  "output": "C:\\Users\\tom_w\\Documents\\Default Project\\cancionero-rojo\\songs\\je-veux\\output\\je-veux.als"
+}

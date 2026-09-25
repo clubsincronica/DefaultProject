@@ -43,7 +43,8 @@ Historial de fixes: `docs/Changelog.md`
 
 ## cancionero-rojo (karaoke backing tracks Ableton)
 
-- **Etapa actual:** Phase 1 en construcción (tooling + template + builder + canción #1 "Je Veux"). Task 9: `ableton/template.als` GENERADO por `scripts/build-template.js` (donor Live 10 Suite Empty; 8 tracks roster, 16 escenas, 2 returns) — falta Step 7: gate humano (abrir en Live 10 sin repair, mapeo MIDI, swap por oído).
+- **Etapa actual:** Phase 1 COMPLETADA — canción #1 "Je Veux" shippeada (2026-09-25). Output: `songs/je-veux/output/je-veux.als` (bossa slow→mid 72/98, 4 scenes, 6 locators, 8 mids + 8 stems, 49/49 tests). Template `ableton/template.als` regenerado y validado (199KB gz).
+- **Canción #1 "Je Veux":** COMPLETADA (2026-09-25). Output: songs/je-veux/output/je-veux.als. Grids: orca/keys+perc ×4 scenes (chanson comping + bossa clave); Patterns: strings.js/texture.js (sawtooth pad + brown/sine bed); Stems: 8 WAVs (10-40s); Build: --dry-run OK → build OK, inspect 16 scenes/6 locators/tempo 98.
 - **Spec:** `docs/superpowers/specs/2026-09-24-cancionero-rojo-karaoke-design.md`.
 - **Pipeline:** ver `cancionero-rojo/AGENTS.md`.
 - **DO-NOT-REPEAT:**
@@ -53,6 +54,8 @@ Historial de fixes: `docs/Changelog.md`
   4. `strudel-render.js` NO acepta rutas absolutas de patrón (`join(ROOT, pat)` las rompe): pasar ruta RELATIVA a `pipeline-viral/` (lo hace `render-stems.js`). Regla "ABSOLUTE path" en AGENTS.md era incorrecta — fix `1041957`.
   5. Renumerar Ids de clones de `.als` por clave `(nombre,id)`: renumerar solo por id hizo que un `FileRef Id="0"` pisara `TrackSendHolder Id="0"`. `(nombre,id)` repetido DENTRO de un clon = índice local → NO renumerar. Reglas completas en `cancionero-rojo/ableton/xml-map.md`.
   6. `build-template.js` es la ÚNICA fuente de `ableton/template.als` (regenera y valida; no escribe si falla). NO editar el .als a mano: el próximo build lo pisa. Sends que la receta no lista → floor `0.0003162277571` (borra cruft de la lección donor).
+  7. `songs/_fixture/output` queda bloqueado por AV/indexer (EBUSY en win32) tras tests: `setupFixture` debe tolerar EBUSY y limpiar subcarpetas individualmente (patch 2026-09-25 en build.test.js). No borrar todo `songs/_fixture` con `rmSync` a ciegas.
+  8. Template XML inválido si se interrumpe `build-template.js` ( DeviceChain/MidiToAudioDeviceChain mismatch → fast-xml-parser addChild): regenerar con `node scripts/build-template.js` y validar `XMLValidator.validate` antes de builder.
 
 ---
 
