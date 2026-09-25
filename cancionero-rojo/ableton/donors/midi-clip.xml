@@ -1,0 +1,566 @@
+<MidiClip Id="0" Time="0">
+											<LomId Value="0" />
+											<LomIdView Value="0" />
+											<WarpMarkers>
+												<WarpMarker Id="0" SecTime="0" BeatTime="0" />
+												<WarpMarker Id="1" SecTime="0.03125" BeatTime="0.03125" />
+											</WarpMarkers>
+											<MarkersGenerated Value="false" />
+											<CurrentStart Value="0" />
+											<CurrentEnd Value="{{DUR_BEATS}}" />
+											<Loop>
+												<LoopStart Value="0" />
+												<LoopEnd Value="{{DUR_BEATS}}" />
+												<StartRelative Value="0" />
+												<LoopOn Value="true" />
+												<OutMarker Value="{{DUR_BEATS}}" />
+												<HiddenLoopStart Value="0" />
+												<HiddenLoopEnd Value="24" />
+											</Loop>
+											<Name Value="{{CLIP_NAME}}" />
+											<Annotation Value="" />
+											<ColorIndex Value="22" />
+											<LaunchMode Value="0" />
+											<LaunchQuantisation Value="0" />
+											<TimeSignature>
+												<TimeSignatures>
+													<RemoteableTimeSignature Id="0">
+														<Numerator Value="4" />
+														<Denominator Value="4" />
+														<Time Value="0" />
+													</RemoteableTimeSignature>
+												</TimeSignatures>
+											</TimeSignature>
+											<Envelopes>
+												<Envelopes>
+													<ClipEnvelope Id="0">
+														<EnvelopeTarget>
+															<PointeeId Value="152145" />
+														</EnvelopeTarget>
+														<Automation>
+															<Events>
+																<FloatEvent Id="0" Time="-63072000" Value="62" />
+																<FloatEvent Id="1" Time="0" Value="62" />
+																<FloatEvent Id="2" Time="0" Value="63.5" />
+																<FloatEvent Id="3" Time="8" Value="63.5" />
+																<FloatEvent Id="4" Time="8" Value="62" />
+																<FloatEvent Id="5" Time="24" Value="62" />
+																<FloatEvent Id="6" Time="24" Value="63.5" />
+															</Events>
+														</Automation>
+														<LoopSlot>
+															<Value />
+														</LoopSlot>
+														<ScrollerTimePreserver>
+															<LeftTime Value="0" />
+															<RightTime Value="0" />
+														</ScrollerTimePreserver>
+													</ClipEnvelope>
+													<ClipEnvelope Id="1">
+														<EnvelopeTarget>
+															<PointeeId Value="150079" />
+														</EnvelopeTarget>
+														<Automation>
+															<Events>
+																<FloatEvent Id="0" Time="-63072000" Value="-24" />
+																<FloatEvent Id="1" Time="0" Value="-24" />
+																<FloatEvent Id="2" Time="0" Value="-31.6626511" />
+																<FloatEvent Id="3" Time="16" Value="-26.4578304" />
+																<FloatEvent Id="5" Time="24" Value="-27.0887184" />
+															</Events>
+														</Automation>
+														<LoopSlot>
+															<Value />
+														</LoopSlot>
+														<ScrollerTimePreserver>
+															<LeftTime Value="0" />
+															<RightTime Value="0" />
+														</ScrollerTimePreserver>
+													</ClipEnvelope>
+													<ClipEnvelope Id="2">
+														<EnvelopeTarget>
+															<PointeeId Value="150859" />
+														</EnvelopeTarget>
+														<Automation>
+															<Events>
+																<FloatEvent Id="0" Time="-63072000" Value="-24" />
+																<FloatEvent Id="1" Time="0" Value="-24" />
+																<FloatEvent Id="2" Time="0" Value="-21.2530098" />
+																<FloatEvent Id="3" Time="16" Value="-16.048193" />
+																<FloatEvent Id="5" Time="24" Value="-16.679081" />
+															</Events>
+														</Automation>
+														<LoopSlot>
+															<Value />
+														</LoopSlot>
+														<ScrollerTimePreserver>
+															<LeftTime Value="0" />
+															<RightTime Value="0" />
+														</ScrollerTimePreserver>
+													</ClipEnvelope>
+													<ClipEnvelope Id="4">
+														<EnvelopeTarget>
+															<PointeeId Value="152656" />
+														</EnvelopeTarget>
+														<Automation>
+															<Events>
+																<BoolEvent Id="0" Time="-63072000" Value="false" />
+																<BoolEvent Id="1" Time="0" Value="false" />
+																<BoolEvent Id="2" Time="0" Value="true" />
+																<BoolEvent Id="3" Time="23.940295121545123" Value="true" />
+																<BoolEvent Id="4" Time="23.979951819014317" Value="false" />
+															</Events>
+														</Automation>
+														<LoopSlot>
+															<Value />
+														</LoopSlot>
+														<ScrollerTimePreserver>
+															<LeftTime Value="0" />
+															<RightTime Value="0" />
+														</ScrollerTimePreserver>
+													</ClipEnvelope>
+													<ClipEnvelope Id="5">
+														<EnvelopeTarget>
+															<PointeeId Value="152662" />
+														</EnvelopeTarget>
+														<Automation>
+															<Events>
+																<FloatEvent Id="0" Time="-63072000" Value="121.803276" />
+																<FloatEvent Id="1" Time="0" Value="121.803276" />
+																<FloatEvent Id="2" Time="0" Value="61.4754105" />
+																<FloatEvent Id="3" Time="3.2711111804861805" Value="61.4754105" />
+																<FloatEvent Id="4" Time="3.2711111804861805" Value="62.1038246" />
+																<FloatEvent Id="5" Time="3.359999895937396" Value="62.1038246" />
+																<FloatEvent Id="6" Time="3.359999895937396" Value="63.3606567" />
+																<FloatEvent Id="7" Time="3.395555486180486" Value="63.3606567" />
+																<FloatEvent Id="8" Time="3.395555486180486" Value="63.9890709" />
+																<FloatEvent Id="9" Time="4.515555538211788" Value="63.9890709" />
+																<FloatEvent Id="10" Time="4.515555538211788" Value="64.617485" />
+																<FloatEvent Id="11" Time="4.5511111284548784" Value="64.617485" />
+																<FloatEvent Id="12" Time="4.5511111284548784" Value="65.245903" />
+																<FloatEvent Id="13" Time="4.5866667186979688" Value="65.245903" />
+																<FloatEvent Id="14" Time="4.5866667186979688" Value="67.1311493" />
+																<FloatEvent Id="15" Time="5.4044445138195139" Value="67.1311493" />
+																<FloatEvent Id="16" Time="5.4044445138195139" Value="67.759552" />
+																<FloatEvent Id="17" Time="6.1688889235764233" Value="67.759552" />
+																<FloatEvent Id="18" Time="6.1688889235764233" Value="68.38797" />
+																<FloatEvent Id="19" Time="6.2222223089410589" Value="68.38797" />
+																<FloatEvent Id="20" Time="6.2222223089410589" Value="69.0163879" />
+																<FloatEvent Id="21" Time="6.2400001040626041" Value="69.0163879" />
+																<FloatEvent Id="22" Time="6.2400001040626041" Value="69.6448059" />
+																<FloatEvent Id="23" Time="7.4488888715451216" Value="69.6448059" />
+																<FloatEvent Id="24" Time="7.4488888715451216" Value="70.2732239" />
+																<FloatEvent Id="25" Time="8.1422221008158502" Value="70.2732239" />
+																<FloatEvent Id="26" Time="8.1422221008158502" Value="70.9016418" />
+																<FloatEvent Id="27" Time="8.1777776910589406" Value="70.9016418" />
+																<FloatEvent Id="28" Time="8.1777776910589406" Value="72.1584702" />
+																<FloatEvent Id="29" Time="8.213333281302031" Value="72.1584702" />
+																<FloatEvent Id="30" Time="8.213333281302031" Value="73.4152985" />
+																<FloatEvent Id="31" Time="8.7288888195138199" Value="73.4152985" />
+																<FloatEvent Id="32" Time="8.7288888195138199" Value="74.0437164" />
+																<FloatEvent Id="33" Time="8.7644444097569103" Value="74.0437164" />
+																<FloatEvent Id="34" Time="8.7644444097569103" Value="74.6721344" />
+																<FloatEvent Id="35" Time="9.2266665626040627" Value="74.6721344" />
+																<FloatEvent Id="36" Time="9.2266665626040627" Value="75.3005447" />
+																<FloatEvent Id="37" Time="9.2622221528471531" Value="75.3005447" />
+																<FloatEvent Id="38" Time="9.2622221528471531" Value="76.5573807" />
+																<FloatEvent Id="39" Time="9.3333333333333339" Value="76.5573807" />
+																<FloatEvent Id="40" Time="9.3333333333333339" Value="77.185791" />
+																<FloatEvent Id="41" Time="9.4933332292707284" Value="77.185791" />
+																<FloatEvent Id="42" Time="9.4933332292707284" Value="77.814209" />
+																<FloatEvent Id="43" Time="9.6888889756077248" Value="77.814209" />
+																<FloatEvent Id="44" Time="9.6888889756077248" Value="78.4426193" />
+																<FloatEvent Id="45" Time="10.346666614635364" Value="78.4426193" />
+																<FloatEvent Id="46" Time="10.346666614635364" Value="79.0710373" />
+																<FloatEvent Id="47" Time="10.488888975607725" Value="79.0710373" />
+																<FloatEvent Id="48" Time="10.488888975607725" Value="79.6994553" />
+																<FloatEvent Id="49" Time="11.395555486180486" Value="79.6994553" />
+																<FloatEvent Id="50" Time="11.395555486180486" Value="80.3278656" />
+																<FloatEvent Id="51" Time="11.431111076423576" Value="80.3278656" />
+																<FloatEvent Id="52" Time="11.431111076423576" Value="80.9562836" />
+																<FloatEvent Id="53" Time="11.448888871545121" Value="80.9562836" />
+																<FloatEvent Id="54" Time="11.448888871545121" Value="81.5847015" />
+																<FloatEvent Id="55" Time="11.466666666666667" Value="81.5847015" />
+																<FloatEvent Id="56" Time="11.466666666666667" Value="82.2131119" />
+																<FloatEvent Id="57" Time="11.520000052031302" Value="82.2131119" />
+																<FloatEvent Id="58" Time="11.520000052031302" Value="82.8415298" />
+																<FloatEvent Id="59" Time="11.591111232517482" Value="82.8415298" />
+																<FloatEvent Id="60" Time="11.591111232517482" Value="83.4699478" />
+																<FloatEvent Id="61" Time="11.822222308941059" Value="83.4699478" />
+																<FloatEvent Id="62" Time="11.822222308941059" Value="84.0983582" />
+																<FloatEvent Id="63" Time="11.875555434149184" Value="84.0983582" />
+																<FloatEvent Id="64" Time="11.875555434149184" Value="84.7267761" />
+																<FloatEvent Id="65" Time="12.071111180486181" Value="84.7267761" />
+																<FloatEvent Id="66" Time="12.071111180486181" Value="85.3551941" />
+																<FloatEvent Id="67" Time="12.106666770729271" Value="85.3551941" />
+																<FloatEvent Id="68" Time="12.106666770729271" Value="85.9836044" />
+																<FloatEvent Id="69" Time="12.159999895937396" Value="85.9836044" />
+																<FloatEvent Id="70" Time="12.159999895937396" Value="86.6120224" />
+																<FloatEvent Id="71" Time="12.337777847152847" Value="86.6120224" />
+																<FloatEvent Id="72" Time="12.337777847152847" Value="87.2404404" />
+																<FloatEvent Id="73" Time="12.408888767482518" Value="87.2404404" />
+																<FloatEvent Id="74" Time="12.408888767482518" Value="87.8688507" />
+																<FloatEvent Id="75" Time="12.497777743090243" Value="87.8688507" />
+																<FloatEvent Id="76" Time="12.497777743090243" Value="89.1256866" />
+																<FloatEvent Id="77" Time="12.515555538211789" Value="89.1256866" />
+																<FloatEvent Id="78" Time="12.515555538211789" Value="89.754097" />
+																<FloatEvent Id="79" Time="12.622222308941058" Value="89.754097" />
+																<FloatEvent Id="80" Time="12.622222308941058" Value="90.382515" />
+																<FloatEvent Id="81" Time="12.640000104062604" Value="90.382515" />
+																<FloatEvent Id="82" Time="12.640000104062604" Value="91.0109253" />
+																<FloatEvent Id="83" Time="12.693333229270729" Value="91.0109253" />
+																<FloatEvent Id="84" Time="12.693333229270729" Value="91.6393433" />
+																<FloatEvent Id="85" Time="12.853333385364635" Value="91.6393433" />
+																<FloatEvent Id="86" Time="12.853333385364635" Value="92.2677612" />
+																<FloatEvent Id="87" Time="12.888888975607726" Value="92.2677612" />
+																<FloatEvent Id="88" Time="12.888888975607726" Value="92.8961716" />
+																<FloatEvent Id="89" Time="13.066666666666666" Value="92.8961716" />
+																<FloatEvent Id="90" Time="13.066666666666666" Value="93.5245895" />
+																<FloatEvent Id="91" Time="13.084444461788213" Value="93.5245895" />
+																<FloatEvent Id="92" Time="13.084444461788213" Value="94.1530075" />
+																<FloatEvent Id="93" Time="13.102222256909757" Value="94.1530075" />
+																<FloatEvent Id="94" Time="13.102222256909757" Value="94.7814178" />
+																<FloatEvent Id="95" Time="13.404444513819513" Value="94.7814178" />
+																<FloatEvent Id="96" Time="13.404444513819513" Value="95.4098358" />
+																<FloatEvent Id="97" Time="13.422222308941059" Value="95.4098358" />
+																<FloatEvent Id="98" Time="13.422222308941059" Value="96.0382538" />
+																<FloatEvent Id="99" Time="13.440000104062603" Value="96.0382538" />
+																<FloatEvent Id="100" Time="13.440000104062603" Value="97.2950821" />
+																<FloatEvent Id="101" Time="13.475555434149184" Value="97.2950821" />
+																<FloatEvent Id="102" Time="13.475555434149184" Value="97.9235001" />
+																<FloatEvent Id="103" Time="13.813333281302031" Value="97.9235001" />
+																<FloatEvent Id="104" Time="13.813333281302031" Value="98.5519104" />
+																<FloatEvent Id="105" Time="13.831111076423577" Value="98.5519104" />
+																<FloatEvent Id="106" Time="13.831111076423577" Value="99.1803207" />
+																<FloatEvent Id="107" Time="13.866666666666667" Value="99.1803207" />
+																<FloatEvent Id="108" Time="13.866666666666667" Value="99.8087463" />
+																<FloatEvent Id="109" Time="13.920000052031302" Value="99.8087463" />
+																<FloatEvent Id="110" Time="13.920000052031302" Value="100.437157" />
+																<FloatEvent Id="111" Time="14.079999947968698" Value="100.437157" />
+																<FloatEvent Id="112" Time="14.079999947968698" Value="101.065575" />
+																<FloatEvent Id="113" Time="14.115555538211789" Value="101.065575" />
+																<FloatEvent Id="114" Time="14.115555538211789" Value="101.693993" />
+																<FloatEvent Id="115" Time="14.151111128454879" Value="101.693993" />
+																<FloatEvent Id="116" Time="14.151111128454879" Value="102.322403" />
+																<FloatEvent Id="117" Time="14.453333385364635" Value="102.322403" />
+																<FloatEvent Id="118" Time="14.453333385364635" Value="102.950821" />
+																<FloatEvent Id="119" Time="14.506666770729272" Value="102.950821" />
+																<FloatEvent Id="120" Time="14.506666770729272" Value="103.579231" />
+																<FloatEvent Id="121" Time="14.773333437395937" Value="103.579231" />
+																<FloatEvent Id="122" Time="14.773333437395937" Value="104.207649" />
+																<FloatEvent Id="123" Time="14.897777743090243" Value="104.207649" />
+																<FloatEvent Id="124" Time="14.897777743090243" Value="104.836067" />
+																<FloatEvent Id="125" Time="14.968888923576424" Value="104.836067" />
+																<FloatEvent Id="126" Time="14.968888923576424" Value="106.092896" />
+																<FloatEvent Id="127" Time="15.004444513819514" Value="106.092896" />
+																<FloatEvent Id="128" Time="15.004444513819514" Value="106.721313" />
+																<FloatEvent Id="129" Time="15.057777899184149" Value="106.721313" />
+																<FloatEvent Id="130" Time="15.057777899184149" Value="107.349716" />
+																<FloatEvent Id="131" Time="15.164444409756909" Value="107.349716" />
+																<FloatEvent Id="132" Time="15.164444409756909" Value="107.978142" />
+																<FloatEvent Id="133" Time="15.199999999999999" Value="107.978142" />
+																<FloatEvent Id="134" Time="15.199999999999999" Value="108.606552" />
+																<FloatEvent Id="135" Time="15.253333385364636" Value="108.606552" />
+																<FloatEvent Id="136" Time="15.253333385364636" Value="109.23497" />
+																<FloatEvent Id="137" Time="15.306666770729271" Value="109.23497" />
+																<FloatEvent Id="138" Time="15.306666770729271" Value="109.863388" />
+																<FloatEvent Id="139" Time="15.324444565850817" Value="109.863388" />
+																<FloatEvent Id="140" Time="15.324444565850817" Value="110.491806" />
+																<FloatEvent Id="141" Time="15.413333281302032" Value="110.491806" />
+																<FloatEvent Id="142" Time="15.413333281302032" Value="111.120216" />
+																<FloatEvent Id="143" Time="15.448888871545121" Value="111.120216" />
+																<FloatEvent Id="144" Time="15.448888871545121" Value="111.748634" />
+																<FloatEvent Id="145" Time="15.484444461788211" Value="111.748634" />
+																<FloatEvent Id="146" Time="15.484444461788211" Value="112.377052" />
+																<FloatEvent Id="147" Time="15.537777847152848" Value="112.377052" />
+																<FloatEvent Id="148" Time="15.537777847152848" Value="113.005463" />
+																<FloatEvent Id="149" Time="15.626666562604063" Value="113.005463" />
+																<FloatEvent Id="150" Time="15.626666562604063" Value="113.633881" />
+																<FloatEvent Id="151" Time="15.644444357725607" Value="113.633881" />
+																<FloatEvent Id="152" Time="15.644444357725607" Value="114.262299" />
+																<FloatEvent Id="153" Time="15.662222152847153" Value="114.262299" />
+																<FloatEvent Id="154" Time="15.662222152847153" Value="114.890709" />
+																<FloatEvent Id="155" Time="15.697777743090244" Value="114.890709" />
+																<FloatEvent Id="156" Time="15.697777743090244" Value="115.519127" />
+																<FloatEvent Id="157" Time="15.768888923576423" Value="115.519127" />
+																<FloatEvent Id="158" Time="15.768888923576423" Value="116.147537" />
+																<FloatEvent Id="159" Time="15.85777789918415" Value="116.147537" />
+																<FloatEvent Id="160" Time="15.85777789918415" Value="116.775948" />
+																<FloatEvent Id="161" Time="16.035555590243089" Value="116.775948" />
+																<FloatEvent Id="162" Time="16.035555590243089" Value="117.404373" />
+																<FloatEvent Id="163" Time="16.266666666666666" Value="117.404373" />
+																<FloatEvent Id="164" Time="16.266666666666666" Value="118.032784" />
+																<FloatEvent Id="165" Time="16.479999947968697" Value="118.032784" />
+																<FloatEvent Id="166" Time="16.479999947968697" Value="118.661201" />
+																<FloatEvent Id="167" Time="16.888888975607724" Value="118.661201" />
+																<FloatEvent Id="168" Time="16.888888975607724" Value="119.289619" />
+																<FloatEvent Id="169" Time="17.066666666666666" Value="119.289619" />
+																<FloatEvent Id="170" Time="17.066666666666666" Value="119.91803" />
+																<FloatEvent Id="171" Time="17.457777899184148" Value="119.91803" />
+																<FloatEvent Id="172" Time="17.457777899184148" Value="120.546448" />
+																<FloatEvent Id="173" Time="18.36444440975691" Value="120.546448" />
+																<FloatEvent Id="174" Time="18.36444440975691" Value="121.174866" />
+																<FloatEvent Id="175" Time="21.084444461788213" Value="121.174866" />
+																<FloatEvent Id="176" Time="21.084444461788213" Value="121.803276" />
+															</Events>
+														</Automation>
+														<LoopSlot>
+															<Value />
+														</LoopSlot>
+														<ScrollerTimePreserver>
+															<LeftTime Value="0" />
+															<RightTime Value="0" />
+														</ScrollerTimePreserver>
+													</ClipEnvelope>
+													<ClipEnvelope Id="6">
+														<EnvelopeTarget>
+															<PointeeId Value="152666" />
+														</EnvelopeTarget>
+														<Automation>
+															<Events>
+																<FloatEvent Id="0" Time="-63072000" Value="0.518617034" />
+																<FloatEvent Id="1" Time="0" Value="0.518617034" />
+																<FloatEvent Id="2" Time="0" Value="0.4920212626" />
+																<FloatEvent Id="3" Time="3.3422221008158508" Value="0.4920212626" />
+																<FloatEvent Id="4" Time="3.3422221008158508" Value="0.5053191781" />
+																<FloatEvent Id="5" Time="3.4311110764235764" Value="0.5053191781" />
+																<FloatEvent Id="6" Time="3.4311110764235764" Value="0.518617034" />
+																<FloatEvent Id="7" Time="4.088888975607726" Value="0.518617034" />
+																<FloatEvent Id="8" Time="4.088888975607726" Value="0.5053191781" />
+																<FloatEvent Id="9" Time="8.1422221008158502" Value="0.5053191781" />
+																<FloatEvent Id="10" Time="8.1422221008158502" Value="0.4920212626" />
+																<FloatEvent Id="11" Time="9.2622221528471531" Value="0.4920212626" />
+																<FloatEvent Id="12" Time="9.2622221528471531" Value="0.4787234366" />
+																<FloatEvent Id="13" Time="10.346666614635364" Value="0.4787234366" />
+																<FloatEvent Id="14" Time="10.346666614635364" Value="0.4920212626" />
+																<FloatEvent Id="15" Time="12.088888975607725" Value="0.4920212626" />
+																<FloatEvent Id="16" Time="12.088888975607725" Value="0.4787234366" />
+																<FloatEvent Id="17" Time="13.084444461788213" Value="0.4787234366" />
+																<FloatEvent Id="18" Time="13.084444461788213" Value="0.4920212626" />
+																<FloatEvent Id="19" Time="14.968888923576424" Value="0.4920212626" />
+																<FloatEvent Id="20" Time="14.968888923576424" Value="0.4787234366" />
+																<FloatEvent Id="21" Time="15.662222152847153" Value="0.4787234366" />
+																<FloatEvent Id="22" Time="15.662222152847153" Value="0.4920212626" />
+																<FloatEvent Id="23" Time="15.911111024392275" Value="0.4920212626" />
+																<FloatEvent Id="24" Time="15.911111024392275" Value="0.5053191781" />
+																<FloatEvent Id="25" Time="16.195555486180485" Value="0.5053191781" />
+																<FloatEvent Id="26" Time="16.195555486180485" Value="0.518617034" />
+																<FloatEvent Id="27" Time="16.408888767482516" Value="0.518617034" />
+																<FloatEvent Id="28" Time="16.408888767482516" Value="0.5319148898" />
+																<FloatEvent Id="29" Time="20.675555434149185" Value="0.5319148898" />
+																<FloatEvent Id="30" Time="20.675555434149185" Value="0.518617034" />
+															</Events>
+														</Automation>
+														<LoopSlot>
+															<Value />
+														</LoopSlot>
+														<ScrollerTimePreserver>
+															<LeftTime Value="0" />
+															<RightTime Value="0" />
+														</ScrollerTimePreserver>
+													</ClipEnvelope>
+												</Envelopes>
+											</Envelopes>
+											<ScrollerTimePreserver>
+												<LeftTime Value="0" />
+												<RightTime Value="0" />
+											</ScrollerTimePreserver>
+											<TimeSelection>
+												<AnchorTime Value="0" />
+												<OtherTime Value="0" />
+											</TimeSelection>
+											<Legato Value="false" />
+											<Ram Value="false" />
+											<GrooveSettings>
+												<GrooveId Value="0" />
+											</GrooveSettings>
+											<Disabled Value="false" />
+											<VelocityAmount Value="0" />
+											<FollowTime Value="4" />
+											<FollowActionA Value="0" />
+											<FollowActionB Value="0" />
+											<FollowChanceA Value="1" />
+											<FollowChanceB Value="0" />
+											<Grid>
+												<FixedNumerator Value="1" />
+												<FixedDenominator Value="16" />
+												<GridIntervalPixel Value="20" />
+												<Ntoles Value="2" />
+												<SnapToGrid Value="true" />
+												<Fixed Value="false" />
+											</Grid>
+											<FreezeStart Value="0" />
+											<FreezeEnd Value="0" />
+											<IsSongTempoMaster Value="false" />
+											<IsWarped Value="true" />
+											<Notes>{{NOTES}}</Notes>
+														<MidiKey Value="36" />
+													</KeyTrack>
+													<KeyTrack Id="1">
+														<Notes>
+															<MidiNoteEvent Time="0.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="2.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="4.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="6.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="8.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="10.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="12.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+															<MidiNoteEvent Time="14.5" Duration="0.25" Velocity="74" OffVelocity="64" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="37" />
+													</KeyTrack>
+													<KeyTrack Id="2">
+														<Notes>
+															<MidiNoteEvent Time="1" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="3" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="7" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="9" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="11" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="13" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="15" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="38" />
+													</KeyTrack>
+													<KeyTrack Id="3">
+														<Notes>
+															<MidiNoteEvent Time="1" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="9" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="13" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="39" />
+													</KeyTrack>
+													<KeyTrack Id="4">
+														<Notes>
+															<MidiNoteEvent Time="2.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="3.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="3.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="6.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="7.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="7.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="10.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="11.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="11.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="14.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="15.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="15.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+														</Notes>
+														<MidiKey Value="42" />
+													</KeyTrack>
+													<KeyTrack Id="5">
+														<Notes>
+															<MidiNoteEvent Time="7.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="15.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="43" />
+													</KeyTrack>
+													<KeyTrack Id="6">
+														<Notes>
+															<MidiNoteEvent Time="0" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="1" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="2" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="3" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="4" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="6" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="7" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="8" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="9" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="10" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="11" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="12" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="13" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="14" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="15" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="44" />
+													</KeyTrack>
+													<KeyTrack Id="7">
+														<Notes>
+															<MidiNoteEvent Time="6.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="45" />
+													</KeyTrack>
+													<KeyTrack Id="8">
+														<Notes>
+															<MidiNoteEvent Time="0.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="1.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="2.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="2.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="3.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="4.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="5.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="6.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="6.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="7.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="8.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="9.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="10.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="10.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="11.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="12.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="13.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="14.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="14.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="15.25" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+														</Notes>
+														<MidiKey Value="46" />
+													</KeyTrack>
+													<KeyTrack Id="9">
+														<Notes>
+															<MidiNoteEvent Time="7.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="15.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="47" />
+													</KeyTrack>
+													<KeyTrack Id="10">
+														<Notes>
+															<MidiNoteEvent Time="8.5" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="48" />
+													</KeyTrack>
+													<KeyTrack Id="11">
+														<Notes>
+															<MidiNoteEvent Time="0" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="1" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="2" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="2.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="3" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="4" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="5" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="6" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="6.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="7" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="8" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="9" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="10" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="10.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="11" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="12" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="13" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="14" Duration="0.125" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="14.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+															<MidiNoteEvent Time="15" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="false" />
+														</Notes>
+														<MidiKey Value="49" />
+													</KeyTrack>
+													<KeyTrack Id="12">
+														<Notes>
+															<MidiNoteEvent Time="3.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="7.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="11.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+															<MidiNoteEvent Time="15.75" Duration="0.25" Velocity="100" OffVelocity="0" IsEnabled="true" />
+														</Notes>
+														<MidiKey Value="50" />
+													</KeyTrack>
+												</KeyTracks>
+											</Notes>
+											<BankSelectCoarse Value="-1" />
+											<BankSelectFine Value="-1" />
+											<ProgramChange Value="-1" />
+											<NoteEditorFoldInZoom Value="-1" />
+											<NoteEditorFoldInScroll Value="-1" />
+											<NoteEditorFoldOutZoom Value="176" />
+											<NoteEditorFoldOutScroll Value="-11" />
+										</MidiClip>

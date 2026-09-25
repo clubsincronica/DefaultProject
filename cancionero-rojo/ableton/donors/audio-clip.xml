@@ -1,0 +1,192 @@
+<AudioClip Id="1" Time="0">
+											<LomId Value="0" />
+											<LomIdView Value="0" />
+											<WarpMarkers>
+												<WarpMarker Id="0" SecTime="0" BeatTime="0" />
+												<WarpMarker Id="1" SecTime="0.0187499999999999993" BeatTime="0.03125" />
+											</WarpMarkers>
+											<MarkersGenerated Value="false" />
+											<CurrentStart Value="0" />
+											<CurrentEnd Value="28" />
+											<Loop>
+												<LoopStart Value="0" />
+												<LoopEnd Value="28" />
+												<StartRelative Value="0" />
+												<LoopOn Value="true" />
+												<OutMarker Value="28" />
+												<HiddenLoopStart Value="0" />
+												<HiddenLoopEnd Value="28" />
+											</Loop>
+											<Name Value="{{CLIP_NAME}}" />
+											<Annotation Value="" />
+											<ColorIndex Value="62" />
+											<LaunchMode Value="0" />
+											<LaunchQuantisation Value="0" />
+											<TimeSignature>
+												<TimeSignatures>
+													<RemoteableTimeSignature Id="0">
+														<Numerator Value="4" />
+														<Denominator Value="4" />
+														<Time Value="0" />
+													</RemoteableTimeSignature>
+												</TimeSignatures>
+											</TimeSignature>
+											<Envelopes>
+												<Envelopes />
+											</Envelopes>
+											<ScrollerTimePreserver>
+												<LeftTime Value="0" />
+												<RightTime Value="24.002163331530557" />
+											</ScrollerTimePreserver>
+											<TimeSelection>
+												<AnchorTime Value="0" />
+												<OtherTime Value="0" />
+											</TimeSelection>
+											<Legato Value="false" />
+											<Ram Value="false" />
+											<GrooveSettings>
+												<GrooveId Value="-1" />
+											</GrooveSettings>
+											<Disabled Value="false" />
+											<VelocityAmount Value="0" />
+											<FollowTime Value="4" />
+											<FollowActionA Value="0" />
+											<FollowActionB Value="0" />
+											<FollowChanceA Value="1" />
+											<FollowChanceB Value="0" />
+											<Grid>
+												<FixedNumerator Value="1" />
+												<FixedDenominator Value="16" />
+												<GridIntervalPixel Value="20" />
+												<Ntoles Value="2" />
+												<SnapToGrid Value="true" />
+												<Fixed Value="false" />
+											</Grid>
+											<FreezeStart Value="0" />
+											<FreezeEnd Value="0" />
+											<IsSongTempoMaster Value="false" />
+											<IsWarped Value="true" />
+											<SampleRef>
+												<FileRef>
+													<HasRelativePath Value="true" />
+													<RelativePathType Value="5" />
+													<RelativePath>
+														<RelativePathElement Id="40" Dir="Samples" />
+														<RelativePathElement Id="41" Dir="Synth" />
+													</RelativePath>
+													<Name Value="Wavetable Pads.wav" />
+													<Type Value="2" />
+													<Data>
+														0000000001A20002000008746D705F6461746100000000000000000000000000000000000000D10C
+														E011482B000000C6658412576176657461626C6520506164732E7761760000000000000000000000
+														0000000000000000000000000000000000000000000000000000000000000000000000C673FDD687
+														F92A0000000000000000FFFFFFFF000009000000000000000000000000000000000553796E746800
+														001000080000D10CD2010000001100080000D687EB1A00000001001000C6658400C65C7800C65A5B
+														0000003E00020040746D705F646174613A7472756E6B3A00436F7265204C6962726172793A005361
+														6D706C65733A0053796E74683A00576176657461626C6520506164732E776176000E002600120057
+														006100760065007400610062006C006500200050006100640073002E007700610076000F00120008
+														0074006D0070005F0064006100740061001200342F7472756E6B2F436F7265204C6962726172792F
+														53616D706C65732F53796E74682F576176657461626C6520506164732E776176001300112F566F6C
+														756D65732F746D705F6461746100FFFF0000
+													</Data>
+													<RefersToFolder Value="false" />
+													<SearchHint>
+														<PathHint>
+															<RelativePathElement Id="0" Dir="trunk" />
+															<RelativePathElement Id="1" Dir="Core Library" />
+															<RelativePathElement Id="2" Dir="Samples" />
+															<RelativePathElement Id="3" Dir="Synth" />
+														</PathHint>
+														<FileSize Value="{{SIZE}}" />
+														<Crc Value="{{MD5}}" />
+														<MaxCrcSize Value="16384" />
+														<HasExtendedInfo Value="true" />
+													</SearchHint>
+													<LivePackName Value="Core Library" />
+													<LivePackId Value="www.ableton.com/0" />
+												</FileRef>
+												<LastModDate Value="1516387037" />
+												<SourceContext>
+													<SourceContext Id="0">
+														<OriginalFileRef>
+															<FileRef Id="21">
+																<HasRelativePath Value="true" />
+																<RelativePathType Value="5" />
+																<RelativePath>
+																	<RelativePathElement Id="42" Dir="Samples" />
+																	<RelativePathElement Id="43" Dir="Synth" />
+																</RelativePath>
+																<Name Value="Wavetable Pads.wav" />
+																<Type Value="2" />
+																<Data>
+																	0000000001A20002000008746D705F6461746100000000000000000000000000000000000000D10C
+																	E011482B000000C6658412576176657461626C6520506164732E7761760000000000000000000000
+																	0000000000000000000000000000000000000000000000000000000000000000000000C673FDD687
+																	F92A0000000000000000FFFFFFFF000009000000000000000000000000000000000553796E746800
+																	001000080000D10CD2010000001100080000D687EB1A00000001001000C6658400C65C7800C65A5B
+																	0000003E00020040746D705F646174613A7472756E6B3A00436F7265204C6962726172793A005361
+																	6D706C65733A0053796E74683A00576176657461626C6520506164732E776176000E002600120057
+																	006100760065007400610062006C006500200050006100640073002E007700610076000F00120008
+																	0074006D0070005F0064006100740061001200342F7472756E6B2F436F7265204C6962726172792F
+																	53616D706C65732F53796E74682F576176657461626C6520506164732E776176001300112F566F6C
+																	756D65732F746D705F6461746100FFFF0000
+																</Data>
+																<RefersToFolder Value="false" />
+																<SearchHint>
+																	<PathHint>
+																		<RelativePathElement Id="0" Dir="trunk" />
+																		<RelativePathElement Id="1" Dir="Core Library" />
+																		<RelativePathElement Id="2" Dir="Samples" />
+																		<RelativePathElement Id="3" Dir="Synth" />
+																	</PathHint>
+																	<FileSize Value="{{SIZE}}" />
+																	<Crc Value="{{MD5}}" />
+																	<MaxCrcSize Value="16384" />
+																	<HasExtendedInfo Value="true" />
+																</SearchHint>
+																<LivePackName Value="Core Library" />
+																<LivePackId Value="www.ableton.com/0" />
+															</FileRef>
+														</OriginalFileRef>
+														<BrowserContentPath Value="{{FILE_PATH}}" />
+													</SourceContext>
+												</SourceContext>
+												<SampleUsageHint Value="0" />
+												<DefaultDuration Value="661500" />
+												<DefaultSampleRate Value="44100" />
+											</SampleRef>
+											<Onsets>
+												<UserOnsets />
+												<HasUserOnsets Value="false" />
+											</Onsets>
+											<WarpMode Value="0" />
+											<GranularityTones Value="30" />
+											<GranularityTexture Value="65" />
+											<FluctuationTexture Value="25" />
+											<TransientResolution Value="6" />
+											<TransientLoopMode Value="2" />
+											<TransientEnvelope Value="100" />
+											<ComplexProFormants Value="100" />
+											<ComplexProEnvelope Value="128" />
+											<Sync Value="true" />
+											<HiQ Value="true" />
+											<Fade Value="true" />
+											<Fades>
+												<FadeInLength Value="0" />
+												<FadeOutLength Value="0" />
+												<ClipFadesAreInitialized Value="true" />
+												<CrossfadeInState Value="0" />
+												<FadeInCurveSkew Value="0" />
+												<FadeInCurveSlope Value="0" />
+												<FadeOutCurveSkew Value="0" />
+												<FadeOutCurveSlope Value="0" />
+												<IsDefaultFadeIn Value="true" />
+												<IsDefaultFadeOut Value="true" />
+											</Fades>
+											<PitchCoarse Value="0" />
+											<PitchFine Value="0" />
+											<SampleVolume Value="1" />
+											<MarkerDensity Value="2" />
+											<AutoWarpTolerance Value="4" />
+											<SavedWarpMarkersForStretched />
+										</AudioClip>

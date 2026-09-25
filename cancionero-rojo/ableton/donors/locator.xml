@@ -1,0 +1,7 @@
+<Locator Id="2">
+					<LomId Value="0" />
+					<Time Value="{{TIME}}" />
+					<Name Value="{{LOC_NAME}}" />
+					<Annotation Value="" />
+					<IsSongStart Value="false" />
+				</Locator>
