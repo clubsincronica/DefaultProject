@@ -28,10 +28,18 @@ export function makeAudioClipXml({ name, wavPath, donor, id }) {
     out = out + `<!-- Crc Value="${md5}" -->`;
   }
   // Unique Id: use explicit id if provided, else random fallback (avoids Id="1" duplication)
+  let fileRefId = null;
   if (id != null) {
     out = out.replace(/Id="\d+"/, `Id="${id}"`);
+    fileRefId = id + 5000; // inner FileRef offset keeps below NextPointeeId (max 165k +5k <173792)
   } else {
-    out = out.replace(/Id="\d+"/, `Id="${9000 + Math.floor(Math.random() * 9000)}"`);
+    const rnd = 9000 + Math.floor(Math.random() * 9000);
+    out = out.replace(/Id="\d+"/, `Id="${rnd}"`);
+    fileRefId = rnd + 5000;
+  }
+  // Renumber inner FileRef Id="21" (OriginalFileRef) to unique per clip — FileRef is not INDEX_LIKE
+  if (fileRefId != null) {
+    out = out.replace(/<FileRef Id="21"/, `<FileRef Id="${fileRefId}"`);
   }
   // Fix FileRef: point Name to actual stem file, make external ref (no Core Library Pack)
   // Replace both FileRef and OriginalFileRef Name entries (donor has Wavetable Pads.wav twice)

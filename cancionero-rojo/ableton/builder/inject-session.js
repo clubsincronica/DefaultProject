@@ -27,6 +27,15 @@ export function makeClipXml({ name, donor, notes, id }) {
   } else {
     xml = xml.replace(/Id="\d+"/, `Id="${9000 + Math.floor(Math.random() * 900)}"`);
   }
+  // Fix HiddenLoopEnd: donor has 24, but Verse/Chorus need 64 beats (16 bars). Live requires HiddenLoopEnd >= CurrentEnd.
+  // Mirror inject-arrangement.js logic for session clips: bump HiddenLoopEnd to end if needed.
+  const hiddenMatch = xml.match(/<HiddenLoopEnd Value="([^"]*)"/);
+  if (hiddenMatch && parseFloat(hiddenMatch[1]) < end) {
+    xml = xml.replace(/<HiddenLoopEnd Value="[^"]*"/, `<HiddenLoopEnd Value="${end}"`);
+  } else if (!hiddenMatch) {
+    // fallback: ensure HiddenLoopEnd exists and equals end
+    xml = xml.replace(/<HiddenLoopEnd Value="[^"]*"/, `<HiddenLoopEnd Value="${end}"`);
+  }
   return xml;
 }
 

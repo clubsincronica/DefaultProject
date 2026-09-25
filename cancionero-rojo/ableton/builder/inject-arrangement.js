@@ -148,6 +148,14 @@ export function injectArrangement(xml, arrangement, scenes, clipMap) {
       if (hiddenMatch && parseFloat(hiddenMatch[1]) < end) {
         patched = patched.replace(/<HiddenLoopEnd Value="[^"]*"/, `<HiddenLoopEnd Value="${end}"`);
       }
+      // For AudioClip, renumber inner FileRef Id (not INDEX_LIKE) to unique per arrangement occurrence
+      if (patched.includes('<FileRef Id="')) {
+        const innerMatch = patched.match(/<FileRef Id="(\d+)"/);
+        if (innerMatch) {
+          const newFileRefId = nextArrId++;
+          patched = patched.replace(/<FileRef Id="\d+"/, `<FileRef Id="${newFileRefId}"`);
+        }
+      }
       clips.push(patched);
     }
     if (clips.length === 0) continue;
