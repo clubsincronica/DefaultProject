@@ -36,7 +36,7 @@ export function saveAls(state, outPath) {
 
 export function inventoryXml(xml) {
   return {
-    scenes: (xml.match(/<Scene Id=/g) ?? []).length,
+    scenes: (xml.match(/<Scene Id="/g) ?? []).length,
     tracks: [...xml.matchAll(/<EffectiveName Value="([^"]*)"/g)].map((m) => m[1]),
   };
 }
@@ -45,8 +45,8 @@ export function inventoryXml(xml) {
 export function loadAls(path) {
   const buf = readFileSync(path);
   const state = parseAls(buf);
-  // also expose gzip/raw per brief's description
-  return { ...state, path, gzip: buf, raw: state.xml, buffer: buf };
+  // raw is Buffer per brief; xml is string
+  return { ...state, path, gzip: buf, raw: buf, buffer: buf, xml: state.xml };
 }
 
 export function query(state) {

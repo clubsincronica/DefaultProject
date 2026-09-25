@@ -40,7 +40,7 @@ grab(
   'midi-clip',
   (s) =>
     s
-      .replace(/(<Notes>)[\s\S]*?(<\/Notes>)/, '$1{{NOTES}}$2')
+      .replace(/<Notes>\s*<KeyTracks>[\s\S]*?<\/KeyTracks>\s*<\/Notes>/, '<Notes>{{NOTES}}</Notes>')
       .replace(/(<CurrentEnd Value=")[\d.]+(")/, '$1{{DUR_BEATS}}$2')
       .replace(/(<LoopEnd Value=")[\d.]+(")/, '$1{{DUR_BEATS}}$2')
       .replace(/(<OutMarker Value=")[\d.]+(")/, '$1{{DUR_BEATS}}$2')

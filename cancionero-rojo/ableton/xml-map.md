@@ -75,9 +75,9 @@ Expected `donors/` tras `node scripts/extract-donors.js "<Live 10 Suite Empty.al
 
 | Concepto | Ruta exacta | Valor template |
 |---|---|---|
-| Escenas lista | `LiveSet > SceneNames` | 16 × `<Scene Id="..." Value="">` |
+| Escenas lista | `LiveSet > MasterTrack > SessionView > Scenes` | 16 × `<Scene Id="..." Value="">` |
 | Escena body (builder) | `Scene > Name > EffectiveName Value="{{SCENE_NAME}}"` | `setSceneNames` escribe `:@.@_Value` |
-| Tempo global | `LiveSet > MasterTrack? > Tempo > Manual Value` + `AutomationTarget Id` | `100` (Manual) |
+| Tempo global | `LiveSet > MasterTrack > Tempo > Manual Value` + `AutomationTarget Id` | `100` (Manual) |
 | TimeSignature | `LiveSet > TimeSignature > TimeSignatures > RemoteableTimeSignature > Numerator/Denominator` | 4/4 |
 | Track body by name | `LiveSet > Tracks > *[EffectiveName Value="<Mic Lead|Keys|...>"]` | `findTrackBody(xml,name)` busca `EffectiveName Value` y devuelve `{start,end}` del `<...Track>` |
 | Slots order | `Track > DeviceChain > MainSequencer|FreezeSequencer > ClipSlotList > ClipSlot Id="0".."15"` | orden slot = escena index |
