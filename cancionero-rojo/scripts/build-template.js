@@ -45,6 +45,12 @@ const RETURNS = [
   { name: 'B-Delay',  srcId: '3' },
 ];
 
+// Orden fijo de ejecución (también el orden de asignación de Ids frescos).
+const STEP_NAMES = [
+  'duplicate', 'master-chain', 'scenes', 'tracks', 'rename',
+  'returns-rename', 'routing', 'sends', 'strip', 'nextpointee', 'validate',
+];
+
 const TAG_RE = /<([A-Za-z][A-Za-z0-9.]*)\s[^>]*?\bId="(\d+)"[^>]*>/g;
 
 function fail(msg) { throw new Error(msg); }
@@ -112,7 +118,7 @@ function extractTracks(xml) {
     assert(closeIdx > 0, `sin cierre ${close}`);
     const lineStart = xml.lastIndexOf(EOL, m.index) + 1;
     const lineEnd = closeIdx + close.length;
-    out.push({ type: m[1], id: m[2], text: xml.slice(lineStart, lineEnd) });
+    out.push({ type: m[1], id: m[2], text: xml.slice(lineStart, lineEnd), start: lineStart, end: lineEnd });
   }
   return out;
 }
@@ -251,20 +257,216 @@ function reindent(text, tabs) {
   return text.split(EOL).map((l) => (l.startsWith('\t') ? l.slice(tabs) : l)).join(EOL);
 }
 
-function processTrack(text, entry) {
-  let t = renameTrack(text, entry.name);
-  t = t.replace(/<TrackGroupId Value="-?\d+" \/>/, '<TrackGroupId Value="-1" />');
-  t = setTrackOutputToMaster(t);
-  if (entry.input) t = setTrackInput(t, entry.input);
-  if (entry.monitor) t = t.replace(/<MonitoringEnum Value="\d+" \/>/g, `<MonitoringEnum Value="${entry.monitor}" />`);
-  // Receta: mics A/B=0.15, Strings/Texture A=0.2; el resto silenciado al floor
-  // (borra sends de la lección del donor que no están en la receta).
-  t = setSend(t, '0', entry.sends?.[0] ?? SEND_FLOOR, entry.name);
-  t = setSend(t, '1', entry.sends?.[1] ?? SEND_FLOOR, entry.name);
-  t = normalizeClipSlots(t);
-  t = emptyArrangement(t);
-  return t;
+// ----------------------------------------------------------------- steps (build)
+// Steps nombrados, ejecutados SIEMPRE en el orden de STEP_NAMES. Cada uno muta
+// ctx.xml y se puede habilitar por separado (--only=...) para los probes de
+// bisect. El orden de asignación de Ids frescos (duplicate → master-chain →
+// scenes) replica el de la build original f6f6aa8: la salida por defecto tiene
+// que ser idéntica byte a byte.
+
+function rosterEntry(ctx, seg) {
+  return ROSTER.find((e) =>
+    (e.srcId && e.srcId === seg.id) ||
+    (e.cloneOf && ctx.textureTrackId && ctx.textureTrackId === seg.id));
 }
+
+// Aplica fn solo a las pistas del roster (por Id), de atrás adelante para no
+// invalidar los offsets de los segments anteriores.
+function mapRoster(ctx, fn) {
+  const segs = extractTracks(ctx.xml).filter((s) => ctx.rosterIds.has(s.id));
+  for (let i = segs.length - 1; i >= 0; i--) {
+    const seg = segs[i];
+    const text = fn(seg.text, seg);
+    if (text !== seg.text) {
+      ctx.xml = ctx.xml.slice(0, seg.start) + text + ctx.xml.slice(seg.end);
+    }
+  }
+}
+
+// 1. duplicate — Texture = clon de la pista 96 con Ids frescos, insertado tras ella.
+function stepDuplicate(ctx) {
+  const src = ctx.donorTracks.get('96');
+  assert(src?.type === 'Audio', 'donor 96 no es AudioTrack');
+  ctx.textureText = cloneRenumber(src.text, ctx.docIndex, ctx.nextId);
+  const head = ctx.textureText.match(/^\t*<AudioTrack Id="(\d+)">/);
+  assert(head, 'clon sin <AudioTrack Id>');
+  ctx.textureTrackId = head[1];
+  ctx.rosterIds.add(head[1]);
+  const seg = extractTracks(ctx.xml).find((t) => t.id === '96');
+  assert(seg, 'no encuentro la pista 96 para insertar el clon');
+  if (process.env.TRACE) console.error(`[trace] duplicate: textureLen=${ctx.textureText.length} segEnd=${seg.end} segStart=${seg.start}`);
+  ctx.xml = ctx.xml.slice(0, seg.end) + EOL + ctx.textureText + ctx.xml.slice(seg.end);
+}
+
+// 2. master-chain — trasplante de AutoFilter #2 (nth=1) y Echo #1 (nth=0) al
+//    MasterTrack. Se extraen SIEMPRE del donor: la build original los extraía de
+//    un xml aún sin insertar el clon, así que donorXml es la fuente fiel.
+function stepMasterChain(ctx) {
+  let autoDev = cloneRenumber(extractElement(ctx.donorXml, 'AutoFilter', 1), ctx.docIndex, ctx.nextId);
+  let echoDev = cloneRenumber(extractElement(ctx.donorXml, 'Echo', 0), ctx.docIndex, ctx.nextId);
+  autoDev = reindent(autoDev, 1);
+  echoDev = reindent(echoDev, 1);
+  autoDev = setParamInBlock(autoDev, 'Cutoff', '133.25'); // 18k (escala log del donor)
+  echoDev = setParamInBlock(echoDev, 'DryWet', '0');
+
+  const xml = ctx.xml;
+  const mtStart = xml.indexOf('<MasterTrack>');
+  const mtEnd = xml.indexOf('</MasterTrack>', mtStart);
+  assert(mtStart >= 0 && mtEnd > mtStart, 'sin MasterTrack');
+  let master = xml.slice(mtStart, mtEnd);
+  const devClose = master.indexOf('</Devices>');
+  assert(devClose > 0, 'master sin <Devices>');
+  const closeIndent = '\t'.repeat(5);
+  const devIndent = '\t'.repeat(6);
+  master = master.slice(0, devClose)
+    + autoDev + EOL + devIndent + echoDev + EOL + closeIndent
+    + master.slice(devClose);
+  ctx.xml = xml.slice(0, mtStart) + master + xml.slice(mtEnd);
+}
+
+// 3. scenes — SceneNames 7 → 16, nombres vacíos, Ids nuevos para los creados.
+function stepScenes(ctx) {
+  const xml = ctx.xml;
+  const snStart = xml.indexOf('<SceneNames>');
+  const snEnd = xml.indexOf('</SceneNames>', snStart);
+  assert(snStart >= 0 && snEnd > snStart, 'sin SceneNames');
+  const sceneBlock = xml.slice(snStart, snEnd);
+  const sceneOpen = sceneBlock.indexOf('<Scene Id=');
+  const sceneClose = sceneBlock.indexOf('</Scene>', sceneOpen) + '</Scene>'.length;
+  const sceneTpl = sceneBlock.slice(sceneOpen, sceneClose)
+    .replace(/(<Scene Id="\d+" Value=")[^"]*(")/, '$1$2');
+  const scenes = [];
+  let cursor = sceneOpen;
+  while (true) {
+    const o = sceneBlock.indexOf('<Scene Id=', cursor);
+    if (o < 0) break;
+    const c = sceneBlock.indexOf('</Scene>', o) + '</Scene>'.length;
+    const raw = sceneBlock.slice(o, c);
+    scenes.push(raw.replace(/(<Scene Id="\d+" Value=")[^"]*(")/, '$1$2'));
+    cursor = c;
+  }
+  assert(scenes.length === 7, `scenes donor=${scenes.length}`);
+  while (scenes.length < SCENE_COUNT) {
+    scenes.push(sceneTpl.replace(/(<Scene Id=")\d+(")/, (m, a, b) => `${a}${ctx.nextId()}${b}`));
+  }
+  const sceneIndent = indentOfLine(sceneBlock, sceneOpen);
+  const snCloseIndent = indentOfLine(sceneBlock, snEnd);
+  ctx.xml = xml.slice(0, snStart) + '<SceneNames>' + EOL
+    + scenes.map((s) => sceneIndent + s).join(EOL) + EOL
+    + snCloseIndent + xml.slice(snEnd);
+}
+
+// 4. tracks — reconstruye <Tracks>: roster en orden + returns al final.
+//    Borra el resto de pistas (grupo, lección, etc.).
+function stepTracks(ctx) {
+  const segs = new Map(extractTracks(ctx.xml).map((t) => [t.id, t]));
+  const segments = [];
+  for (const entry of ROSTER) {
+    const id = entry.cloneOf ? ctx.textureTrackId : entry.srcId;
+    assert(id, `tracks: falta '${entry.name}' — combina con la step 'duplicate'`);
+    const seg = segs.get(id);
+    assert(seg, `tracks: falta pista ${entry.name} (id=${id})`);
+    segments.push(seg.text);
+  }
+  for (const entry of RETURNS) {
+    const seg = segs.get(entry.srcId);
+    assert(seg, `tracks: falta return ${entry.srcId}`);
+    segments.push(seg.text);
+  }
+  const xml = ctx.xml;
+  const tStart = xml.indexOf('<Tracks>');
+  const tEnd = xml.indexOf('</Tracks>', tStart) + '</Tracks>'.length;
+  assert(tStart >= 0 && tEnd > tStart, 'sin <Tracks>');
+  ctx.xml = xml.slice(0, tStart) + '<Tracks>' + EOL
+    + segments.join(EOL) + EOL + '\t\t'
+    + xml.slice(tEnd - '</Tracks>'.length);
+}
+
+// 5. rename — EffectiveName/UserName del roster a los nombres de la receta.
+function stepRename(ctx) {
+  mapRoster(ctx, (text, seg) => {
+    const entry = rosterEntry(ctx, seg);
+    return entry ? renameTrack(text, entry.name) : text;
+  });
+}
+
+// 6. returns-rename — A-Reverb / B-Delay.
+function stepReturnsRename(ctx) {
+  const segs = extractTracks(ctx.xml).filter((s) => s.type === 'Return');
+  for (let i = segs.length - 1; i >= 0; i--) {
+    const seg = segs[i];
+    const entry = RETURNS.find((e) => e.srcId === seg.id);
+    if (!entry) continue;
+    const text = renameTrack(seg.text, entry.name);
+    ctx.xml = ctx.xml.slice(0, seg.start) + text + ctx.xml.slice(seg.end);
+  }
+}
+
+// 7. routing — TrackGroupId -1, salida al master, input de mics, monitor In.
+function stepRouting(ctx) {
+  mapRoster(ctx, (text, seg) => {
+    let t = text.replace(/<TrackGroupId Value="-?\d+" \/>/, '<TrackGroupId Value="-1" />');
+    t = setTrackOutputToMaster(t);
+    const entry = rosterEntry(ctx, seg);
+    if (entry?.input) t = setTrackInput(t, entry.input);
+    if (entry?.monitor) t = t.replace(/<MonitoringEnum Value="\d+" \/>/g, `<MonitoringEnum Value="${entry.monitor}" />`);
+    return t;
+  });
+}
+
+// 8. sends — receta: mics A/B=0.15, Strings/Texture A=0.2; resto al floor
+//    (borra los sends de la lección del donor que no están en la receta).
+function stepSends(ctx) {
+  mapRoster(ctx, (text, seg) => {
+    const entry = rosterEntry(ctx, seg);
+    if (!entry) return text;
+    let t = setSend(text, '0', entry.sends?.[0] ?? SEND_FLOOR, entry.name);
+    t = setSend(t, '1', entry.sends?.[1] ?? SEND_FLOOR, entry.name);
+    return t;
+  });
+}
+
+// 9. strip — slots vacíos a 16 por lista + ArrangerAutomation vacío.
+function stepStrip(ctx) {
+  mapRoster(ctx, (text) => emptyArrangement(normalizeClipSlots(text)));
+}
+
+// 10. nextpointee — NextPointeeId por encima de todo Id usado.
+function stepNextpointee(ctx) {
+  const npm = ctx.xml.match(/<NextPointeeId Value="(\d+)" \/>/);
+  assert(npm, 'sin NextPointeeId');
+  ctx.nextPointeeId = npm[1];
+  if (ctx.counter >= +npm[1]) {
+    ctx.xml = ctx.xml.replace(/<NextPointeeId Value="\d+" \/>/, `<NextPointeeId Value="${ctx.counter + 1}" />`);
+  }
+}
+
+// 11. validate — sin esto no se escribe nada si algo falla (exit 1).
+function stepValidate(ctx) {
+  const problems = validate(ctx.xml, ctx.donorXml);
+  if (problems.length) {
+    mkdirSync(resolve(ROOT, 'ableton/.tmp'), { recursive: true });
+    writeFileSync(resolve(ROOT, 'ableton/.tmp/failed.xml'), ctx.xml);
+    console.error('VALIDACION fallida (volcado en ableton/.tmp/failed.xml):');
+    for (const p of problems) console.error('  - ' + p);
+    process.exit(1);
+  }
+}
+
+const STEP_IMPL = {
+  'duplicate': stepDuplicate,
+  'master-chain': stepMasterChain,
+  'scenes': stepScenes,
+  'tracks': stepTracks,
+  'rename': stepRename,
+  'returns-rename': stepReturnsRename,
+  'routing': stepRouting,
+  'sends': stepSends,
+  'strip': stepStrip,
+  'nextpointee': stepNextpointee,
+  'validate': stepValidate,
+};
+
 
 // ---------------------------------------------------------------- validations
 function dupPairs(xml) {
@@ -354,132 +556,80 @@ function validate(xml, donorXml) {
   return problems;
 }
 
+// ------------------------------------------------------------------------ CLI
+// Sin flags: build completa (idéntica a f6f6aa8). Con --only=/--skip=: subconjunto
+// de steps para probes de bisect (salida a --out=...). --list-steps imprime los
+// nombres. La escritura (gzip) es siempre el paso final; validate es una step
+// más y puede omitirse en probes parciales.
+function parseArgs(argv) {
+  const opts = { out: OUT, only: null, skip: [], list: false };
+  for (const a of argv) {
+    if (a === '--list-steps') opts.list = true;
+    else if (a.startsWith('--out=')) opts.out = resolve(ROOT, a.slice(6));
+    else if (a.startsWith('--only=')) opts.only = a.slice(7).split(',').map((s) => s.trim()).filter(Boolean);
+    else if (a.startsWith('--skip=')) opts.skip = a.slice(7).split(',').map((s) => s.trim()).filter(Boolean);
+    else fail(`argumento desconocido: ${a}`);
+  }
+  const names = opts.only ?? STEP_NAMES;
+  for (const s of names.concat(opts.skip)) {
+    if (!STEP_NAMES.includes(s)) fail(`step desconocida: ${s} (válidas: ${STEP_NAMES.join(', ')})`);
+  }
+  return opts;
+}
+
 // ------------------------------------------------------------------------ main
 function main() {
+  const opts = parseArgs(process.argv.slice(2));
+  if (opts.list) { console.log(STEP_NAMES.join('\n')); return; }
+  const enabled = opts.only
+    ? STEP_NAMES.filter((s) => opts.only.includes(s))
+    : STEP_NAMES.filter((s) => !opts.skip.includes(s));
+
   const donorBuf = readFileSync(DONOR);
   const donorXml = gunzipSync(donorBuf).toString('utf8');
   assert(donorXml.startsWith('<?xml'), 'donor no es XML');
-  let xml = donorXml;
 
   const donorInv = inventory(donorXml);
   assert(donorInv.tracks.length === 15 && donorInv.scenes === 7 && donorInv.returns === 2,
     `donor inesperado: ${donorInv.tracks.length}p/${donorInv.scenes}e/${donorInv.returns}r`);
 
   const maxSeen = Math.max(...[...donorXml.matchAll(/\bId="(\d+)"/g)].map((m) => +m[1]));
-  let counter = maxSeen;
-  const nextId = () => ++counter;
+  const counter = maxSeen;
 
-  const docIndex = buildIndex(xml);
-  const donorTracks = new Map(extractTracks(xml).map((t) => [t.id, t]));
-  assert(donorTracks.get('96')?.type === 'Audio', 'donor 96 no es AudioTrack');
+  const ctx = {
+    xml: donorXml,
+    donorXml,
+    docIndex: buildIndex(donorXml),
+    donorTracks: new Map(extractTracks(donorXml).map((t) => [t.id, t])),
+    nextId: () => ++ctx.counter,
+    counter,
+    textureText: null,
+    textureTrackId: null,
+    rosterIds: new Set(ROSTER.map((e) => e.srcId).filter(Boolean)),
+    nextPointeeId: null,
+  };
 
-  // 1. Subarbol clonado: Texture = copia de "10 Vocals 1" con Ids renumerados.
-  const textureText = cloneRenumber(donorTracks.get('96').text, docIndex, nextId);
-
-  // 2. Trasplantes de devices al master (AutoFilter #2 y Echo #1, de pistas que
-  //    se borran; se renumeran igualmente contra el documento vivo).
-  let autoDev = cloneRenumber(extractElement(xml, 'AutoFilter', 1), docIndex, nextId);
-  let echoDev = cloneRenumber(extractElement(xml, 'Echo', 0), docIndex, nextId);
-  autoDev = reindent(autoDev, 1);
-  echoDev = reindent(echoDev, 1);
-  autoDev = setParamInBlock(autoDev, 'Cutoff', '133.25'); // 18k (escala log del donor)
-  echoDev = setParamInBlock(echoDev, 'DryWet', '0');
-
-  const mtStart = xml.indexOf('<MasterTrack>');
-  const mtEnd = xml.indexOf('</MasterTrack>', mtStart);
-  assert(mtStart >= 0 && mtEnd > mtStart, 'sin MasterTrack');
-  let master = xml.slice(mtStart, mtEnd);
-  const devClose = master.indexOf('</Devices>');
-  assert(devClose > 0, 'master sin <Devices>');
-  const closeIndent = '\t'.repeat(5);
-  const devIndent = '\t'.repeat(6);
-  master = master.slice(0, devClose)
-    + autoDev + EOL + devIndent + echoDev + EOL + closeIndent
-    + master.slice(devClose);
-  xml = xml.slice(0, mtStart) + master + xml.slice(mtEnd);
-
-  // 3. Escenas: 7 -> 16, nombres vacios, Ids nuevos.
-  const snStart = xml.indexOf('<SceneNames>');
-  const snEnd = xml.indexOf('</SceneNames>', snStart);
-  assert(snStart >= 0 && snEnd > snStart, 'sin SceneNames');
-  const sceneBlock = xml.slice(snStart, snEnd);
-  const sceneOpen = sceneBlock.indexOf('<Scene Id=');
-  const sceneClose = sceneBlock.indexOf('</Scene>', sceneOpen) + '</Scene>'.length;
-  const sceneTpl = sceneBlock.slice(sceneOpen, sceneClose)
-    .replace(/(<Scene Id="\d+" Value=")[^"]*(")/, '$1$2');
-  const scenes = [];
-  let cursor = sceneOpen;
-  while (true) {
-    const o = sceneBlock.indexOf('<Scene Id=', cursor);
-    if (o < 0) break;
-    const c = sceneBlock.indexOf('</Scene>', o) + '</Scene>'.length;
-    const raw = sceneBlock.slice(o, c);
-    scenes.push(raw.replace(/(<Scene Id="\d+" Value=")[^"]*(")/, '$1$2'));
-    cursor = c;
-  }
-  assert(scenes.length === 7, `scenes donor=${scenes.length}`);
-  while (scenes.length < SCENE_COUNT) {
-    scenes.push(sceneTpl.replace(/(<Scene Id=")\d+(")/, (m, a, b) => `${a}${nextId()}${b}`));
-  }
-  const sceneIndent = indentOfLine(sceneBlock, sceneOpen);
-  const snCloseIndent = indentOfLine(sceneBlock, snEnd);
-  xml = xml.slice(0, snStart) + '<SceneNames>' + EOL
-    + scenes.map((s) => sceneIndent + s).join(EOL) + EOL
-    + snCloseIndent + xml.slice(snEnd);
-
-  // 4. Pistas: roster en orden + returns al final.
-  const byId = donorTracks;
-  const segments = [];
-  for (const entry of ROSTER) {
-    const src = entry.cloneOf ? textureText : byId.get(entry.srcId)?.text;
-    assert(src, `falta pista fuente ${entry.srcId ?? entry.cloneOf}`);
-    segments.push(processTrack(src, entry));
-  }
-  for (const entry of RETURNS) {
-    const src = byId.get(entry.srcId)?.text;
-    assert(src, `falta return ${entry.srcId}`);
-    segments.push(renameTrack(src, entry.name));
+  for (const name of enabled) {
+    STEP_IMPL[name](ctx);
+    if (process.env.TRACE) console.error(`[trace] ${name}: xmlLen=${ctx.xml.length}`);
   }
 
-  const tStart = xml.indexOf('<Tracks>');
-  const tEnd = xml.indexOf('</Tracks>', tStart) + '</Tracks>'.length;
-  assert(tStart >= 0 && tEnd > tStart, 'sin <Tracks>');
-  xml = xml.slice(0, tStart) + '<Tracks>' + EOL
-    + segments.join(EOL) + EOL + '\t\t'
-    + xml.slice(tEnd - '</Tracks>'.length);
-
-  // 5. NextPointeeId por encima de todo Id usado.
-  const npm = xml.match(/<NextPointeeId Value="(\d+)" \/>/);
-  assert(npm, 'sin NextPointeeId');
-  if (counter >= +npm[1]) {
-    xml = xml.replace(/<NextPointeeId Value="\d+" \/>/, `<NextPointeeId Value="${counter + 1}" />`);
-  }
-
-  // 6. Validaciones (no se escribe nada si algo falla).
-  const problems = validate(xml, donorXml);
-  if (problems.length) {
-    mkdirSync(resolve(ROOT, 'ableton/.tmp'), { recursive: true });
-    writeFileSync(resolve(ROOT, 'ableton/.tmp/failed.xml'), xml);
-    console.error('VALIDACION fallida (volcado en ableton/.tmp/failed.xml):');
-    for (const p of problems) console.error('  - ' + p);
-    process.exit(1);
-  }
-
-  const gz = gzipSync(Buffer.from(xml, 'utf8'));
+  const gz = gzipSync(Buffer.from(ctx.xml, 'utf8'));
   const back = gunzipSync(gz).toString('utf8');
-  assert(back === xml, 'gzip roundtrip != xml');
-  mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(OUT, gz);
+  assert(back === ctx.xml, 'gzip roundtrip != xml');
+  mkdirSync(dirname(opts.out), { recursive: true });
+  writeFileSync(opts.out, gz);
 
   const inv = inventory(gz);
   console.log(JSON.stringify({
-    out: OUT,
+    out: opts.out,
+    steps: enabled,
     bytes: gz.length,
-    xmlBytes: xml.length,
+    xmlBytes: ctx.xml.length,
     tracks: inv.tracks.map((t) => `${t.name}(${t.type},${t.clipSlots} slots,${t.devices} dev)`),
     scenes: inv.scenes, returns: inv.returns, tempo: inv.tempo,
-    freshIds: counter - maxSeen,
-    nextPointeeId: npm[1],
+    freshIds: ctx.counter - maxSeen,
+    nextPointeeId: ctx.nextPointeeId,
   }, null, 2));
 }
 
