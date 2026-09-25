@@ -42,12 +42,12 @@ function setupFixture() {
     const notes = [{ startBeat: 0, durBeats: 1, note: 60, velocity: 96 }];
     writeFileSync(join(dir, 'clips', `keys--${sc.name}.mid`), Buffer.from([0x4d,0x54,0x68,0x64]));
     writeFileSync(join(dir, 'clips', `keys--${sc.name}.mid.json`), JSON.stringify({ notes }));
-    // tiny wav for strings
+    // tiny wav for strings (1 sec silence to keep Live happy)
     const wav = join(dir, 'stems', `strings--${sc.name}.wav`);
-    // minimal RIFF header (44 bytes) + data
+    const dataLen = 44100 * 2; // 1 sec 16-bit mono
     const hdr = Buffer.alloc(44);
-    hdr.write('RIFF',0); hdr.writeUInt32LE(36+4,4); hdr.write('WAVE',8); hdr.write('fmt ',12); hdr.writeUInt32LE(16,16); hdr.writeUInt16LE(1,20); hdr.writeUInt16LE(1,22); hdr.writeUInt32LE(44100,24); hdr.writeUInt32LE(44100*2,28); hdr.writeUInt16LE(2,32); hdr.writeUInt16LE(16,34); hdr.write('data',36); hdr.writeUInt32LE(4,40);
-    const data = Buffer.from([0,0,0,0]);
+    hdr.write('RIFF',0); hdr.writeUInt32LE(36+dataLen,4); hdr.write('WAVE',8); hdr.write('fmt ',12); hdr.writeUInt32LE(16,16); hdr.writeUInt16LE(1,20); hdr.writeUInt16LE(1,22); hdr.writeUInt32LE(44100,24); hdr.writeUInt32LE(44100*2,28); hdr.writeUInt16LE(2,32); hdr.writeUInt16LE(16,34); hdr.write('data',36); hdr.writeUInt32LE(dataLen,40);
+    const data = Buffer.alloc(dataLen, 0);
     writeFileSync(wav, Buffer.concat([hdr, data]));
   }
   writeFileSync(join(dir, 'stems', 'manifest.json'), JSON.stringify([

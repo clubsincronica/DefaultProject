@@ -24,8 +24,15 @@ function normalizePart(part) {
   return TRACK_MAP[low] ?? part;
 }
 
-export async function buildSong(slug, opts = {}) {
+export async function buildSong(slugArg, opts = {}) {
   const dryRun = !!opts.dryRun;
+  // accept both "<slug>" and "songs/<slug>" forms (review gate uses songs/_fixture)
+  let slug = slugArg;
+  if (slug.includes('/') || slug.includes('\\')) {
+    // normalize path: take basename, or resolve relative to ROOT
+    const parts = slug.replace(/\\/g, '/').split('/').filter(Boolean);
+    slug = parts[parts.length - 1];
+  }
   const songDir = join(ROOT, 'songs', slug);
   const structurePath = join(songDir, 'structure.json');
   if (!existsSync(structurePath)) fail(`structure.json not found: ${structurePath}`);
@@ -161,6 +168,23 @@ export async function buildSong(slug, opts = {}) {
     }
   }
 
+  // 7-9 skipped in dry-run — spec: dry-run stops after step 6 (validation) and writes report.json only, no XML mutation.
+  const outDir = join(songDir, 'output');
+  mkdirSync(outDir, { recursive: true });
+  const reportPath = join(outDir, 'report.json');
+  report.scenes = structure.scenes.map(s => s.name);
+  report.tempo = structure.tempo;
+  report.arrangement = structure.arrangement;
+  report.missing = report.missing ?? [];
+
+  // 10. dry-run: write report only, no .als — early exit before tempo/locators/arrangement mutation
+  if (dryRun) {
+    writeFileSync(reportPath, JSON.stringify(report, null, 2));
+    console.log(JSON.stringify({ ...report, dryRun: true }, null, 2));
+    if (report.missing.length) console.warn(`missing assets: ${report.missing.join(', ')}`);
+    return { report, written: false };
+  }
+
   // 7. tempo base
   // Replace global <Tempo><Manual Value="...">
   xml = xml.replace(/(<Tempo>[\s\S]*?<Manual Value=")[^"]*(")/, `$1${structure.tempo}$2`);
@@ -186,23 +210,6 @@ export async function buildSong(slug, opts = {}) {
     state.tree = reparsed.tree;
     state.xml = xml;
   } catch { state.xml = xml; }
-
-  const outDir = join(songDir, 'output');
-  mkdirSync(outDir, { recursive: true });
-  const reportPath = join(outDir, 'report.json');
-
-  report.scenes = structure.scenes.map(s => s.name);
-  report.tempo = structure.tempo;
-  report.arrangement = structure.arrangement;
-  report.missing = report.missing ?? [];
-
-  // 10. dry-run: write report only, no .als
-  if (dryRun) {
-    writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    console.log(JSON.stringify({ ...report, dryRun: true }, null, 2));
-    if (report.missing.length) console.warn(`missing assets: ${report.missing.join(', ')}`);
-    return { report, written: false };
-  }
 
   // 11. save
   const outAls = join(outDir, `${slug}.als`);

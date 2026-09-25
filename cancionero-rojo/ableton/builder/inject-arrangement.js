@@ -74,8 +74,6 @@ export function injectSceneTempos(xml, scenes) {
     if (idx < 0) throw new Error(`scene index ${i} not found for tempo override`);
     const block = m[0];
     if (block.includes('<Tempo>')) {
-      const replaced = block.replace(/<Tempo>[\s\S]*?<Manual Value="[^"]*"/, `<Tempo><Manual Value="${sc.tempo}"`);
-      // Actually need to replace Manual Value correctly
       const patched = block.replace(/(<Tempo>[\s\S]*?<Manual Value=")[^"]*(")/, `$1${sc.tempo}$2`);
       out = out.slice(0, idx) + patched + out.slice(idx + block.length);
     } else {
@@ -105,6 +103,15 @@ export function injectArrangement(xml, arrangement, scenes, clipMap) {
     times.push(cumul);
     cumul += (sceneBars.get(name) ?? 4) * 4;
   }
+  // allocate globally unique Ids: scan max existing Id to avoid collisions
+  let nextArrId = 5000;
+  for (const m of xml.matchAll(/\bId="(\d+)"/g)) {
+    const v = parseInt(m[1], 10);
+    if (v >= nextArrId) nextArrId = v + 1;
+  }
+  // also account for Ids inside clipMap that will be cloned
+  // ensure nextArrId is above 9000 range used historically
+  if (nextArrId < 9000) nextArrId = 9000;
   // For each track, collect clips to place in arrangement order
   // Replace <ArrangerAutomation><Events /></ArrangerAutomation> or <Events>...</Events> inside each track
   let out = xml;
@@ -126,9 +133,21 @@ export function injectArrangement(xml, arrangement, scenes, clipMap) {
       const clipXml = map[sceneName];
       if (!clipXml) continue;
       const time = times[i];
-      // Patch Time="0" -> Time="time"
-      const patched = clipXml.replace(/<((Midi|Audio)Clip) Id="[^"]*" Time="[^"]*"/, `<$1 Id="${9000 + i}" Time="${time}"`);
-      // Also ensure <CurrentEnd> etc reflect duration; keep as is
+      // Use scene's bars for arrangement duration (scene bars *4 beats), not donor's arbitrary duration
+      const sceneBarsVal = sceneBars.get(sceneName) ?? 4;
+      const dur = sceneBarsVal * 4;
+      const end = time + dur;
+      // Patch Time + allocate globally unique Id + fix absolute end markers
+      let patched = clipXml.replace(/<((Midi|Audio)Clip) Id="[^"]*" Time="[^"]*"/, `<$1 Id="${nextArrId++}" Time="${time}"`);
+      patched = patched.replace(/<CurrentEnd Value="[^"]*"/, `<CurrentEnd Value="${end}"`);
+      patched = patched.replace(/<LoopEnd Value="[^"]*"/, `<LoopEnd Value="${end}"`);
+      patched = patched.replace(/<OutMarker Value="[^"]*"/, `<OutMarker Value="${end}"`);
+      // CurrentStart stays 0 per donor (relative), but Live repair complained about Start > End; we keep Start 0 and fix End above.
+      // For absolute timeline, also ensure HiddenLoopEnd >= end
+      const hiddenMatch = patched.match(/<HiddenLoopEnd Value="([^"]*)"/);
+      if (hiddenMatch && parseFloat(hiddenMatch[1]) < end) {
+        patched = patched.replace(/<HiddenLoopEnd Value="[^"]*"/, `<HiddenLoopEnd Value="${end}"`);
+      }
       clips.push(patched);
     }
     if (clips.length === 0) continue;
