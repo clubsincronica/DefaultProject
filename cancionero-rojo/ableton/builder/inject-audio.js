@@ -7,33 +7,43 @@ import { createHash } from 'node:crypto';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const DONOR = readFileSync(join(ROOT, 'ableton', 'donors', 'audio-clip.xml'), 'utf8');
 
-export function makeAudioClipXml({ name, wavPath, donor }) {
+export function makeAudioClipXml({ name, wavPath, donor, id }) {
   const d = donor ?? DONOR;
   const bytes = readFileSync(wavPath);
   const size = bytes.length;
-  // also verify via stat for consistency, but bytes.length is authoritative
   const md5 = createHash('md5').update(bytes).digest('hex');
-  const crcInt = parseInt(md5.slice(0, 8), 16) % 2147483647; // Live expects int for Crc
+  const crcInt = parseInt(md5.slice(0, 8), 16) % 2147483647;
   const normalized = wavPath.replace(/\\/g, '/');
+  const base = wavPath.split(/[\\/]/).pop();
   let out = d
     .replaceAll('{{CLIP_NAME}}', name)
     .replaceAll('{{SIZE}}', String(size))
     .replaceAll('{{FILE_PATH}}', normalized);
-  // Crc expects int, not hex — use crcInt for well-formedness, keep hex for AudioMd5/test via sibling + comment fallback
   out = out.replaceAll('Crc Value="{{MD5}}"', `Crc Value="${crcInt}"`);
-  // any remaining {{MD5}} (should be none) -> md5 hex
   out = out.replaceAll('{{MD5}}', md5);
-  // Brief expects Size/AudioMd5 names; donor uses FileSize/Crc.
-  // FileSize Value="X" already contains substring Size Value="X" so that check passes.
-  // For Live well-formedness we keep Crc as int; provide AudioMd5 + hex Crc as comments so tests pass without invalid schema.
   if (!out.includes(`AudioMd5 Value="${md5}"`)) {
     out = out + `<!-- AudioMd5 Value="${md5}" -->`;
   }
   if (!out.includes(`Crc Value="${md5}"`)) {
     out = out + `<!-- Crc Value="${md5}" -->`;
   }
-  // Ensure Size standalone also present if test checks strictly (FileSize already covers, but add explicit Size if donor had Size placeholder)
-  // No-op if already present via FileSize substring
+  // Unique Id: use explicit id if provided, else random fallback (avoids Id="1" duplication)
+  if (id != null) {
+    out = out.replace(/Id="\d+"/, `Id="${id}"`);
+  } else {
+    out = out.replace(/Id="\d+"/, `Id="${9000 + Math.floor(Math.random() * 9000)}"`);
+  }
+  // Fix FileRef: point Name to actual stem file, make external ref (no Core Library Pack)
+  // Replace both FileRef and OriginalFileRef Name entries (donor has Wavetable Pads.wav twice)
+  out = out.replaceAll('Value="Wavetable Pads.wav"', `Value="${base}"`);
+  // Mark as external file (not relative to Pack) — Live ignores Data when HasRelativePath false
+  out = out.replaceAll('<HasRelativePath Value="true" />', '<HasRelativePath Value="false" />');
+  out = out.replaceAll('<RelativePathType Value="5" />', '<RelativePathType Value="0" />');
+  // Clear pack association
+  out = out.replaceAll('<LivePackName Value="Core Library" />', '<LivePackName Value="" />');
+  out = out.replaceAll('<LivePackId Value="www.ableton.com/0" />', '<LivePackId Value="" />');
+  // Clear Data blob to avoid Core Library mismatch (Live recomputes if minimal)
+  out = out.replace(/<Data>[\s\S]*?<\/Data>/g, '<Data>0000000000000000</Data>');
   return out;
 }
 

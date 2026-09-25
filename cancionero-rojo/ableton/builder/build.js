@@ -89,11 +89,16 @@ export async function buildSong(slugArg, opts = {}) {
     template: 'OK',
   };
 
-  // 5. MIDI parts x scenes
+  // 5. MIDI parts x scenes — allocate unique Ids from max existing to avoid AudioClip Id="1" duplication
   const midiParts = structure.parts?.midi ?? [];
   const audioParts = structure.parts?.audio ?? [];
   const sceneIndex = new Map(structure.scenes.map((s, i) => [s.name, i]));
   const clipMap = {}; // trackName -> { sceneName: clipXml }
+  let nextClipId = 9000;
+  for (const m of xml.matchAll(/\bId="(\d+)"/g)) {
+    const v = parseInt(m[1], 10);
+    if (v >= nextClipId) nextClipId = v + 1;
+  }
 
   for (const part of midiParts) {
     const trackName = normalizePart(part);
@@ -131,7 +136,7 @@ export async function buildSong(slugArg, opts = {}) {
       } catch (e) {
         fail(`cannot load sidecar ${sidecar}: ${e.message}`);
       }
-      const clipXml = makeClipXml({ name: sc.name, notes });
+      const clipXml = makeClipXml({ name: sc.name, notes, id: nextClipId++ });
       try {
         xml = injectMidiIntoTrack(xml, trackName, idx, clipXml);
         clipMap[trackName][sc.name] = clipXml;
@@ -156,7 +161,7 @@ export async function buildSong(slugArg, opts = {}) {
         report.missing.push(`stems/${part}--${sc.name}.wav`);
         continue;
       }
-      const clipXml = makeAudioClipXml({ name: sc.name, wavPath: chosen });
+      const clipXml = makeAudioClipXml({ name: sc.name, wavPath: chosen, id: nextClipId++ });
       try {
         xml = injectAudioIntoTrack(xml, trackName, idx, clipXml);
         clipMap[trackName][sc.name] = clipXml;

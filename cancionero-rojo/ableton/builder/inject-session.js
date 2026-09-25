@@ -13,16 +13,21 @@ export function notesToLiveEvents(notes) {
     `<MidiNoteEvent Time="${n.startBeat}" Duration="${n.durBeats}" Note="${n.note}" Velocity="${n.velocity}" />`).join('');
 }
 
-export function makeClipXml({ name, donor, notes }) {
+export function makeClipXml({ name, donor, notes, id }) {
   const d = donor ?? DONOR;
   const events = notesToLiveEvents(notes);
   const end = Math.max(...notes.map(n => n.startBeat + n.durBeats), 4);
-  return d
+  let xml = d
     .replace('{{NOTES}}', events)
     .replace(/\{\{DUR\}\}|Value="\{\{DUR_BEATS\}\}"/g, `Value="${end}"`)
     .replace(/(<Name(?:\.Value)? Value=")[^"]*(")/, `$1${name}$2`)
-    .replace(/(<EffectiveName Value=")[^"]*(")/, `$1${name}$2`)
-    .replace(/Id="\d+"/, `Id="${9000 + Math.floor(Math.random() * 900)}"`);
+    .replace(/(<EffectiveName Value=")[^"]*(")/, `$1${name}$2`);
+  if (id != null) {
+    xml = xml.replace(/Id="\d+"/, `Id="${id}"`);
+  } else {
+    xml = xml.replace(/Id="\d+"/, `Id="${9000 + Math.floor(Math.random() * 900)}"`);
+  }
+  return xml;
 }
 
 // string-level injection: localiza el bloque del track y reescribe el slot destino
