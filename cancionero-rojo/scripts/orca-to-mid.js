@@ -16,4 +16,5 @@ for (const w of warnings) console.warn('WARN', w);
 const buf = writeSmf({ tempo: parseFloat(args.tempo), timeSig: [4, 4], notes, program: parseInt(args.program ?? header.program ?? '0', 10) });
 mkdirSync(dirname(args.out), { recursive: true });
 writeFileSync(args.out, buf);
-console.log(`Wrote ${args.out} (${notes.length} notes)`);
+writeFileSync(args.out + '.json', JSON.stringify({ notes }, null, 2));
+console.log(`Wrote ${args.out} (${notes.length} notes) + ${args.out}.json`);
