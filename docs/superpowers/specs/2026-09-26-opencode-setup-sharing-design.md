@@ -1,7 +1,7 @@
 # Spec — Repos de compartir: `opencode-setup` + `cancionero-rojo`
 
 Fecha: 2026-09-26
-Estado: **borrador, pendiente de revisión del usuario**
+Estado: **aprobado e implementado (2026-09-26)** — solo queda invitar al colaborador.
 
 ## 1. Contexto
 
@@ -104,9 +104,9 @@ Separación del repo raíz (el padre ya tiene 77 archivos de `cancionero-rojo` i
 
 ## 6. Criterios de aceptación
 
-- [ ] `clubsincronica/opencode-setup` existe, es privado y contiene las 4 configs saneadas + README con las 6 secciones.
-- [ ] Escaneo de secretos = 0 coincidencias en ambos repos.
-- [ ] `clubsincronica/cancionero-rojo` existe, es privado, sin audio ni probes de debug.
-- [ ] El repo raíz ya no trackea `cancionero-rojo/` y su `git status` está limpio en ese tema.
-- [ ] Ambos repos enlazados desde el README.
-- [ ] Colaborador invitado (usuario pendiente).
+- [x] `clubsincronica/opencode-setup` existe, es privado y contiene las 4 configs saneadas + README con las 6 secciones.
+- [x] Escaneo de secretos = 0 coincidencias en ambos repos.
+- [x] `clubsincronica/cancionero-rojo` existe, es privado, sin audio ni probes de debug.
+- [x] El repo raíz ya no trackea `cancionero-rojo/` y su `git status` está limpio en ese tema.
+- [x] Ambos repos enlazados desde el README.
+- [ ] Colaborador invitado — **pendiente: usuario de GitHub del amigo**.

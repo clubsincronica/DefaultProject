@@ -5,6 +5,8 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 
 Historial de fixes: `docs/Changelog.md`
 
+**Repos GitHub (org `clubsincronica`, todos PRIVADOS):** `club-sincronica`, `pipeline-viral`, `cancionero-rojo` (nuevo 2026-09-26), `opencode-setup` (nuevo 2026-09-26, configs de opencode saneadas + README de flujo de API keys). El repo raíz y `remotion-poc` siguen SOLO locales. Spec: `docs/superpowers/specs/2026-09-26-opencode-setup-sharing-design.md`.
+
 ---
 
 ## club-sincronica (shorts diarios)
@@ -49,6 +51,7 @@ Historial de fixes: `docs/Changelog.md`
 - **FIX STEMS (2026-09-26):** los WAV de Strings/Texture no resolvían (`No se pudo abrir el archivo "strings--Intro.wav"`). Causa: `inject-audio.js` dejaba el FileRef DONOR (pack `trunk/Core Library/Samples/Synth`, `RelativePathType=5`) + combo imposible (`HasRelativePath=false` + `RelativePathType=0` + `<Data>` a ceros). Fix: formato Live 10 decodificado de sets REALES del usuario (`NEW WAM.als`, `GRABETA`, `Sin título.als`): `HasRelativePath=true`, `RelativePathType=1`, `<RelativePath>` = dirs relativas al dir del .als con `".."` codificado como `Dir=""` (ours: `Dir=""` + `Dir="stems"`), `<Data>` = UTF-16LE hex del path absoluto + null, `<PathHint>` = dirs sin drive. `makeAudioClipXml` ahora recibe `setDir` (build.js lo pasa). Verificado: harness OPEN_OK **cero** avisos `No se pudo abrir` en sesión de 90s. Tests 50/50.
 - **FIX MIDI MUDO (2026-09-26):** primera audición: solo Strings/Texture sonaban; Keys/Perc (clips con notas presentes) en silencio. Causa raíz: `notesToLiveEvents` (inject-session.js) generaba notas en formato SMF plano `<MidiNoteEvent ... Note="57" .../>` — **Live 10 ignora el atributo `Note=`**: el pitch real va en `<MidiKey Value>` dentro de `<KeyTrack>` agrupado bajo `<Notes><KeyTracks>...` (formato decodificado del donor `Live 10 Suite Empty.als`, 44 MidiClips). Contribuyente: `extract-donors.js` aplanó el wrapper `<KeyTracks>` al extraer el `midi-clip.xml` ({{NOTES}} va donde iba el KeyTracks → el generator ahora lo repone). Fix: agrupa eventos por pitch (KeyTrack Id=index, pitches ascendentes) con attrs ground-truth `Time/Duration/Velocity/OffVelocity/IsEnabled`. Verificado: output = 21 KeyTracks / 114 MidiKey / 0 attrs `Note=`, harness OPEN_OK sin errores. Tests 50/50. **Audición confirmada por usuario: todos los clips suenan (2026-09-26).**
 - **Spec:** `docs/superpowers/specs/2026-09-24-cancionero-rojo-karaoke-design.md`.
+- **Repo propio (2026-09-26):** `cancionero-rojo` ya NO se trackea en el repo raíz (`git rm --cached` + `cancionero-rojo/` en el `.gitignore` raíz); ahora es repo privado propio → https://github.com/clubsincronica/cancionero-rojo (130 archivos, 0 audio). `.gitignore` propio bloquea wav/mp3/asd, `node_modules`, probes de debug (`dbg.mjs`, `dump*.mjs`, `gen-probes2.mjs`) y `songs/_fixture/`. Rutas absolutas personales de `ableton/xml-map.md` saneadas a placeholders (`<LIVE_RESOURCES>`, `<MUSIC>`).
 - **Pipeline:** ver `cancionero-rojo/AGENTS.md`.
 - **DO-NOT-REPEAT:**
   1. `node --test <dir>` NO recursa desde Node 21 (win32): usar `node --test` (bare) — script `npm test` corregido 2026-09-24.
