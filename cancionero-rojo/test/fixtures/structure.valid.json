@@ -1,8 +1,0 @@
-{
-  "slug": "je-veux", "title": "Je Veux", "artist": "Zaz", "key": "Am",
-  "tempo": 130, "timeSig": "4/4",
-  "scenes": [{ "name": "Intro", "bars": 4 }, { "name": "Verse", "bars": 16 },
-             { "name": "Chorus", "bars": 16 }, { "name": "Outro", "bars": 4 }],
-  "arrangement": ["Intro", "Verse", "Chorus", "Verse", "Chorus", "Outro"],
-  "parts": { "midi": ["keys"], "audio": ["strings", "texture"] }
-}

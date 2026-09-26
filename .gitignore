@@ -2,6 +2,8 @@
 club-sincronica/
 pipeline-viral/
 remotion-poc/
+cancionero-rojo/
+opencode-setup/
 Project/
 toolbox/
 
@@ -25,12 +27,6 @@ audit-code-*.md
 audit-code-tasks.json
 audit-code-tareas.md
 
-# cancionero-rojo audio assets
-cancionero-rojo/**/*.wav
-cancionero-rojo/**/*.asd
-cancionero-rojo/**/*.mp3
-cancionero-rojo/**/.tmp/
-
-# Python caches (cancionero-rojo scripts)
-cancionero-rojo/**/__pycache__/
+# Python caches
 *.pyc
+
