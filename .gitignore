@@ -27,6 +27,7 @@ audit-code-tareas.md
 
 # cancionero-rojo audio assets
 cancionero-rojo/**/*.wav
+cancionero-rojo/**/*.asd
 cancionero-rojo/**/*.mp3
 cancionero-rojo/**/.tmp/
 
