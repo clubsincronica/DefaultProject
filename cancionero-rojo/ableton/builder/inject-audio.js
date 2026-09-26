@@ -1,13 +1,36 @@
 import { readFileSync } from 'node:fs';
 import { statSync } from 'node:fs';
-import { join, resolve, dirname } from 'node:path';
+import { join, resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const DONOR = readFileSync(join(ROOT, 'ableton', 'donors', 'audio-clip.xml'), 'utf8');
 
-export function makeAudioClipXml({ name, wavPath, donor, id }) {
+// Replace every <tag>...</tag> block keeping each one's own indentation.
+// buildInner(indent, blockIdx) returns the inner lines (without the open/close tag lines).
+function replaceBlocks(xml, tag, buildInner) {
+  let blockIdx = 0;
+  return xml.replace(new RegExp(`<${tag}>[\\s\\S]*?</${tag}>`, 'g'), (m, off, str) => {
+    const lineStart = str.lastIndexOf('\n', off) + 1;
+    const indent = str.slice(lineStart, off);
+    const inner = buildInner(indent, blockIdx++);
+    return `<${tag}>\n${inner}\n${indent}</${tag}>`;
+  });
+}
+
+function wrapHex(hex, indent) {
+  const lines = [];
+  for (let i = 0; i < hex.length; i += 80) lines.push(indent + hex.slice(i, i + 80));
+  return lines.join('\n');
+}
+
+// Live 10 ground-truth FileRef for external audio (decoded from working sets:
+// NEW WAM.als / GRABETA / Sin título.als):
+//   HasRelativePath=true, RelativePathType=1, chain = dirs relative to the .als dir
+//   (".." encoded as Dir=""), Data = UTF-16LE absolute path + null terminator,
+//   PathHint = dir chain without drive (search fallback), Name = file name.
+export function makeAudioClipXml({ name, wavPath, donor, id, setDir }) {
   const d = donor ?? DONOR;
   const bytes = readFileSync(wavPath);
   const size = bytes.length;
@@ -41,17 +64,43 @@ export function makeAudioClipXml({ name, wavPath, donor, id }) {
   if (fileRefId != null) {
     out = out.replace(/<FileRef Id="21"/, `<FileRef Id="${fileRefId}"`);
   }
-  // Fix FileRef: point Name to actual stem file, make external ref (no Core Library Pack)
-  // Replace both FileRef and OriginalFileRef Name entries (donor has Wavetable Pads.wav twice)
+  // Fix FileRef: point Name to actual stem file (both FileRef and OriginalFileRef)
   out = out.replaceAll('Value="Wavetable Pads.wav"', `Value="${base}"`);
-  // Mark as external file (not relative to Pack) — Live ignores Data when HasRelativePath false
-  out = out.replaceAll('<HasRelativePath Value="true" />', '<HasRelativePath Value="false" />');
-  out = out.replaceAll('<RelativePathType Value="5" />', '<RelativePathType Value="0" />');
-  // Clear pack association
+  // Clear pack association (external file, not Core Library)
   out = out.replaceAll('<LivePackName Value="Core Library" />', '<LivePackName Value="" />');
   out = out.replaceAll('<LivePackId Value="www.ableton.com/0" />', '<LivePackId Value="" />');
-  // Clear Data blob to avoid Core Library mismatch (Live recomputes if minimal)
-  out = out.replace(/<Data>[\s\S]*?<\/Data>/g, '<Data>0000000000000000</Data>');
+
+  if (setDir) {
+    const abs = resolve(wavPath);
+    const relDir = dirname(relative(resolve(setDir), abs));
+    const dirSegs = relDir === '.' ? [] : relDir.split(/[\\/]/);
+    const encSegs = dirSegs.map((s) => (s === '..' ? '' : s));
+    const hintSegs = abs.split(/[\\/]/).slice(1, -1);
+    const dataHex = Buffer.concat([
+      Buffer.from(abs, 'utf16le'),
+      Buffer.from([0, 0]),
+    ]).toString('hex').toUpperCase();
+
+    // HasRelativePath stays donor=true (matches every working external ref)
+    out = out.replaceAll('<RelativePathType Value="5" />', '<RelativePathType Value="1" />');
+    out = replaceBlocks(out, 'RelativePath', (indent, bi) =>
+      encSegs.length === 0
+        ? `${indent}\t<!-- same-dir ref -->`
+        : encSegs.map((seg, i) =>
+            `${indent}\t<RelativePathElement Id="${40 + bi * 2 + i}" Dir="${seg}" />`
+          ).join('\n')
+    );
+    out = replaceBlocks(out, 'Data', (indent) => wrapHex(dataHex, indent + '\t'));
+    out = replaceBlocks(out, 'PathHint', (indent) =>
+      hintSegs.map((seg, i) => `${indent}\t<RelativePathElement Id="${i}" Dir="${seg}" />`).join('\n')
+    );
+  } else {
+    // Fallback (no setDir): legacy behavior — external flag off, Data zeroed.
+    // Only used by tests that don't assert path fields.
+    out = out.replaceAll('<HasRelativePath Value="true" />', '<HasRelativePath Value="false" />');
+    out = out.replaceAll('<RelativePathType Value="5" />', '<RelativePathType Value="0" />');
+    out = out.replace(/<Data>[\s\S]*?<\/Data>/g, '<Data>0000000000000000</Data>');
+  }
   return out;
 }
 

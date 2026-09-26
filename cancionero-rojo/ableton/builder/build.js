@@ -161,7 +161,7 @@ export async function buildSong(slugArg, opts = {}) {
         report.missing.push(`stems/${part}--${sc.name}.wav`);
         continue;
       }
-      const clipXml = makeAudioClipXml({ name: sc.name, wavPath: chosen, id: nextClipId++ });
+      const clipXml = makeAudioClipXml({ name: sc.name, wavPath: chosen, id: nextClipId++, setDir: join(songDir, 'output') });
       try {
         xml = injectAudioIntoTrack(xml, trackName, idx, clipXml);
         clipMap[trackName][sc.name] = clipXml;
