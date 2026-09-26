@@ -6,11 +6,26 @@ import { gzipSync, gunzipSync } from 'node:zlib';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const DONOR = readFileSync(join(ROOT, 'ableton', 'donors', 'midi-clip.xml'), 'utf8');
 
-// Convierte events del SMF builder (mismo formato que orca-to-mid) a Live MidiNoteEvent:
-// Live 10 guarda Time/Duration en quarter-notes (float).
+// Live 10 ground truth (donor lesson, 44 MidiClips): notes live in
+// <Notes><KeyTracks><KeyTrack Id="n"><Notes><MidiNoteEvent .../></Notes>
+// <MidiKey Value="pitch"/></KeyTrack>...</KeyTracks></Notes>.
+// El pitch va en MidiKey por KeyTrack — un atributo Note= en el evento
+// es ignorado por Live 10 (por eso los clips salían mudos).
+// Time/Duration en quarter-notes (float).
 export function notesToLiveEvents(notes) {
-  return notes.map(n =>
-    `<MidiNoteEvent Time="${n.startBeat}" Duration="${n.durBeats}" Note="${n.note}" Velocity="${n.velocity}" />`).join('');
+  const byPitch = new Map();
+  for (const n of notes) {
+    if (!byPitch.has(n.note)) byPitch.set(n.note, []);
+    byPitch.get(n.note).push(n);
+  }
+  const pitches = [...byPitch.keys()].sort((a, b) => a - b);
+  const keyTracks = pitches.map((pitch, i) => {
+    const events = byPitch.get(pitch)
+      .map(n => `<MidiNoteEvent Time="${n.startBeat}" Duration="${n.durBeats}" Velocity="${n.velocity}" OffVelocity="0" IsEnabled="true" />`)
+      .join('');
+    return `<KeyTrack Id="${i}"><Notes>${events}</Notes><MidiKey Value="${pitch}" /></KeyTrack>`;
+  }).join('');
+  return `<KeyTracks>${keyTracks}</KeyTracks>`;
 }
 
 export function makeClipXml({ name, donor, notes, id }) {

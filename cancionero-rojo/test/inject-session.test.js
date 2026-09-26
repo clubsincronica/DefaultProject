@@ -19,12 +19,31 @@ function fixtureXml() {
 </Tracks></LiveSet></Ableton>`;
 }
 
-test('notesToLiveEvents converts notes to MidiNoteEvent XML', () => {
-  const notes = [{ startBeat: 0, durBeats: 1, note: 60, velocity: 96 }, { startBeat: 1, durBeats: 0.5, note: 62, velocity: 72 }];
+test('notesToLiveEvents emits Live 10 KeyTracks format (grouped by pitch, MidiKey per track)', () => {
+  const notes = [
+    { startBeat: 0, durBeats: 1, note: 60, velocity: 96 },
+    { startBeat: 1, durBeats: 0.5, note: 62, velocity: 72 },
+    { startBeat: 2, durBeats: 1, note: 60, velocity: 88 },
+  ];
   const xml = notesToLiveEvents(notes);
-  assert.ok(xml.includes('MidiNoteEvent Time="0" Duration="1"'));
-  assert.ok(xml.includes('Note="62" Velocity="72"'));
-  assert.equal((xml.match(/MidiNoteEvent/g) ?? []).length, 2);
+  // ground truth from donor lesson (Live 10 Suite Empty.als, 44 MidiClips):
+  // <Notes><KeyTracks><KeyTrack Id="0"><Notes><MidiNoteEvent .../></Notes><MidiKey Value="36"/></KeyTrack>...
+  assert.ok(xml.includes('<KeyTracks>'), 'KeyTracks wrapper present');
+  assert.ok(xml.includes('</KeyTracks>'), 'KeyTracks closed');
+  // pitches grouped: 2 KeyTracks (60, 62), ascending, Id = index
+  assert.equal((xml.match(/<KeyTrack /g) ?? []).length, 2);
+  assert.ok(xml.includes('<KeyTrack Id="0">'), 'first KeyTrack id 0');
+  // pitch lives in MidiKey, NOT as Note= attribute on the event (Live 10 ignores Note=)
+  assert.ok(xml.includes('<MidiKey Value="60" />'), 'MidiKey 60');
+  assert.ok(xml.includes('<MidiKey Value="62" />'), 'MidiKey 62');
+  assert.ok(!xml.includes('Note="'), 'no invented Note= attribute');
+  // events carry ground-truth attrs
+  assert.ok(xml.includes('<MidiNoteEvent Time="0" Duration="1" Velocity="96" OffVelocity="0" IsEnabled="true" />'), 'event attrs complete');
+  // pitch 60 has both events inside its KeyTrack
+  const kt60 = /<KeyTrack Id="0">([\s\S]*?)<\/KeyTrack>/.exec(xml)[1];
+  assert.equal((kt60.match(/<MidiNoteEvent/g) ?? []).length, 2, 'same pitch grouped in one KeyTrack');
+  assert.ok(kt60.includes('<MidiKey Value="60" />'));
+  assert.equal((xml.match(/<MidiNoteEvent/g) ?? []).length, 3, 'all events present');
 });
 
 test('makeClipXml replaces donor placeholders', () => {
@@ -34,6 +53,8 @@ test('makeClipXml replaces donor placeholders', () => {
   assert.ok(!out.includes('{{DUR_BEATS}}'), 'DUR_BEATS placeholder removed');
   assert.ok(!out.includes('{{CLIP_NAME}}'), 'CLIP_NAME placeholder removed');
   assert.ok(out.includes('<MidiNoteEvent'), 'contains note events');
+  assert.ok(out.includes('<KeyTracks>'), 'clip Notes block wraps KeyTracks (Live 10 format)');
+  assert.ok(!/MidiNoteEvent[^>]*Note="/.test(out), 'no flat Note= events outside KeyTracks');
   assert.ok(out.includes('Value="Verse"'), 'clip name injected');
   // end = max(0+1,4)=4 at least
   assert.ok(out.includes('Value="4"') || out.includes('Value="1"'), 'duration set');
