@@ -298,12 +298,23 @@ function stepDuplicate(ctx) {
   ctx.xml = ctx.xml.slice(0, seg.end) + EOL + ctx.textureText + ctx.xml.slice(seg.end);
 }
 
-// 2. master-chain — trasplante de AutoFilter #2 (nth=1) y Echo #1 (nth=0) al
+// 2. master-chain — trasplante de AutoFilter (nth=1) y Echo (nth=1) al
 //    MasterTrack. Se extraen SIEMPRE del donor: la build original los extraía de
 //    un xml aún sin insertar el clon, así que donorXml es la fuente fiel.
+//    SOLO dispositivos de nivel superior (indent 7): Live 10 crashea (fatal,
+//    0xc0000005) al abrir el template si se trasplanta un dispositivo anidado
+//    dentro de un rack (ej. Echo nth=0, indent 13, dentro de InstrumentGroupDevice
+//    de la pista 73). Evidencia: ableton/.tmp/bisect/ (e0-raw CRASH, e1-top OK).
 function stepMasterChain(ctx) {
-  let autoDev = cloneRenumber(extractElement(ctx.donorXml, 'AutoFilter', 1), ctx.docIndex, ctx.nextId);
-  let echoDev = cloneRenumber(extractElement(ctx.donorXml, 'Echo', 0), ctx.docIndex, ctx.nextId);
+  const pickTopLevel = (tag, nth) => {
+    const text = extractElement(ctx.donorXml, tag, nth);
+    const indent = (text.match(/^\t*/) ?? [''])[0].length;
+    assert(indent === 7,
+      `master-chain: ${tag} #${nth} no está en nivel superior (indent=${indent}); Live 10 crashea con dispositivos de racks anidados`);
+    return text;
+  };
+  let autoDev = cloneRenumber(pickTopLevel('AutoFilter', 1), ctx.docIndex, ctx.nextId);
+  let echoDev = cloneRenumber(pickTopLevel('Echo', 1), ctx.docIndex, ctx.nextId);
   autoDev = reindent(autoDev, 1);
   echoDev = reindent(echoDev, 1);
   autoDev = setParamInBlock(autoDev, 'Cutoff', '133.25'); // 18k (escala log del donor)

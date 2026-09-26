@@ -43,8 +43,9 @@ Historial de fixes: `docs/Changelog.md`
 
 ## cancionero-rojo (karaoke backing tracks Ableton)
 
-- **Etapa actual:** Phase 1 COMPLETADA — canción #1 "Je Veux" shippeada (2026-09-25). Output: `songs/je-veux/output/je-veux.als` (bossa slow→mid 72/98, 4 scenes, 6 locators, 8 mids + 8 stems, 49/49 tests). Template `ableton/template.als` regenerado y validado (199KB gz).
+- **Etapa actual:** Phase 1 COMPLETADA — canción #1 "Je Veux" shippeada (2026-09-25). Output: `songs/je-veux/output/je-veux.als` (bossa slow→mid 72/98, 4 scenes, 6 locators, 8 mids + 8 stems, 49/49 tests).
 - **Canción #1 "Je Veux":** COMPLETADA (2026-09-25). Output: songs/je-veux/output/je-veux.als. Grids: orca/keys+perc ×4 scenes (chanson comping + bossa clave); Patterns: strings.js/texture.js (sawtooth pad + brown/sine bed); Stems: 8 WAVs (10-40s); Build: --dry-run OK → build OK, inspect 16 scenes/6 locators/tempo 98.
+- **FIX CRASH LIVE 10 (2026-09-26):** TODO `.als` que salía del builder crasheaba Live 10 (fatal 0xc0000005 / "documento dañado"). Causa raíz: `stepMasterChain` trasplantaba **Echo nth=0 = dispositivo ANIDADO en rack** (indent 13, dentro de InstrumentGroupDevice de la pista 73) al MasterTrack top-level → Live 10 muere al cargarlo. Fix: Echo **nth=1** (top-level indent 7) + assert `indent===7` en `pickTopLevel`. Verificado con harness: `ableton/template.als` y TODOS los outputs (`je-veux`, `je-veux-minimal`, etc.) = OPEN_OK. Evidencia del bisect en `ableton/.tmp/bisect/` (t0..t10, m-*, e0-raw CRASH / e1-top OK). Template regenerado (198KB gz) + todos los outputs reconstruidos.
 - **Spec:** `docs/superpowers/specs/2026-09-24-cancionero-rojo-karaoke-design.md`.
 - **Pipeline:** ver `cancionero-rojo/AGENTS.md`.
 - **DO-NOT-REPEAT:**
@@ -56,6 +57,12 @@ Historial de fixes: `docs/Changelog.md`
   6. `build-template.js` es la ÚNICA fuente de `ableton/template.als` (regenera y valida; no escribe si falla). NO editar el .als a mano: el próximo build lo pisa. Sends que la receta no lista → floor `0.0003162277571` (borra cruft de la lección donor).
   7. `songs/_fixture/output` queda bloqueado por AV/indexer (EBUSY en win32) tras tests: `setupFixture` debe tolerar EBUSY y limpiar subcarpetas individualmente (patch 2026-09-25 en build.test.js). No borrar todo `songs/_fixture` con `rmSync` a ciegas.
   8. Template XML inválido si se interrumpe `build-template.js` ( DeviceChain/MidiToAudioDeviceChain mismatch → fast-xml-parser addChild): regenerar con `node scripts/build-template.js` y validar `XMLValidator.validate` antes de builder.
+  9. **NUNCA trasplantar dispositivos ANIDADOS en racks a top-level** (Live 10 crashea fatal, no da error de XML). Solo dispositivos de nivel superior (indent 7 en tracks/returns; el assert `pickTopLevel` lo garantiza). `Echo nth=0` es el anidado; usar nth=1. Cualquier cambio que "arregle" el template debe re-hacerse: `node alsopentest.mjs <archivo> 75` y esperar `OPEN_OK` (verificar también la RAM: nada de crasheos previos — el harness limpia `CrashRecoveryInfo.cfg`/`CrashDetection.cfg`/`Crash/`).
+
+### Issues abiertos (cancionero)
+
+- **Stems WAV no resuelven (NO fatal, pre-existente):** Live loguea `No se pudo abrir el archivo "strings--Intro.wav"` al abrir los outputs. El `FileRef` real de carga conserva el PathHint/RelativePath DONOR (`trunk/Core Library/Samples/Synth`) — `inject-audio.js` solo reescribe nombre/size/crc/pack, NO la ruta. `BrowserContentPath` (SourceContext) sí tiene la ruta absoluta correcta pero Live 10 no la usa para cargar. No hay ningún ejemplo de path absoluto autorado por Live en disco (donor es solo pack-relative `RelativePathType=5`) → fix pendiente: reescribir `<RelativePath>`/`<PathHint>` al resolver relativo al documento (`../stems/*.wav`, `HasRelativePath=true`) o hallar el formato absoluto de Live 10. Strings/Texture suenan MUDOS hasta resolverlo.
+- **Recovery prompt en harness:** se dispara por crash previo; `alsopentest.mjs` limpia `Preferences/CrashRecoveryInfo.cfg` + `CrashDetection.cfg` + `Preferences/Crash/` pre/post y manda ESC si aparece. NO confiar en resultados `NO_LOAD_ATTEMPT` (rutas sin comillas no se borran).
 
 ---
 
