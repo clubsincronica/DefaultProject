@@ -1,7 +1,7 @@
 # Spec — Repos de compartir: `opencode-setup` + `cancionero-rojo`
 
 Fecha: 2026-09-26
-Estado: **aprobado e implementado (2026-09-26)** — solo queda invitar al colaborador.
+Estado: **implementado (2026-09-26/27)** — colaborador Lahun22 invitado, a la espera de que acepte.
 
 ## 1. Contexto
 
@@ -89,8 +89,8 @@ Separación del repo raíz (el padre ya tiene 77 archivos de `cancionero-rojo` i
 
 ### 4.3 Colaborador
 
-`gh api repos/clubsincronica/<repo>/collaborators/<usuario> -X PUT` para ambos repos.
-**Pendiente:** usuario de GitHub del amigo (bloqueante para este paso, no para el resto).
+`gh api repos/clubsincronica/<repo>/collaborators/<usuario> -X PUT -f permission=pull` para ambos repos.
+**Hecho (2026-09-27):** usuario `Lahun22`; GitHub rechazó `pull` ("Cannot assign … permission of read") así que se invitó con `push` en los dos repos. Nota: `permission=pull` no está disponible como colaborador externo aquí.
 
 ## 5. Riesgos y verificaciones
 
@@ -109,4 +109,4 @@ Separación del repo raíz (el padre ya tiene 77 archivos de `cancionero-rojo` i
 - [x] `clubsincronica/cancionero-rojo` existe, es privado, sin audio ni probes de debug.
 - [x] El repo raíz ya no trackea `cancionero-rojo/` y su `git status` está limpio en ese tema.
 - [x] Ambos repos enlazados desde el README.
-- [ ] Colaborador invitado — **pendiente: usuario de GitHub del amigo**.
+- [x] Colaborador invitado: **Lahun22** (permiso `push` en ambos repos, invitaciones pendientes de aceptar 2026-09-27).

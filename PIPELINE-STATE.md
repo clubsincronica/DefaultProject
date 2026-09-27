@@ -5,7 +5,7 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 
 Historial de fixes: `docs/Changelog.md`
 
-**Repos GitHub (org `clubsincronica`, todos PRIVADOS):** `club-sincronica`, `pipeline-viral`, `cancionero-rojo` (nuevo 2026-09-26), `opencode-setup` (nuevo 2026-09-26, configs de opencode saneadas + README de flujo de API keys). El repo raíz y `remotion-poc` siguen SOLO locales. Spec: `docs/superpowers/specs/2026-09-26-opencode-setup-sharing-design.md`.
+**Repos GitHub (org `clubsincronica`, todos PRIVADOS):** `club-sincronica`, `pipeline-viral`, `cancionero-rojo` (nuevo 2026-09-26), `opencode-setup` (nuevo 2026-09-26, configs de opencode saneadas + README de flujo de API keys). El repo raíz y `remotion-poc` siguen SOLO locales. Spec: `docs/superpowers/specs/2026-09-26-opencode-setup-sharing-design.md`. Colaborador externo `Lahun22` invitado a `opencode-setup` y `cancionero-rojo` (permiso `push`, invitaciones pendientes de aceptar).
 
 ---
 
