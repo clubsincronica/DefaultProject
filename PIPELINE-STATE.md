@@ -12,6 +12,7 @@ Historial de fixes: `docs/Changelog.md`
 ## club-sincronica (shorts diarios)
 
 - **Etapa actual:** produccion diaria (Fase 1, aprobacion humana). **LOTE COMPLETADO (2026-09-08):** 7 videos Sep 10-16 (Kin 15-21) producidos. Publicacion via Buffer + YouTube directo.
+- **LOTE GUIONES OCT 1-14 ESCRITO (2026-09-28):** 14 guion.md poéticos (modos de contar por sello) en `content/output/2026-10-01..14/`, astro real del motor (spec: `docs/superpowers/specs/2026-09-28-guiones-poeticos-oct-1-14-design.md`). 2 días GAP (Oct 4 Tormenta Cósmica, Oct 8 Noche Autoexistente → frase GAP en outro). Luna Nueva Oct 11-14 (evento en puentes). Verificados 14/14 `GUION OK` con `scripts/verify-guion.js` (nuevo: valida placeholders + lema literal vs contexto.json + kinName). Pendiente: grabación/transcripción/storyboard.
 - **Plan de mejora de frames:** `docs/Plans/Frame-Improvement.md`. kinCarta quota fix aplicado 2026-09-13.
 - **Pipeline:** `club-sincronica/AGENTS.md` (orden: tzolkin → astro → generate-day → guion → grabacion → transcripcion → validate-astro → storyboard → musica → frames → assemble → publicacion).
 - **Publicacion:** Buffer (FB/IG/TikTok/LinkedIn) + YouTube Shorts (ruta directa).
@@ -33,6 +34,7 @@ Historial de fixes: `docs/Changelog.md`
 12. **Subtitle layout:** render.js: `ty=-40`, `blockCenter=1500`, maxLines=4. frames.js: `ty=80`, `blockCenter=1420`. Subtítulos NUNCA suben de Y=1416 (margen seguro sobre gráficos).
 13. **Guion NO inventa aspectos:** validate-astro.js es gate ANTES de storyboard.
 14. **Maya numeral compacto:** `gap=6` (no 12 ni 22), `GAP=10` (no 14). Tono 13 = 44px (antes 80-100px). Frames.js y render.js deben tener los MISMOS valores. Nunca subir gap por encima de 8.
+15. **NO re-ejecutar `generate-day.js` después de escribir el guion** (pisa guion.md desde plantilla — patrón Sep 12-30: guiones escritos quedaron como plantillas al re-correr el paquete).
 
 ### Issues abiertos
 
