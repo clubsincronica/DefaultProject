@@ -78,9 +78,10 @@ Historial de fixes: `docs/Changelog.md`
 
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. H9-H10: guiones ✓, WAV voz grabados ✓ (`H9-2026-09-29_33-36.wav`, `H10-2026-10-03_37-40.wav`), mezcla `audio-mezcla.wav` ✓ (599.99s ambos), render Remotion vía chunks + gate (ver DO-NOT-REPEAT 10).
+- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). **H10 Buffer programado** (4 plataformas, due 2026-10-03), YouTube pendiente ~Oct 2.
   - H7: https://youtu.be/weebjoc890g (Meditación sobre Armónica 7, Remotion final 309MB)
   - H8: https://youtu.be/JeS82kwTpZ0 (Meditación sobre Armónica 8, Remotion final 313MB)
+  - H9: https://youtu.be/wiNpOSdGwaI (Meditación sobre Armónica 9, 305.2MB, thumbnail custom)
   - NOTA: Se subieron videos intermedios (~21MB) antes de corregir; re-subir con Remotion final y borrar los videos incorrectos.
 - **Ultimo publicado:** Harmonic 64 = kins 253-256 (BLUEPRINT canonico).
 - **Pipeline:** `pipeline-viral/AGENTS.md` (tzolkin → chakra-freq → journey-composer → soundscape → breath-sync → [voz real continua 600s + whisper trim si silencias extra] → visual-meditation → assemble-meditation).
@@ -102,6 +103,10 @@ Historial de fixes: `docs/Changelog.md`
 10. **Render H9/H10 = SOLO `remotion-poc/scripts/render-harmonic.ps1 H9|H10`** (patrón chunks de 2000f con retry/reanudación + gate de duración). Los scripts viejos (`render-h9-full.ps1`, `run-h9.ps1`, `render-h9.ps1`, `render-h9-ps1.ps1`, `render-h9-win.ps1`) ya DELEGAN al nuevo porque hacían: (a) renderizar la composición **equivocada** `MeditationDemo` (21930f, data de H64) en vez de `MeditationH9/H10` (18000f); (b) secuencia PNG en `out\frames` con `Remove-Item -Force` **sin `-Recurse`** (no borra directorios → frames de corridas mezclados: 6000×4 dígitos + 10770×5 dígitos = el encode corta en el primer hueco); (c) **sin validar nada**: el render moría a mitad y el mux entregaba igual → `meditacion-h9.mp4` = **video 136s + audio 600s** = frame del acto 2 ("Caminante del Cielo") congelado en los actos 3-6 con audio correcto (2026-09-28). El gate vive en `remotion-poc/scripts/duration-gate.mjs` (test: `npm test` en remotion-poc — `node --test scripts/` NO sirve en win32) y renombra a `.BROKEN.mp4` si el video no llega a 600s. **Antes de subir: ffprobe del stream de VIDEO (no del contenedor — el contenedor marca 600s por el audio).**
 11. **`meditacion-H*.json` (remotion-poc/src/data) — validar acentos ANTES de render.** H9/H10 quedaron con UTF-8 doble-encoded (escritos con PowerShell `ConvertTo-Json` con encoding incorrecto) → texto quemado salía `EXPLORACIÃ³N` / `Mago GalÃ¡ctico` en el video (H7/H8 limpios = regresión solo en H9/H10; detectado 2026-09-28 al revisar frames). Fix: re-decodificar latin1→UTF8. `render-harmonic.ps1` ya ABORTA si el JSON contiene `Ã`/`Â` (anti-mojibake antes de gastar ~80 min de render). Si se regenera un JSON con PowerShell, verificar siempre: `node -e "console.log(require('./src/data/meditacion-HX.json').kines[1].kinName)"` debe imprimir `Mago Galáctico` correcto.
 12. **Verificar el contenido de un render por MSE de píxeles, NO por lectura visual de PNGs extraídos.** 2026-09-28: al verificar H9, las lecturas de imágenes devolvieron frames equivocados (mostraron el acto 2 donde los píxeles reales eran acto 5) → falsa alarma de "actos desordenados" que disparó una investigación larga (chunks, concat, PTS, box structure) con resultado final: **el video estaba bien**. Método canónico de verificación: `ffmpeg -i out.mp4 -vf scale=48:85 -f rawvideo -pix_fmt gray -` y comparar MSE contra frames de referencia del propio video (f5100≈act2, f10500≈act4, f14400≈act5); MSE≈0 en la diagonal de 9 slots = timeline correcto. También: los chunks MP4 tienen B-frames → `concat -c copy` deja ~10 frames duplicados (18010 vs 18000 = +0.33s) — benigno, el gate (±1.5s) lo tolera. La matriz MSE slot↔chunk (`h9-permute-check.mjs` style) es la prueba de orden; las lecturas visuales solo sirven como apoyo.
+13. **Publicación Buffer (H9/H10, persistido 2026-09-28):**
+    - **TikTok rechaza videos >10min exactos**: el contenedor de `-compressed.mp4` da 600.333s (los ~10 B-frame dupes + padding AAC del encode) → "Video must be no longer than 10 minutes". Fix: `ffmpeg -i X -t 599.9 -c copy X-tmp.mp4` (queda 599.967s; `-t 600` NO basta, los packets de audio hacen overshoot a 600.067s) → re-subir a Cloudinary. H7/H8 solo pasaron porque su compressed era exactamente 600.000s.
+    - **Facebook usa el teaser de 60s** (corte 120→180s del final, misma receta H7/H8) vía `--fb-video-url` — el fix manual del 2026-09-24 ahora está persistido en `schedule-buffer.js` (NO repetir el fix manual).
+    - **Si Buffer rechaza un asset de un canal tras crear los posts, BORRAR los 3-4 posts y re-agendar TODOS** con la asset correcta (no dejar mix de URLs viejas/nuevas; deletes vía mutation `deletePost` con keys de `buffer-keys.json`, cuenta1=IG+TikTok, cuenta2=LI+FB).
 
 ### H4-H10 Plan
 
@@ -112,8 +117,8 @@ Historial de fixes: `docs/Changelog.md`
 | H6 | 21-24 | Sep 16-19 | 141.27 Hz (Garganta) | YouTube ✓, Buffer programado 2026-09-16 |
 | H7 | 25-28 | Sep 20-23 | 141.27 Hz (Garganta) | **YouTube ✓ (weebjoc890g), Buffer ✓ (2026-09-25)** |
 | H8 | 29-32 | Sep 24-27 | 172.06 Hz (Corona) | **YouTube ✓ (JeS82kwTpZ0), Buffer ✓ (2026-09-25)** |
-| H9 | 33-36 | Sep 28-Oct 1 | 194.18 Hz (Raíz) | Guion ✓ (190/193/190/215w), WAV+mezcla ✓, **render ✓ VERIFICADO 2026-09-28** (gate video 600.34s/audio 599.999s, actos en orden por MSE de píxeles, texto sin mojibake; ver DNR 10-12), pendiente publicar |
-| H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | Guion ✓ (193/188/207/234w), WAV+mezcla ✓, **render ✓ VERIFICADO 2026-09-28** (gate video 600.34s/audio 599.999s, 6 actos en orden por firma de color RGB, continuidad sin cortes, texto sin mojibake), pendiente publicar |
+| H9 | 33-36 | Sep 28-Oct 1 | 194.18 Hz (Raíz) | **PUBLICADO 2026-09-28: YouTube ✓ https://youtu.be/wiNpOSdGwaI + Buffer ✓ 4/4 (due 2026-09-29, post IDs 6abaaabb/6abaaabc/6abaaabd/6abaaabe)** — render verificado (ver DNR 10-12), compressed 599.97s + teaser 60s en Cloudinary |
+| H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | **Buffer ✓ 4/4 programado 2026-09-28 (due 2026-10-03, post IDs 6abaaac6/6abaaac7/6abaaac8/6abaaac9; link = Cloudinary fallback)** — render verificado (DNR 10-12); **YouTube PENDIENTE ~Oct 2** (`node scripts/upload-youtube.js 2026-10-03`; después reprogramar posts con el link YT) |
 
 ### Issues abiertos
 
@@ -122,7 +127,8 @@ Historial de fixes: `docs/Changelog.md`
 - **Buffer posts viejos con video mudo** — 3 posts (FB, TikTok, IG) para borrar manual en dashboard.
 - **YouTube OAuth compartido** con club-sincronica — FIX 2026-09-24: refresh_token revocado, se re-autorizó via authorize-loopback. Se corrigió redirect_uri mismatch (trailing slash `http://localhost:8123/` vs `http://localhost:8123`) en client_secret.json y google-oauth.js. H7 y H8 publicados exitosamente.
 - **Cloudinary free tier limit** — videos >100MB dan 413 error. Se usaron versiones `-compressed.mp4` del Remotion-poc (600s, ~50MB). URL Cloudinary tienen doble `club-sincronica/` en path por config de folder+public_id en upload-cloudinary-sdk.js.
-- **Facebook Reels rechaza videos >90s** — H7 y H8 (600s) rechazados por Buffer para Facebook. **FIX 2026-09-24**: se usan teasers (~6s) como video regular (type: 'post') para Facebook, con link al video completo de YouTube. Teasers subidos a Cloudinary.
+- **Facebook Reels rechaza videos >90s** — H7 y H8 (600s) rechazados por Buffer para Facebook. **FIX 2026-09-24 (persistido en código 2026-09-28)**: `schedule-buffer.js` acepta `--fb-video-url` y Facebook recibe el teaser de 60s (type: 'reel'); IG/TikTok usan compressed `--cloudinary-url`. Teasers = corte 120→180s del final (`meditacion-H*-teaser.mp4`).
+- **H10 YouTube pendiente (~Oct 2)** — decisión del usuario: H9 se subió ya, H10 se sube cerca de su fecha; `upload-youtube.js` solo soporta `privacyStatus: 'public'` (sin programación). Tras subir: reprogramar los 4 posts de Buffer con el link YT (borrar + re-agendar, ver DNR 13).
 - **Pipeline-viral credentials** — canal.env con `pipeline.viral.canales@gmail.com` aún sin OAuth propio. Se usa el OAuth compartido de club-sincronica.
 
 ---
