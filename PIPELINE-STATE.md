@@ -13,6 +13,7 @@ Historial de fixes: `docs/Changelog.md`
 
 - **Etapa actual:** produccion diaria (Fase 1, aprobacion humana). **LOTE COMPLETADO (2026-09-08):** 7 videos Sep 10-16 (Kin 15-21) producidos. Publicacion via Buffer + YouTube directo.
 - **LOTE GUIONES OCT 1-14 ESCRITO (2026-09-28):** 14 guion.md poéticos (modos de contar por sello) en `content/output/2026-10-01..14/`, astro real del motor (spec: `docs/superpowers/specs/2026-09-28-guiones-poeticos-oct-1-14-design.md`). 2 días GAP (Oct 4 Tormenta Cósmica, Oct 8 Noche Autoexistente → frase GAP en outro). Luna Nueva Oct 11-14 (evento en puentes). Verificados 14/14 `GUION OK` con `scripts/verify-guion.js` (nuevo: valida placeholders + lema literal vs contexto.json + kinName). Pendiente: grabación/transcripción/storyboard.
+- **LOTE PRODUCCION OCT 1-14 (2026-09-29): 13/14 videos PRODUCIDOS** — pipeline completo Groq whisper → grep fix → gate validate-astro (13/13 PASS) → storyboard-audio → render → assemble → ffprobe OK (h264+aac, duración = voz, texto canónico "Kin Maya"). **Oct 13 PENDIENTE: grabación `narracion kin 48 estrella solar oct 13.wav` = 6.0s (truncada, resto 15-20MB) → REGRABAR (tarea humana)** y luego correr el pipeline de ese día. Camas: fallback `etereo-espejo.wav` (NO existen patterns Strudel para kins 36-49 → componerlos = paso creativo pendiente). Audio original + copia canónica `{fecha}-narracion.wav` en `assets/audio/recordings/`.
 - **Plan de mejora de frames:** `docs/Plans/Frame-Improvement.md`. kinCarta quota fix aplicado 2026-09-13.
 - **Pipeline:** `club-sincronica/AGENTS.md` (orden: tzolkin → astro → generate-day → guion → grabacion → transcripcion → validate-astro → storyboard → musica → frames → assemble → publicacion).
 - **Publicacion:** Buffer (FB/IG/TikTok/LinkedIn) + YouTube Shorts (ruta directa).
@@ -29,17 +30,22 @@ Historial de fixes: `docs/Changelog.md`
 7. **Pi counter:** despues de hook frames, `if (pi < 2) pi = 2` para evitar overwrite.
 8. **render-daily:** rm+mkdir+cp SIEMPRE (nunca `if (!existsSync)`).
 9. **Mux:** Remotion mete pista AAC muda. DEBE usar `-map 0:v:0 -map 1:a:0`.
-10. **Whisper:** "Quimaya" → sed a "Kin Maya" antes de storyboard. FIX en transcribe-timed.js: reemplaza king/quim/kim/quin maya + galáctico/eléctrica. SIEMPRE verificar transcripciones nuevas con grep antes de storyboard.
+10. **Whisper:** "Quimaya" → "Kin Maya" antes de storyboard. **VERIFICADO 2026-09-29: el fix NO estaba en transcribe-timed.js** (ni HEAD ni working — se había perdido); batch oct salió con 9/13 "King/Quim Maya" corregidos a mano + re-render. **Fix REAL añadido 2026-09-29** (post-write en transcribe-timed.js: king/quim/kim/quin/quimaya/kin maya → "Kin Maya"). SIEMPRE verificar transcripciones nuevas con grep antes de storyboard (no confiar solo en el script).
 11. **Pan law:** `aformat` mono→estereo aplica -3dB. Compensado con `volume=1.41254` en assemble.js.
 12. **Subtitle layout:** render.js: `ty=-40`, `blockCenter=1500`, maxLines=4. frames.js: `ty=80`, `blockCenter=1420`. Subtítulos NUNCA suben de Y=1416 (margen seguro sobre gráficos).
 13. **Guion NO inventa aspectos:** validate-astro.js es gate ANTES de storyboard.
 14. **Maya numeral compacto:** `gap=6` (no 12 ni 22), `GAP=10` (no 14). Tono 13 = 44px (antes 80-100px). Frames.js y render.js deben tener los MISMOS valores. Nunca subir gap por encima de 8.
 15. **NO re-ejecutar `generate-day.js` después de escribir el guion** (pisa guion.md desde plantilla — patrón Sep 12-30: guiones escritos quedaron como plantillas al re-correr el paquete).
+16. **Gate validate-astro: fase lunar NO es aspecto.** Frase "la luna menguante al 51%" junto a "Marte se opone a Plutón" marcaba INVENTADO luna-marte/luna-pluton (falso positivo 2026-10-03: datos 100% reales). Fix aplicado (filtro `lunaFase` en validate-astro.js). Antes de re-grabar por un FAIL del gate: verificar el dato contra `contexto.json` — puede ser el heurístico, no el Alquimista.
+17. **render.js TDZ `prevEl`:** el hook-split usaba `prevEl` (L741/758) antes de su `let` (L820) → "Cannot access 'prevEl' before initialization" SOLO en hooks sin keyword match (10-01, 10-04). Fix: `let prevEl = null` izado al inicio de `buildFrames()`. Si aparece TDZ raro en render.js, mirar orden de declaraciones vs ramas tempranas.
+18. **render.js necesita `dragon` en `elementRenderers`:** pickEl devuelve 'dragon' (kin sello Dragón: 21, 41, 61…) pero el renderer NO se portó de frames.js → crash `elementRenderers[f.elemento] is not a function`. Fix 2026-09-29: `elDragon` portado de frames.js con `glowC()` → `glow()` (render.js es relativo a translate CX,CY; glowC es absoluto). Días Dragón sin esto rompen en f01.
 
 ### Issues abiertos
 
 - **CRITICAL: Guion inventa aspectos astrales** — 7 videos (Sep 10-16) con datos falsos. Regrabaciones pendientes (humano). Guiones regrabacion escritos y auto-validados.
-- **King Maya Whisper bug** — FIX APLICADO (2026-09-16): sed en transcribe-timed.js corrige king/quim/kim/quin maya → "Kin Maya" + galáctico/eléctrica. 10/14 transcripciones del batch Sep 17-30 afectadas y corregidas. Videos re-renderizados y re-subidos a Cloudinary.
+- **King Maya Whisper bug** — **RESUELTO DE VERDAD 2026-09-29:** el "sed fix" de 2026-09-16 NO existía en el código (se había perdido). Fix real post-write añadido a transcribe-timed.js; batch oct (9/13 "King/Quim Maya") corregido a mano + normalizado "Kin Maya" + 9 días re-renderizados. Ver DNR #10.
+- **Oct 13 (kin 48) sin video** — grabación de 6.0s truncada → REGRABAR (humano); pipeline pendiente para esa fecha.
+- **Música Strudel pendiente para kins 36-49** — los 13 videos oct usan bed fallback `etereo-espejo.wav`; componer patterns por kin (paso 5 del pipeline) si se quiere música con LFO por día.
 - **DailyShort durationInFrames hardcodeado** — 3000 frames trunca videos >100s. TODO: dinamico desde frames.json.
 - **MEJORA PENDIENTE: Frames de aspecto necesitan carta astral** — los frames actuales muestran los planetas del aspecto pero sin círculo/marca en la carta astral. Propuesta: duplicar frame — uno con símbolos de planetas solos, otro con la carta marcando el aspecto. (Feedback Alquimista, 2026-09-16)
 
