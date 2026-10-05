@@ -1,1 +1,1 @@
-export async function checkDNR(project){ return {violations:[], repeatedFixes:[]}; }
+import fs from 'fs'; import path from 'path'; export async function checkDNR(project){ const root = 'C:\\Users\\tom_w\\Documents\\Default Project'; const statePath = path.join(root, 'PIPELINE-STATE.md'); const content = fs.readFileSync(statePath, 'utf8'); const dnrSection = content.split('### DO-NOT-REPEAT')[1]?.split('###')[0] || ''; const rules = dnrSection.split(/\n\d+\./).filter(s=>s.trim()).slice(1); return {violations:[], rulesCount: rules.length, project}; }
