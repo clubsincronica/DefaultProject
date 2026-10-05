@@ -1,3 +1,1 @@
-export function runAll(projects){
-  return Object.fromEntries(projects.map(p=>[p,{scores:{}}]));
-}
+import { auditStructure } from './audits/structure-audit.js'; import { auditCodeQuality } from './audits/code-quality.js'; import { checkDNR } from './audits/dnr-check.js'; import { checkEase } from './audits/ease-of-use.js'; import { checkQuality } from './audits/quality-gates.js'; export async function runAll(projects){ const out = {}; for (const p of projects){ const [struct, code, dnr, ease, qual] = await Promise.all([auditStructure(p), auditCodeQuality(p), checkDNR(p), checkEase(p), checkQuality(p)]); out[p] = { structure: struct, codeQuality: code, dnr, ease, quality: qual, scores: { reliability: dnr.rulesCount ? 80 : 100, usability: ease.readmeComplete && ease.entryPoints ? 90 : 60, quality: qual.mojibake ? 50 : 95 } }; } return out; }
