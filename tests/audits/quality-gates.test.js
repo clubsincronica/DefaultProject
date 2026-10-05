@@ -1,0 +1,1 @@
+import test from 'node:test'; import { checkQuality } from '../../scripts/audits/quality-gates.js'; import assert from 'node:assert/strict'; test('quality gates returns ffprobePass', async () => { const r = await checkQuality('cancionero-rojo'); assert('ffprobePass' in r); });
