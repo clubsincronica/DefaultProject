@@ -1,0 +1,1 @@
+import test from 'node:test'; import { checkDNR } from '../../scripts/audits/dnr-check.js'; import assert from 'node:assert/strict'; test('dnr check returns violations', async () => { const r = await checkDNR('club-sincronica'); assert('violations' in r); });
