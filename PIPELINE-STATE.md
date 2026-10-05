@@ -161,9 +161,18 @@ Historial de fixes: `docs/Changelog.md`
 | **SkyReels V2** | ✗ open weights (abr-2025) pero 540P necesita 14.7GB VRAM / 14B → 43.4GB. Sin GPU = inviable |
 | **LTX-2.5** | ✗ mejor técnico de los generativos (open weights gratis <$10M rev., portrait 1080x1920 nativo, máx 20s/gen, API). Sigue sin texto quemado ni determinismo → solo como B-roll opcional |
 | **ArtCraft / ArtCraft-X** | ✗ GUI manual de "crafting" con providers de pago (Seedance/Veo/Kling); no headless para pipeline nocturno. ArtCraft-X aún sin publicar. Mástil para miniaturas |
-| **MCP NotebookLM** | ✗ no genera el MP4 del pipeline; ver piloto pendiente ↓ |
+| **MCP NotebookLM** | ✗ no genera el MP4 del pipeline (montado aparte para Video Overviews, ver ↓) |
 
-### NotebookLM (Gemini Notebook) + MCP — PILOTO PENDIENTE
+### NotebookLM (Gemini Notebook) + MCP — MONTADO 2026-10-05, piloto pendiente
+
+**MCP instalado y autenticado** (cuenta `clubsincronica@gmail.com`, plan `NOTEBOOKLM_TIER_PRO_CONSUMER_USER`):
+
+- Paquete: `notebooklm-mcp-cli` 0.15.2 vía `uv tool install` → binarios `nlm` (CLI, 50+ comandos) y `notebooklm-mcp` (servidor MCP, 53 tools) en `C:\Users\tom_w\.local\bin\`.
+- Registrado en `~/.config/opencode/opencode.json` → `mcp.gemini-notebook-mcp` (type local, command array, timeout 300000 + `experimental.mcp_timeout`). **Requiere reiniciar opencode para activarse.**
+- Skill `nlm-skill` instalado en `~/.config/opencode/skills/nlm-skill/` (aparece tras el restart).
+- Auth: `nlm login --storage file` (cookies 48 + CSRF en `~\.notebooklm-mcp-cli\profiles\default`). **OJO: en Windows el Chrome dedicado a veces no sale a primer plano; si "no se abre nada", vigilar la barra de títulos o re-ejecutar.** Refresh: `nlm auth refresh` (a veces falla → re-ejecutar `nlm login --force`).
+- Cuota vista con `nlm usage`: 100% rolling + semanal. Límite ~3 vídeo-overviews/día en free; verificar con `nlm usage` antes de cada tanda.
+- Comandos clave: `nlm notebook list`, `nlm source add <nb> --text ...`, `nlm video create <nb> -f explainer -s watercolor --language es --focus "..." -y`, `nlm video list`, `nlm download video <nb> --output X.mp4`.
 
 Hipótesis del usuario: usar los **Video Overviews** de NotebookLM como material a integrar/editar junto con lo de Remotion. Datos verificados (2026-10-05):
 
