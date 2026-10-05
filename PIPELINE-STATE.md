@@ -150,6 +150,31 @@ Historial de fixes: `docs/Changelog.md`
 - **H10 YouTube pendiente (~Oct 2)** — decisión del usuario: H9 se subió ya, H10 se sube cerca de su fecha; `upload-youtube.js` solo soporta `privacyStatus: 'public'` (sin programación). Tras subir: reprogramar los 4 posts de Buffer con el link YT (borrar + re-agendar, ver DNR 13).
 - **Pipeline-viral credentials** — canal.env con `pipeline.viral.canales@gmail.com` aún sin OAuth propio. Se usa el OAuth compartido de club-sincronica.
 
+### Investigación de alternativas a Remotion — VEREDICTO 2026-10-05
+
+**MANTENER REMOTION** (refuerza DNR 2 y la decisión 2026-09-16). Ninguna tool evaluada sustituye al render actual (MP4 1080x1920, 600s exactos, texto ES con acentos quemado, sync por frame con la voz real, chunks reanudables + duration-gate, 0€). **Restricción dura descubierta: la máquina NO tiene GPU (solo Intel UHD)** → todo modelo de video local queda descartado.
+
+| Tool | Veredicto |
+|------|-----------|
+| **MiniMax (Hailuo/H3)** | ✗ API de pago, clips máx. 6-15s → ~60-100 clips ≈ $30-50 por vídeo de 600s; sin texto quemado, sin sync, no determinista |
+| **OpenMontage** | ⚠ no es competidor: es un orquestador agentic (12 pipelines) que **usa Remotion + FFmpeg por debajo**. Repo principal inmaduro (~7 stars + forks spam). Posible capa de investigación/guion/assets para shorts, evaluar más adelante |
+| **SkyReels V2** | ✗ open weights (abr-2025) pero 540P necesita 14.7GB VRAM / 14B → 43.4GB. Sin GPU = inviable |
+| **LTX-2.5** | ✗ mejor técnico de los generativos (open weights gratis <$10M rev., portrait 1080x1920 nativo, máx 20s/gen, API). Sigue sin texto quemado ni determinismo → solo como B-roll opcional |
+| **ArtCraft / ArtCraft-X** | ✗ GUI manual de "crafting" con providers de pago (Seedance/Veo/Kling); no headless para pipeline nocturno. ArtCraft-X aún sin publicar. Mástil para miniaturas |
+| **MCP NotebookLM** | ✗ no genera el MP4 del pipeline; ver piloto pendiente ↓ |
+
+### NotebookLM (Gemini Notebook) + MCP — PILOTO PENDIENTE
+
+Hipótesis del usuario: usar los **Video Overviews** de NotebookLM como material a integrar/editar junto con lo de Remotion. Datos verificados (2026-10-05):
+
+- NotebookLM se renombró **Gemini Notebook** (jul-2026). Los Video Overviews se **descargan como MP4** (menú ⋮ del Studio, solo web desktop).
+- Formatos: **Explainer** y **Brief** → **80+ idiomas, incl. español** (EU/LatAm/MX). **Short** (60s vertical) y **Cinematic** → **solo inglés**; Cinematic además requiere Google AI Ultra (18+) y usa Veo 3.
+- Estilos visuales (18+, excepto Cinematic): Classic, Whiteboard, **Watercolor**, Retro Print, Heritage, Paper-craft, Kawaii, Anime + "Custom" (estilo a medida) y *steering prompt*.
+- Cuota free: **hasta 3 video overviews/usuario/día**; tier free lleva **watermark** ("badge" abajo-derecha ~2.3% del frame + end card "Made with Google" ~2.5s); Ultra exporta limpio. Generación en background, a veces **>30 min**.
+- **API oficial NO existe.** Acceso programático vía MCP/CLI no-oficiales sobre RPC `batchexecute` con cookie de Google (riesgo ToS/frágil): `notebooklm-mcp-cli` (`studio create` video + `download video`), `notebooklm-py[mcp]` (38 tools), `notebooklm-mcp-server` (tool `video_overview_create`), `roomi-fields/notebooklm-mcp` (MCP + REST para n8n). Auth = una vez con navegador/curl de cookies.
+- **Conflicto clave de integración:** el Video Overview trae **su propia narración TTS**, incompatible con la voz real 600s de H7-H10. Integración plausible = usar **solo la pista de video** (`-map 0:v`) como B-roll/inserto, o bien como fuente de un teaser, nunca como audio del acto.
+- **Piloto propuesto (1 paso, manual):** crear notebook con fuentes textuales de un kin (lema literal `tzolkin.lema`, power word, chakra/frecuencia, guion del acto) → generar **Explainer en español** → descargar MP4 → ffprobe (aspecto, resolución, duración, watermark) → recortar 10-20s con ffmpeg y comprobar si encaja en el layout Remotion de H11. Si falla cualquiera de estos gates, cerrar la hipótesis y no retomar.
+
 ---
 
 ## remotion-poc (Render lab)
@@ -161,6 +186,10 @@ Historial de fixes: `docs/Changelog.md`
   El batch Sep 17-30 se procesó SIN remotion-poc y los videos son correctos.
   Remotion no aporta nada especial al pipeline actual. Mantener como laboratorio
   pero NO integrar en el pipeline diario salvo que surja una necesidad concreta.
+- **VEREDICTO 2026-10-05:** se comparó Remotion contra MiniMax, OpenMontage,
+  SkyReels V2, LTX-2.5, ArtCraft y MCP NotebookLM → **Remotion se mantiene**
+  (tabla y motivos en la sección pipeline-viral; sin GPU local = modelos
+  descartados). Piloto NotebookLM Video Overviews: PENDIENTE.
 
 ### DO-NOT-REPEAT
 
