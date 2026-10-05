@@ -163,7 +163,7 @@ Historial de fixes: `docs/Changelog.md`
 | **ArtCraft / ArtCraft-X** | ✗ GUI manual de "crafting" con providers de pago (Seedance/Veo/Kling); no headless para pipeline nocturno. ArtCraft-X aún sin publicar. Mástil para miniaturas |
 | **MCP NotebookLM** | ✗ no genera el MP4 del pipeline (montado aparte para Video Overviews, ver ↓) |
 
-### NotebookLM (Gemini Notebook) + MCP — MONTADO 2026-10-05, piloto pendiente
+### NotebookLM (Gemini Notebook) + MCP — MONTADO, piloto CERRADO (2026-10-05)
 
 **MCP instalado y autenticado** (cuenta `clubsincronica@gmail.com`, plan `NOTEBOOKLM_TIER_PRO_CONSUMER_USER`):
 
@@ -182,7 +182,22 @@ Hipótesis del usuario: usar los **Video Overviews** de NotebookLM como material
 - Cuota free: **hasta 3 video overviews/usuario/día**; tier free lleva **watermark** ("badge" abajo-derecha ~2.3% del frame + end card "Made with Google" ~2.5s); Ultra exporta limpio. Generación en background, a veces **>30 min**.
 - **API oficial NO existe.** Acceso programático vía MCP/CLI no-oficiales sobre RPC `batchexecute` con cookie de Google (riesgo ToS/frágil): `notebooklm-mcp-cli` (`studio create` video + `download video`), `notebooklm-py[mcp]` (38 tools), `notebooklm-mcp-server` (tool `video_overview_create`), `roomi-fields/notebooklm-mcp` (MCP + REST para n8n). Auth = una vez con navegador/curl de cookies.
 - **Conflicto clave de integración:** el Video Overview trae **su propia narración TTS**, incompatible con la voz real 600s de H7-H10. Integración plausible = usar **solo la pista de video** (`-map 0:v`) como B-roll/inserto, o bien como fuente de un teaser, nunca como audio del acto.
-- **Piloto propuesto (1 paso, manual):** crear notebook con fuentes textuales de un kin (lema literal `tzolkin.lema`, power word, chakra/frecuencia, guion del acto) → generar **Explainer en español** → descargar MP4 → ffprobe (aspecto, resolución, duración, watermark) → recortar 10-20s con ffmpeg y comprobar si encaja en el layout Remotion de H11. Si falla cualquiera de estos gates, cerrar la hipótesis y no retomar.
+- **Piloto EJECUTADO 2026-10-05 (H10, kins 37-40) → HIPÓTESIS CERRADA.** Notebook `e7eef3ba-f4f2-43a2-b619-286cab4fc28a` con 2 fuentes TXT (kines+lemas, estructura+drone) → `nlm video create -f explainer -s watercolor --language es` → `completed` en ~11 min → `nlm download video` (43MB).
+
+  | Gate | Resultado |
+  |------|-----------|
+  | Descarga programática MP4 | ✅ |
+  | Lema literal + acentos en pantalla | ✅ ("Yo disuelvo con el fin de Evolucionar, Liberando la Sincronicidad." verbatim) |
+  | Narración en español | ✅ |
+  | **Resolución/aspecto 1080x1920 vertical** | ❌ **1280x720 16:9**, 24fps |
+  | **Encaje en layout Remotion (crop 405x720→1080x1920)** | ❌ **el texto quemado queda cortado a los lados** — inutilizable sin re-layout completo |
+  | **Watermark** | ❌ badge "Gemini Notebook" visible (alterna esquina inferior) |
+  | Estilo `watercolor` | ❌ no respetado (salió anime/kawaii con borde azul) |
+  | Audio compatible con voz real 600s | ❌ narración TTS propia (mean -23.3dB, max -2.0dB) |
+  | Duración controlada | ⚠ 386.25s fija, sin control |
+  | Cuota | ⚠ **43.7% de la ventana rolling por 1 vídeo ≈ 2 Video Overviews / 5h** |
+
+  **Conclusión:** los Video Overviews NO se integran en el render vertical de Remotion → no retomar esta hipótesis. El MCP **se queda montado** por lo demás que aporta (Q&A con citas como capa de "síntesis sin tokens", Audio Overviews, informes, mind maps, research) para etapas de guion/investigación. Si algún día se quisiera el vídeo horizontal, existe como pieza 16:9 independiente (YouTube largo / community), no como inserto del Short vertical.
 
 ---
 
