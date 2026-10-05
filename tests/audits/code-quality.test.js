@@ -1,0 +1,1 @@
+import test from 'node:test'; import { auditCodeQuality } from '../../scripts/audits/code-quality.js'; import assert from 'node:assert/strict'; test('code quality returns largeFiles', async () => { const r = await auditCodeQuality('pipeline-viral'); assert(Array.isArray(r.largeFiles)); });
