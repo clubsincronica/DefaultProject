@@ -1,0 +1,1 @@
+import test from 'node:test'; import { runAll } from '../../scripts/diagnostic-runner.js'; import assert from 'node:assert/strict'; test('full diagnostic completes', async () => { const r = await runAll(['club-sincronica','pipeline-viral','remotion-poc','cancionero-rojo']); assert(r); });
