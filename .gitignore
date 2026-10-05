@@ -30,3 +30,5 @@ audit-code-tareas.md
 # Python caches
 *.pyc
 
+
+.worktrees/
