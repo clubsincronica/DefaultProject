@@ -1,9 +1,1 @@
-export function auditStructure(projectPath) {
-  return {
-    readme: true,
-    sprawl: 0,
-    legacy: 0,
-    gitignore: true,
-    secrets: true
-  };
-}
+import fs from 'fs'; import path from 'path'; export async function auditStructure(projectName){ const root = 'C:\\Users\\tom_w\\Documents\\Default Project'; const projPath = path.join(root, projectName); const readme = fs.existsSync(path.join(projPath, 'README.md')) || fs.existsSync(path.join(projPath, 'AGENTS.md')); const gitignore = fs.existsSync(path.join(projPath, '.gitignore')); const secretsMap = fs.existsSync(path.join(root, 'SECRETS-MAP.md')); const files = fs.readdirSync(projPath, {withFileTypes:true}); const sprawl = files.filter(f=>!f.isDirectory()).length; return {readme, sprawl, legacy:0, gitignore, secrets:secretsMap}; }
