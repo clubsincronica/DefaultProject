@@ -1,0 +1,1 @@
+import test from 'node:test'; import { checkEase } from '../../scripts/audits/ease-of-use.js'; import assert from 'node:assert/strict'; test('ease check returns readmeComplete', async () => { const r = await checkEase('remotion-poc'); assert(typeof r.readmeComplete === 'boolean'); });
