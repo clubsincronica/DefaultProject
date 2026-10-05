@@ -1,0 +1,1 @@
+import test from 'node:test'; import { generateReport } from '../scripts/report-generator.js'; import assert from 'node:assert/strict'; test('generateReport writes markdown', async () => { const p = await generateReport({club:{scores:{}}}, '2026-10-05'); assert(p.includes('2026-10-05-report.md')); });

@@ -1,0 +1,1 @@
+import fs from 'fs'; export async function generateReport(r,d){ const p='docs/diagnostics/'+d+'-report.md'; fs.mkdirSync('docs/diagnostics',{recursive:true}); fs.writeFileSync(p,'# Report'); return p; }
