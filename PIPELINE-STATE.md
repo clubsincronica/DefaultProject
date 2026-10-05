@@ -101,7 +101,7 @@ Historial de fixes: `docs/Changelog.md`
 
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). **H10 Buffer programado** (4 plataformas, due 2026-10-03), YouTube pendiente ~Oct 2.
+- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). **H10 Buffer programado** (4 plataformas, due 2026-10-03), YouTube pendiente ~Oct 2. **GUIONES H11-H13 LISTOS 2026-10-05** (kins 41-52, Oct 6-17) — ver fila LOTE GUIONES H11-H13.
   - H7: https://youtu.be/weebjoc890g (Meditación sobre Armónica 7, Remotion final 309MB)
   - H8: https://youtu.be/JeS82kwTpZ0 (Meditación sobre Armónica 8, Remotion final 313MB)
   - H9: https://youtu.be/wiNpOSdGwaI (Meditación sobre Armónica 9, 305.2MB, thumbnail custom)
@@ -109,6 +109,7 @@ Historial de fixes: `docs/Changelog.md`
 - **Ultimo publicado:** Harmonic 64 = kins 253-256 (BLUEPRINT canonico).
 - **Pipeline:** `pipeline-viral/AGENTS.md` (tzolkin → chakra-freq → journey-composer → soundscape → breath-sync → [voz real continua 600s + whisper trim si silencias extra] → visual-meditation → assemble-meditation).
 - **Scripts clave:** `soundscape.js`, `voice-layer.js` (H1-H6), `visual-meditation.js`, `strudel-render.js`, `deliver.js`, `meditar.js` (opts.voiceFile), `kin-data.js` BLOCKS 7-10, `meditar-h7..h10.mjs`, `whisper-h7-h8.py` (detección secuencial power word), `trim-voice-by-whisper.js` (asplit+atrim+adelay+amix 600s).
+- **LOTE GUIONES H11-H13 ESCRITO (2026-10-05):** 3 guiones voz-real continua en `pipeline-viral/content/scripts/H11..H13-*.md` (kins 41-52, Oct 6-17) + **BLOCKS 11-13 en `kin-data.js`** + `scripts/meditar-h11/h12/h13.mjs` (plantilla h10, ahora con flag `--dry-run` = `render:false`) + gate nuevo **`node scripts/verify-guion.mjs [H11|H12|H13]`** (lemas === `mediacion(kin)` verbatim, 180-265w actos 2-4, 180-300w acto 5 con poema+mantra, 0 astro, timestamps 0/44/170/296/422/548, sin mojibake) → **3/3 PASS** (calibrado: pasa también H7-H10 4/4). Drones: H11 Corazón 136.10 · H12 Garganta 141.27 · H13 Corona 172.06. 12 modos de contar nuevos + 1 poema por bloque (Floración / Constelación / Testigo) + mantra. Dry-runs 3/3 (600s), tests 56/56. **Pendiente: grabar 1 WAV/H → meditar-hN → render-harmonic.ps1 HN.** Spec: `pipeline-viral/docs/superpowers/specs/2026-10-05-h11-13-guiones-design.md`.
 - **Fix 2026-09-14:** `publish-pack.js` corregido - Act 1 (Respiración) ya no muestra info de kin en timestamps. `schedule-buffer.js` actualizado para ser dinámico (lee de publicacion.md).
 - **Fix 2026-09-17:** `kin-data.js` BLOCKS 7-10, `generate-block.js` 6→10, `meditar.js` voz real (volume 0.92 + atrim/pad), guiones H7-H10 180-260w/acto, WHISPER H7/H8 (base) + TRIM a 600s realineado (H7 raw 571s→600s Δ act3 +47s, act4 +15s, act5 +19s; H8 raw 605s→600s Δ +7/+9/0/+9/+22s). Trimmed en `club-sincronica/.../H*-trimmed.wav` y copiado a `pipeline-viral/assets/audio/recordings/H*.wav` para meditar.js.
 
@@ -130,8 +131,9 @@ Historial de fixes: `docs/Changelog.md`
     - **TikTok rechaza videos >10min exactos**: el contenedor de `-compressed.mp4` da 600.333s (los ~10 B-frame dupes + padding AAC del encode) → "Video must be no longer than 10 minutes". Fix: `ffmpeg -i X -t 599.9 -c copy X-tmp.mp4` (queda 599.967s; `-t 600` NO basta, los packets de audio hacen overshoot a 600.067s) → re-subir a Cloudinary. H7/H8 solo pasaron porque su compressed era exactamente 600.000s.
     - **Facebook usa el teaser de 60s** (corte 120→180s del final, misma receta H7/H8) vía `--fb-video-url` — el fix manual del 2026-09-24 ahora está persistido en `schedule-buffer.js` (NO repetir el fix manual).
     - **Si Buffer rechaza un asset de un canal tras crear los posts, BORRAR los 3-4 posts y re-agendar TODOS** con la asset correcta (no dejar mix de URLs viejas/nuevas; deletes vía mutation `deletePost` con keys de `buffer-keys.json`, cuenta1=IG+TikTok, cuenta2=LI+FB).
+14. **Todo guion nuevo (H11+) pasa por `node scripts/verify-guion.mjs HN` ANTES de grabar.** El gate ignora las etiquetas de fuente `(Cousto: Mercurio|Tierra|…)` del drone (NO son astro del guion) y matchea con `\b` — sin eso, "amarte" triggera "marte" (falsos positivos vistos al calibrar contra H7/H8).
 
-### H4-H10 Plan
+### H4-H13 Plan
 
 | Harmonic | Kins | Fechas | Drone | Estado |
 |----------|------|--------|-------|--------|
@@ -142,6 +144,9 @@ Historial de fixes: `docs/Changelog.md`
 | H8 | 29-32 | Sep 24-27 | 172.06 Hz (Corona) | **YouTube ✓ (JeS82kwTpZ0), Buffer ✓ (2026-09-25)** |
 | H9 | 33-36 | Sep 28-Oct 1 | 194.18 Hz (Raíz) | **PUBLICADO 2026-09-28: YouTube ✓ https://youtu.be/wiNpOSdGwaI + Buffer ✓ 4/4 (due 2026-09-29, post IDs 6abaaabb/6abaaabc/6abaaabd/6abaaabe)** — render verificado (ver DNR 10-12), compressed 599.97s + teaser 60s en Cloudinary |
 | H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | **Buffer ✓ 4/4 programado 2026-09-28 (due 2026-10-03, post IDs 6abaaac6/6abaaac7/6abaaac8/6abaaac9; link = Cloudinary fallback)** — render verificado (DNR 10-12); **YouTube PENDIENTE ~Oct 2** (`node scripts/upload-youtube.js 2026-10-03`; después reprogramar posts con el link YT) |
+| H11 | 41-44 | Oct 6-9 | 136.10 Hz (Corazón) | **GUIONES ✓ 2026-10-05** (verify-guion 3/3) — pendiente grabación → meditar-h11 → render → publicar |
+| H12 | 45-48 | Oct 10-13 | 141.27 Hz (Garganta) | **GUIONES ✓ 2026-10-05** — pendiente grabación → meditar-h12 → render → publicar |
+| H13 | 49-52 | Oct 14-17 | 172.06 Hz (Corona) | **GUIONES ✓ 2026-10-05** — cierra el Castillo Rojo (kin 52) — pendiente grabación → meditar-h13 → render → publicar |
 
 ### Issues abiertos
 
