@@ -101,7 +101,7 @@ Historial de fixes: `docs/Changelog.md`
 
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). **H10 Buffer programado** (4 plataformas, due 2026-10-03), YouTube pendiente ~Oct 2. **GUIONES H11-H13 LISTOS 2026-10-05** (kins 41-52, Oct 6-17) — ver fila LOTE GUIONES H11-H13. **H11 GRABADO+RENDERIZADO 2026-10-06**: voz real 579.5s → mezcla voice-true 600s (límites whisper 63/189/299/416/542) → `meditacion-h11.mp4` gate ✓ + compressed 39.5MB/599.9s + teaser 60s + thumbnail + `upload-youtube --dry-run` ✓ — **PENDIENTE publicar (requiere aprobación)**.
+- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). **H10 Buffer programado** (4 plataformas, due 2026-10-03), YouTube pendiente ~Oct 2. **GUIONES H11-H13 LISTOS 2026-10-05** (kins 41-52, Oct 6-17) — ver fila LOTE GUIONES H11-H13. **H11 PUBLICADO 2026-10-06** (YouTube wIL_VGiWgH0 + Buffer 4/4 due Oct 7 + Cloudinary compressed/teaser; voz real 579.5s → mezcla voice-true 600s → render gate 600.34s ✓, alineación verificada DNR 15-16).
   - H7: https://youtu.be/weebjoc890g (Meditación sobre Armónica 7, Remotion final 309MB)
   - H8: https://youtu.be/JeS82kwTpZ0 (Meditación sobre Armónica 8, Remotion final 313MB)
   - H9: https://youtu.be/wiNpOSdGwaI (Meditación sobre Armónica 9, 305.2MB, thumbnail custom)
@@ -146,7 +146,7 @@ Historial de fixes: `docs/Changelog.md`
 | H8 | 29-32 | Sep 24-27 | 172.06 Hz (Corona) | **YouTube ✓ (JeS82kwTpZ0), Buffer ✓ (2026-09-25)** |
 | H9 | 33-36 | Sep 28-Oct 1 | 194.18 Hz (Raíz) | **PUBLICADO 2026-09-28: YouTube ✓ https://youtu.be/wiNpOSdGwaI + Buffer ✓ 4/4 (due 2026-09-29, post IDs 6abaaabb/6abaaabc/6abaaabd/6abaaabe)** — render verificado (ver DNR 10-12), compressed 599.97s + teaser 60s en Cloudinary |
 | H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | **Buffer ✓ 4/4 programado 2026-09-28 (due 2026-10-03, post IDs 6abaaac6/6abaaac7/6abaaac8/6abaaac9; link = Cloudinary fallback)** — render verificado (DNR 10-12); **YouTube PENDIENTE ~Oct 2** (`node scripts/upload-youtube.js 2026-10-03`; después reprogramar posts con el link YT) |
-| H11 | 41-44 | Oct 6-9 | 136.10 Hz (Corazón) | **RENDER OK 2026-10-06** — voz grabada (`recordings/H11-2026-10-07_41-44.wav`, raw 579.5s), mezcla voice-true, `meditacion-h11.mp4` 287MB gate 600.34s ✓, alineación actos↔voz verificada (DNR 15-16), compressed 39.5MB + teaser 60s + thumbnail + dry-run ✓ — **PENDIENTE publicar** |
+| H11 | 41-44 | Oct 6-9 | 136.10 Hz (Corazón) | **PUBLICADO 2026-10-06: YouTube ✓ https://youtu.be/wIL_VGiWgH0 (miniatura custom) + Buffer ✓ 4/4 (due 2026-10-07, post IDs 6ac527fe8815e4f7570434fe/6ac527ff6cefee84931dc91b/6ac528006cefee84931dc946/6ac5280061c22f8369bd02b4) + Cloudinary compressed 599.9s + teaser 60s** — render verificado voice-true (DNR 15-16), OAuth re-autorizado (authorize-loopback), ver `publication-report.md` |
 | H12 | 45-48 | Oct 10-13 | 141.27 Hz (Garganta) | **GUIONES ✓ 2026-10-05** — pendiente grabación → meditar-h12 → render → publicar |
 | H13 | 49-52 | Oct 14-17 | 172.06 Hz (Corona) | **GUIONES ✓ 2026-10-05** — cierra el Castillo Rojo (kin 52) — pendiente grabación → meditar-h13 → render → publicar |
 
