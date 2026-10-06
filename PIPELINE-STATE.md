@@ -101,7 +101,7 @@ Historial de fixes: `docs/Changelog.md`
 
 ## pipeline-viral (Kin Harmonic 10min+)
 
-- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). **H10 Buffer programado** (4 plataformas, due 2026-10-03), YouTube pendiente ~Oct 2. **GUIONES H11-H13 LISTOS 2026-10-05** (kins 41-52, Oct 6-17) — ver fila LOTE GUIONES H11-H13. **H11 PUBLICADO 2026-10-06** (YouTube wIL_VGiWgH0 + Buffer 4/4 due Oct 7 + Cloudinary compressed/teaser; voz real 579.5s → mezcla voice-true 600s → render gate 600.34s ✓, alineación verificada DNR 15-16).
+- **Etapa actual:** H1-H8 COMPLETADO. H7 y H8 publicados en YouTube (2026-09-24) con videos Remotion finales. **H9 PUBLICADO 2026-09-28** (YouTube + Buffer 4 plataformas, ver fila H9). ****H10 PUBLICADO en YouTube 2026-10-06** (9e8uruQ0VtI; Buffer skip por decisión de usuario). **GUIONES H11-H13 LISTOS 2026-10-05** (kins 41-52, Oct 6-17) — ver fila LOTE GUIONES H11-H13. **H11 PUBLICADO 2026-10-06** (YouTube wIL_VGiWgH0 + Buffer 4/4 due Oct 7 + Cloudinary compressed/teaser; voz real 579.5s → mezcla voice-true 600s → render gate 600.34s ✓, alineación verificada DNR 15-16).
   - H7: https://youtu.be/weebjoc890g (Meditación sobre Armónica 7, Remotion final 309MB)
   - H8: https://youtu.be/JeS82kwTpZ0 (Meditación sobre Armónica 8, Remotion final 313MB)
   - H9: https://youtu.be/wiNpOSdGwaI (Meditación sobre Armónica 9, 305.2MB, thumbnail custom)
@@ -145,7 +145,7 @@ Historial de fixes: `docs/Changelog.md`
 | H7 | 25-28 | Sep 20-23 | 141.27 Hz (Garganta) | **YouTube ✓ (weebjoc890g), Buffer ✓ (2026-09-25)** |
 | H8 | 29-32 | Sep 24-27 | 172.06 Hz (Corona) | **YouTube ✓ (JeS82kwTpZ0), Buffer ✓ (2026-09-25)** |
 | H9 | 33-36 | Sep 28-Oct 1 | 194.18 Hz (Raíz) | **PUBLICADO 2026-09-28: YouTube ✓ https://youtu.be/wiNpOSdGwaI + Buffer ✓ 4/4 (due 2026-09-29, post IDs 6abaaabb/6abaaabc/6abaaabd/6abaaabe)** — render verificado (ver DNR 10-12), compressed 599.97s + teaser 60s en Cloudinary |
-| H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | **Buffer ✓ 4/4 programado 2026-09-28 (due 2026-10-03, post IDs 6abaaac6/6abaaac7/6abaaac8/6abaaac9; link = Cloudinary fallback)** — render verificado (DNR 10-12); **YouTube PENDIENTE ~Oct 2** (`node scripts/upload-youtube.js 2026-10-03`; después reprogramar posts con el link YT) |
+| H10 | 37-40 | Oct 2-5 | 126.22 Hz (Plexo) | **PUBLICADO YouTube 2026-10-06: https://youtu.be/9e8uruQ0VtI (miniatura custom)** - render verificado (DNR 10-12); **Buffer SKIP por decisión de usuario 2026-10-06** (verificado: los posts 6abaaac6/7/8/9 NO existen en Buffer — query de todos los estados, creados Sep 27-Oct 6 = solo H9x2 + scheduled/sent; ventana Oct 2-5 ya pasada) |
 | H11 | 41-44 | Oct 6-9 | 136.10 Hz (Corazón) | **PUBLICADO 2026-10-06: YouTube ✓ https://youtu.be/wIL_VGiWgH0 (miniatura custom) + Buffer ✓ 4/4 (due 2026-10-07, post IDs 6ac527fe8815e4f7570434fe/6ac527ff6cefee84931dc91b/6ac528006cefee84931dc946/6ac5280061c22f8369bd02b4) + Cloudinary compressed 599.9s + teaser 60s** — render verificado voice-true (DNR 15-16), OAuth re-autorizado (authorize-loopback), ver `publication-report.md` |
 | H12 | 45-48 | Oct 10-13 | 141.27 Hz (Garganta) | **GUIONES ✓ 2026-10-05** — pendiente grabación → meditar-h12 → render → publicar |
 | H13 | 49-52 | Oct 14-17 | 172.06 Hz (Corona) | **GUIONES ✓ 2026-10-05** — cierra el Castillo Rojo (kin 52) — pendiente grabación → meditar-h13 → render → publicar |
@@ -158,7 +158,7 @@ Historial de fixes: `docs/Changelog.md`
 - **YouTube OAuth compartido** con club-sincronica — FIX 2026-09-24: refresh_token revocado, se re-autorizó via authorize-loopback. Se corrigió redirect_uri mismatch (trailing slash `http://localhost:8123/` vs `http://localhost:8123`) en client_secret.json y google-oauth.js. H7 y H8 publicados exitosamente.
 - **Cloudinary free tier limit** — videos >100MB dan 413 error. Se usaron versiones `-compressed.mp4` del Remotion-poc (600s, ~50MB). URL Cloudinary tienen doble `club-sincronica/` en path por config de folder+public_id en upload-cloudinary-sdk.js.
 - **Facebook Reels rechaza videos >90s** — H7 y H8 (600s) rechazados por Buffer para Facebook. **FIX 2026-09-24 (persistido en código 2026-09-28)**: `schedule-buffer.js` acepta `--fb-video-url` y Facebook recibe el teaser de 60s (type: 'reel'); IG/TikTok usan compressed `--cloudinary-url`. Teasers = corte 120→180s del final (`meditacion-H*-teaser.mp4`).
-- **H10 YouTube pendiente (~Oct 2)** — decisión del usuario: H9 se subió ya, H10 se sube cerca de su fecha; `upload-youtube.js` solo soporta `privacyStatus: 'public'` (sin programación). Tras subir: reprogramar los 4 posts de Buffer con el link YT (borrar + re-agendar, ver DNR 13).
+- ~~**H10 YouTube pendiente (~Oct 2)**~~ RESUELTO 2026-10-06: subido https://youtu.be/9e8uruQ0VtI. Buffer H10: SKIP (decisión de usuario) — los posts registrados 6abaaac6-c9 no existen en Buffer (revisado todos los estados); si se quisiera repostería, re-agendar con `schedule-buffer.js` (ver DNR 13).
 - **Pipeline-viral credentials** — canal.env con `pipeline.viral.canales@gmail.com` aún sin OAuth propio. Se usa el OAuth compartido de club-sincronica.
 
 ### Investigación de alternativas a Remotion — VEREDICTO 2026-10-05
