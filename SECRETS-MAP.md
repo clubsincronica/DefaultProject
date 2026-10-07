@@ -64,6 +64,7 @@ club-sincronica en modo solo-lectura). No publica.
 | rclone (Google Drive) | config local del sistema | usado por `deliver.js` |
 | OpenCode MCP memory | `opencode.json` → `data/memory.json` | store de memoria (no secreto) |
 | jcode auditor (DeepSeek NIM) | `scripts/jcode-auditor.config.json` (en club-sincronica) | key de API gratuita NIM |
+| `NVIDIA_API_KEY` | `%LOCALAPPDATA%\hermes\.env` (i.e. `C:\Users\tom_w\AppData\Local\hermes\.env`) | OpenCode `hermes` child agent (Hermes Agent provider `nvidia`); free-tier key from build.nvidia.com; value never written to the repo |
 
 ---
 
