@@ -284,7 +284,7 @@ Get-FileHash $out -Algorithm SHA256 | Format-Table Hash, Path
 - [ ] **Step 2: Run the build**
 
 Run: `powershell -Command "opencode-installer/Build-Exe.ps1"`
-Expected: `dist/OpenCode-Setup.exe` exists, size > 1MB, SHA256 printed. (First run installs ps2exe; ~2 min.)
+Expected: `dist/OpenCode-Setup.exe` exists (`Test-Path True`, valid MZ/PE), SHA256 printed + `dist/SHA256.txt` written. Size is informational only (ps2exe 1.0.18 emits a ~41KB launcher stub; payload ships alongside in `dist/payload/`). (First run installs ps2exe; ~2 min.)
 
 - [ ] **Step 3: Smoke-verify without launching GUI**
 
@@ -318,7 +318,7 @@ Expected: `OK`, temp `opencode.json` parses, no `<PROJECT_DIR>` literal.
 - [ ] **Step 3: Full test-suite gate**
 
 Run: `powershell -Command "Invoke-Pester opencode-installer/tests/"`
-Expected: ALL PASS (9/9). Clean temp dirs afterwards.
+Expected: ALL PASS (10/10: 3 template + 5 core + 2 gui). Clean temp dirs afterwards.
 
 - [ ] **Step 4: Verify + report**
 
@@ -392,7 +392,7 @@ Expected: PASS (2/2).
 - [ ] **Step 5: Verify + report**
 
 Run: `powershell -Command "Invoke-Pester opencode-installer/tests/"`
-Expected: ALL PASS (11/11). Report done, no commit.
+Expected: ALL PASS (12/12: 3 template + 5 core + 2 gui + 2 skills). Report done, no commit.
 
 ---
 
