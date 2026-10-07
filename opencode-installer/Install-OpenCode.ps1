@@ -9,7 +9,7 @@ Add-Type -AssemblyName System.Drawing
 
 function Show-InstallerWizard {
     $templatesDir = Join-Path $PSScriptRoot 'templates'
-    $state = @{ ProjectDir = [Environment]::GetFolderPath('MyDocuments') }
+    $state = @{ ProjectDir = (Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'opencode-project') }
 
     $form = New-Object System.Windows.Forms.Form
     $form.Text = 'opencode Windows Installer'
@@ -68,10 +68,10 @@ function Show-InstallerWizard {
     $progressBar.Maximum = 100
     $form.Controls.Add($progressBar)
 
-    $logBox = New-Object System.Windows.Forms.TextBox
+    $logBox = New-Object System.Windows.Forms.RichTextBox
     $logBox.Multiline = $true
     $logBox.ReadOnly = $true
-    $logBox.ScrollBars = 'Vertical'
+    $logBox.ScrollBars = [System.Windows.Forms.RichTextBoxScrollBars]::Vertical
     $logBox.Location = New-Object System.Drawing.Point(12, 152)
     $logBox.Size = New-Object System.Drawing.Size(540, 308)
     $form.Controls.Add($logBox)
@@ -97,6 +97,12 @@ function Show-InstallerWizard {
     })
 
     $installButton.Add_Click({
+        $browseButton.Enabled = $false
+        $installButton.Enabled = $false
+        $testButton.Enabled = $false
+        $keysButton.Enabled = $false
+        $form.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+        [System.Windows.Forms.Application]::DoEvents()
         try {
             $progressBar.Value = 5
             & $addLog 'Running preflight checks...' 'Black'
@@ -113,20 +119,35 @@ function Show-InstallerWizard {
             }
             $progressBar.Value = 25
             & $addLog 'Installing opencode CLI (npm -g)...' 'Black'
+            [System.Windows.Forms.Application]::DoEvents()
             Install-OpencodeCli
+            [System.Windows.Forms.Application]::DoEvents()
             $progressBar.Value = 50
             & $addLog 'Writing global config...' 'Black'
+            [System.Windows.Forms.Application]::DoEvents()
             Write-GlobalConfig $env:USERPROFILE $templatesDir
+            [System.Windows.Forms.Application]::DoEvents()
             $progressBar.Value = 70
             & $addLog ("Scaffolding project at $($state.ProjectDir) ...") 'Black'
+            [System.Windows.Forms.Application]::DoEvents()
             Write-ProjectScaffold $state.ProjectDir $templatesDir
+            [System.Windows.Forms.Application]::DoEvents()
             $progressBar.Value = 85
             & $addLog 'Writing memory seeds...' 'Black'
+            [System.Windows.Forms.Application]::DoEvents()
             Write-MemorySeeds $env:USERPROFILE $state.ProjectDir $templatesDir
+            [System.Windows.Forms.Application]::DoEvents()
             $progressBar.Value = 100
             & $addLog 'Done. Click Test to verify, Get free keys for provider keys.' 'Green'
         } catch {
             & $addLog ("Install failed: $($_.Exception.Message)") 'Red'
+        } finally {
+            $browseButton.Enabled = $true
+            $installButton.Enabled = $true
+            $testButton.Enabled = $true
+            $keysButton.Enabled = $true
+            $form.Cursor = [System.Windows.Forms.Cursors]::Default
+            [System.Windows.Forms.Application]::DoEvents()
         }
     })
 
@@ -138,15 +159,19 @@ function Show-InstallerWizard {
 
     $testButton.Add_Click({
         try {
-            $ver = (& opencode --version 2>&1 | Out-String).Trim()
-            if ($LASTEXITCODE -eq 0) { & $addLog "opencode --version: $ver" 'Green' }
+            $verRaw = (& opencode --version 2>&1)
+            $verOk = ($LASTEXITCODE -eq 0)
+            $ver = ($verRaw | Out-String).Trim()
+            if ($verOk) { & $addLog "opencode --version: $ver" 'Green' }
             else { & $addLog "opencode --version failed: $ver" 'Red' }
         } catch {
             & $addLog "opencode --version failed: $($_.Exception.Message)" 'Red'
         }
         try {
-            $cfg = (& opencode debug config 2>&1 | Out-String).Trim()
-            if ($LASTEXITCODE -eq 0) { & $addLog "debug config OK: $cfg" 'Green' }
+            $cfgRaw = (& opencode debug config 2>&1)
+            $cfgOk = ($LASTEXITCODE -eq 0)
+            $cfg = ($cfgRaw | Out-String).Trim()
+            if ($cfgOk) { & $addLog "debug config OK: $cfg" 'Green' }
             else { & $addLog "debug config reported a problem: $cfg" 'Red' }
         } catch {
             & $addLog "debug config failed: $($_.Exception.Message)" 'Red'
