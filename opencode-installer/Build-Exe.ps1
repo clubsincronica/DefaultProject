@@ -41,6 +41,23 @@ if (Test-Path -LiteralPath $graphifySrc) {
     Write-Warning "graphify.js source not found at $graphifySrc; payload staged without plugin copy."
 }
 
+# 3b. Stage the vendored skill bodies for Write-SkillSet.
+# Source is the committed opencode-setup repo (nested separate repo, absent from
+# this worktree), so the absolute path is required; repo-relative resolution
+# cannot work here. Explicit allow-list only: never copy superpowers or others.
+$skillsSrcRoot = 'C:\Users\tom_w\Documents\Default Project\opencode-setup\skills'
+$payloadSkills = Join-Path $PSScriptRoot 'dist\payload\skills'
+New-Item -ItemType Directory $payloadSkills -Force | Out-Null
+$skillNames = @('agent-reach', 'archify', 'graphify', 'nlm-skill', 'youtube-watcher')
+foreach ($name in $skillNames) {
+    $skillSrc = Join-Path $skillsSrcRoot $name
+    if (Test-Path -LiteralPath $skillSrc) {
+        Copy-Item -LiteralPath $skillSrc (Join-Path $payloadSkills $name) -Recurse -Force
+    } else {
+        Write-Warning "skill source not found at $skillSrc; payload staged without $name."
+    }
+}
+
 # 4. SHA256 record (brief step, unchanged) + dist/SHA256.txt artifact.
 Get-FileHash $out -Algorithm SHA256 | Format-Table Hash, Path
 $hash = (Get-FileHash $out -Algorithm SHA256).Hash
