@@ -5,7 +5,7 @@ Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deb
 
 Historial de fixes: `docs/Changelog.md`
 
-**Repos GitHub (org `clubsincronica`, todos PRIVADOS):** `club-sincronica`, `pipeline-viral`, `cancionero-rojo` (nuevo 2026-09-26), `opencode-setup` (nuevo 2026-09-26, configs de opencode saneadas + README de flujo de API keys). El repo raíz y `remotion-poc` siguen SOLO locales. Spec: `docs/superpowers/specs/2026-09-26-opencode-setup-sharing-design.md`. Colaborador externo `Lahun22` invitado a `opencode-setup` y `cancionero-rojo` (permiso `push`, invitaciones pendientes de aceptar).
+**Repos GitHub (org `clubsincronica`, todos PRIVADOS):** `club-sincronica`, `pipeline-viral`, `cancionero-rojo` (nuevo 2026-09-26), `opencode-setup` (nuevo 2026-09-26, configs de opencode saneadas + README de flujo de API keys). El repo raíz y `remotion-poc` siguen SOLO locales. Spec: `docs/superpowers/specs/2026-09-26-opencode-setup-sharing-design.md`. Colaborador externo `Lahun22` invitado a `opencode-setup` y `cancionero-rojo` (permiso `push`, invitaciones pendientes de aceptar). **opencode-setup lleva `skills/` desde 2026-10-07 (commit `c07d685`): agent-reach, archify (trim: sin examples/ ni test/), graphify, nlm-skill, youtube-watcher + `sync-skills.ps1`; superpowers/* NO se vendea (plugin URL). Re-sync tras cada cambio de skill antes de rebuild del .exe.**
 
 ---
 
@@ -46,6 +46,7 @@ Historial de fixes: `docs/Changelog.md`
 21. **Cap FREE Buffer = 10 posts programados POR CANAL** (`LimitReachedError`): fechas 10-14 del lote oct NO caben de una pasada; entran por tandas con `--fill` (agenda SOLO plataformas faltantes con hueco, escribe `publicado.json` solo al 5/5, NUNCA borra posts creados — acumula). Guardia `date < todayUTC → skip` obligatoria (evita re-agendar posts ya publicados cuando salen de la cola). La mutación `createPost` es una union: DEBE llevar `__typename` + fragmentos de TODOS los tipos de error (`LimitReachedError`, etc.), si no Buffer devuelve `{}` ilegible.
 22. **YouTube VÍA BUFFER exige `metadata.youtube: { title, categoryId }`** — Buffer NO deriva el título del `text` (error: "YouTube posts require a title/category"). `categoryId: '22'` (People & Blogs) = convención de `upload-youtube.js`; `privacy: 'public'`. El `text` va solo con la descripción.
 23. **NO ejecutar `process-pending.js` sobre el lote oct:** escribe `publicado.json` incluso con plataformas en `status:'error'` (sin reintentar) y computa dueAt "hoy" para fechas pasadas. El `--fill` de `schedule-oct-batch.js` reemplaza esa función para este lote.
+24. **Glifo "aguila" NO debe aparecer salvo mencion explicita.** El regex de `pickEl` (render.js:840) y `pickElement` (storyboard-audio.js:70) era demasiado amplio: matcheaba palabras comunes como "desde arriba", "el mapa", "perspectiva", "vision", "panorama" y las asignaba como elemento `aguila`. Ademas, los fallback cycles incluian `aguila` como elemento por defecto cuando no habia match. Fix 2026-10-07: regex reducido a `aguila|alturas?|volar?|vuela|plumas?|pico` y `aguila` eliminado de TODOS los fallback pools/cycles. 6 videos afectados (Oct 3, 6, 7, 10, 12, 13) re-renderizados y re-ensamblados. Regla: un glifo de sello SOLO aparece si el texto lo menciona explicitamente o si el kin del dia ES ese sello.
 
 ### Issues abiertos
 
