@@ -21,8 +21,10 @@ function Write-GlobalConfig($HomeRoot, $TemplatesDir) {
     Write-Utf8NoBom (Join-Path $dest 'rate-limit-fallback.json') (Get-Content (Join-Path $TemplatesDir 'rate-limit-fallback.json') -Raw -Encoding UTF8)
 }
 function Write-ProjectScaffold($ProjectDir, $TemplatesDir) {
-    $raw = (Get-Content (Join-Path $TemplatesDir 'project.opencode.json') -Raw -Encoding UTF8).Replace('<PROJECT_DIR>', $ProjectDir)
-    $raw = $raw.Replace('<HOME>', $env:USERPROFILE)
+    $escDir = $ProjectDir.Replace('\', '\\')
+    $escHome = $env:USERPROFILE.Replace('\', '\\')
+    $raw = (Get-Content (Join-Path $TemplatesDir 'project.opencode.json') -Raw -Encoding UTF8).Replace('<PROJECT_DIR>', $escDir)
+    $raw = $raw.Replace('<HOME>', $escHome)
     Write-Utf8NoBom (Join-Path $ProjectDir 'opencode.json') $raw
     Write-Utf8NoBom (Join-Path $ProjectDir '.opencode\opencode.jsonc') (Get-Content (Join-Path $TemplatesDir 'lean.opencode.jsonc') -Raw -Encoding UTF8)
     Write-Utf8NoBom (Join-Path $ProjectDir 'AGENTS.md') (Get-Content (Join-Path $TemplatesDir 'AGENTS.template.md') -Raw -Encoding UTF8)

@@ -29,7 +29,8 @@ Describe 'Core install functions' {
         $raw = Get-Content (Join-Path $d 'opencode.json') -Raw
         $raw | Should Not Match '<PROJECT_DIR>'
         $raw | Should Not Match '<HOME>'
-        $raw | Should Match ([regex]::Escape($d))
+        { Get-Content (Join-Path $d 'opencode.json') -Raw | ConvertFrom-Json } | Should Not Throw
+        $raw | Should Match ([regex]::Escape($d.Replace('\', '\\')))
     }
     It 'copies graphify.js plugin when source exists' {
         $gSrc = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path '.opencode\plugins\graphify.js'
