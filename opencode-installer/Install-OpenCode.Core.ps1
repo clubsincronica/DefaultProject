@@ -6,9 +6,9 @@ function Get-Preflight {
     return @{ node = $node; npm = $npm; net = $net }
 }
 function Install-OpencodeCli {
-    if ($null -eq (Get-Command opencode -ErrorAction SilentlyContinue)) {
-        & npm install -g opencode@latest
-    }
+    if ($null -ne (Get-Command opencode -ErrorAction SilentlyContinue)) { return $true }
+    & npm install -g opencode@latest
+    return ($LASTEXITCODE -eq 0)
 }
 function Write-Utf8NoBom($Path, $Text) {
     $dir = Split-Path $Path -Parent
@@ -30,6 +30,7 @@ function Write-ProjectScaffold($ProjectDir, $TemplatesDir) {
     Write-Utf8NoBom (Join-Path $ProjectDir 'AGENTS.md') (Get-Content (Join-Path $TemplatesDir 'AGENTS.template.md') -Raw -Encoding UTF8)
     Write-Utf8NoBom (Join-Path $ProjectDir 'PIPELINE-STATE.md') (Get-Content (Join-Path $TemplatesDir 'PIPELINE-STATE.seed.md') -Raw -Encoding UTF8)
     Write-Utf8NoBom (Join-Path $ProjectDir '.gitignore') (Get-Content (Join-Path $TemplatesDir 'gitignore.template') -Raw -Encoding UTF8)
+    Write-Utf8NoBom (Join-Path $ProjectDir 'SECRETS-MAP.md') (Get-Content (Join-Path $TemplatesDir 'secrets-map.template.md') -Raw -Encoding UTF8)
     $gSrc = Join-Path (Split-Path $PSScriptRoot -Parent) '.opencode\plugins\graphify.js'
     if (Test-Path $gSrc) {
         $gDst = Join-Path $ProjectDir '.opencode\plugins\graphify.js'

@@ -32,9 +32,17 @@ $payloadInstaller = Join-Path $PSScriptRoot 'dist\payload\opencode-installer'
 $payloadGraphify = Join-Path $PSScriptRoot 'dist\payload\.opencode\plugins'
 New-Item -ItemType Directory $payloadInstaller -Force | Out-Null
 New-Item -ItemType Directory $payloadGraphify -Force | Out-Null
+$coreDst = Join-Path $payloadInstaller 'Install-OpenCode.Core.ps1'
+if (Test-Path -LiteralPath $coreDst) { Remove-Item -LiteralPath $coreDst -Recurse -Force }
 Copy-Item (Join-Path $PSScriptRoot 'Install-OpenCode.Core.ps1') $payloadInstaller -Force
-Copy-Item (Join-Path $PSScriptRoot 'templates') (Join-Path $payloadInstaller 'templates') -Recurse -Force
+$payloadTemplates = Join-Path $payloadInstaller 'templates'
+if (Test-Path -LiteralPath $payloadTemplates) { Remove-Item -LiteralPath $payloadTemplates -Recurse -Force }
+Copy-Item (Join-Path $PSScriptRoot 'templates') $payloadTemplates -Recurse -Force
+$graphifyRepoSrc = Join-Path (Split-Path $PSScriptRoot -Parent) '.opencode\plugins\graphify.js'
 $graphifySrc = 'C:\Users\tom_w\Documents\Default Project\.opencode\plugins\graphify.js'
+if (Test-Path -LiteralPath $graphifyRepoSrc) { $graphifySrc = $graphifyRepoSrc }
+$graphifyDst = Join-Path $payloadGraphify 'graphify.js'
+if (Test-Path -LiteralPath $graphifyDst) { Remove-Item -LiteralPath $graphifyDst -Recurse -Force }
 if (Test-Path -LiteralPath $graphifySrc) {
     Copy-Item -LiteralPath $graphifySrc (Join-Path $payloadGraphify 'graphify.js') -Force
 } else {
@@ -42,17 +50,21 @@ if (Test-Path -LiteralPath $graphifySrc) {
 }
 
 # 3b. Stage the vendored skill bodies for Write-SkillSet.
-# Source is the committed opencode-setup repo (nested separate repo, absent from
-# this worktree), so the absolute path is required; repo-relative resolution
-# cannot work here. Explicit allow-list only: never copy superpowers or others.
-$skillsSrcRoot = 'C:\Users\tom_w\Documents\Default Project\opencode-setup\skills'
+# Repo-relative source first (script dir parent = repo root); the absolute
+# path is a fallback only. Explicit allow-list only: never copy superpowers.
+$skillsSrcRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'opencode-setup\skills'
+if (-not (Test-Path -LiteralPath $skillsSrcRoot)) {
+    $skillsSrcRoot = 'C:\Users\tom_w\Documents\Default Project\opencode-setup\skills'
+}
 $payloadSkills = Join-Path $PSScriptRoot 'dist\payload\skills'
 New-Item -ItemType Directory $payloadSkills -Force | Out-Null
 $skillNames = @('agent-reach', 'archify', 'graphify', 'nlm-skill', 'youtube-watcher')
 foreach ($name in $skillNames) {
     $skillSrc = Join-Path $skillsSrcRoot $name
+    $skillDst = Join-Path $payloadSkills $name
     if (Test-Path -LiteralPath $skillSrc) {
-        Copy-Item -LiteralPath $skillSrc (Join-Path $payloadSkills $name) -Recurse -Force
+        if (Test-Path -LiteralPath $skillDst) { Remove-Item -LiteralPath $skillDst -Recurse -Force }
+        Copy-Item -LiteralPath $skillSrc $skillDst -Recurse -Force
     } else {
         Write-Warning "skill source not found at $skillSrc; payload staged without $name."
     }

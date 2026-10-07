@@ -5,10 +5,17 @@
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-. (Join-Path $PSScriptRoot 'Install-OpenCode.Core.ps1')
+# Payload resolver: the compiled exe runs from dist/ while the payload stages
+# to dist/payload/opencode-installer/. Pick the first candidate holding the
+# core script; fall back to $PSScriptRoot (dev layout).
+$script:InstallerBase = $PSScriptRoot
+foreach ($c in @($PSScriptRoot, (Join-Path $PSScriptRoot 'payload\opencode-installer'))) {
+    if (Test-Path (Join-Path $c 'Install-OpenCode.Core.ps1')) { $script:InstallerBase = $c; break }
+}
+. (Join-Path $script:InstallerBase 'Install-OpenCode.Core.ps1')
 
 function Show-InstallerWizard {
-    $templatesDir = Join-Path $PSScriptRoot 'templates'
+    $templatesDir = Join-Path $script:InstallerBase 'templates'
     $state = @{ ProjectDir = (Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'opencode-project') }
 
     $form = New-Object System.Windows.Forms.Form
@@ -120,7 +127,15 @@ function Show-InstallerWizard {
             $progressBar.Value = 25
             & $addLog 'Installing opencode CLI (npm -g)...' 'Black'
             [System.Windows.Forms.Application]::DoEvents()
-            Install-OpencodeCli
+            if (-not (Install-OpencodeCli)) {
+                & $addLog 'opencode CLI install failed (npm error). Fix npm, then Install again.' 'Red'
+                $browseButton.Enabled = $true
+                $installButton.Enabled = $true
+                $testButton.Enabled = $true
+                $keysButton.Enabled = $true
+                $form.Cursor = [System.Windows.Forms.Cursors]::Default
+                return
+            }
             [System.Windows.Forms.Application]::DoEvents()
             $progressBar.Value = 50
             & $addLog 'Writing global config...' 'Black'

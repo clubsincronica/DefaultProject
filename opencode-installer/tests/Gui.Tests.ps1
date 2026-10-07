@@ -13,4 +13,16 @@ Describe 'Wizard script' {
         $raw | Should Match 'FolderBrowserDialog'
         $raw | Should Match 'More info'
     }
+    It 'resolves dist payload with dev-layout fallback (static)' {
+        $raw = Get-Content (Join-Path $PSScriptRoot '..\Install-OpenCode.ps1') -Raw
+        $raw | Should Match 'payload\\opencode-installer'
+        $raw | Should Match 'Install-OpenCode\.Core\.ps1'
+        $raw | Should Match 'InstallerBase'
+        $raw | Should Match '\$PSScriptRoot'
+    }
+    It 'aborts before writers when npm install fails (static)' {
+        $raw = Get-Content (Join-Path $PSScriptRoot '..\Install-OpenCode.ps1') -Raw
+        $raw | Should Match ([regex]::Escape('if (-not (Install-OpencodeCli))'))
+        $raw.IndexOf('if (-not (Install-OpencodeCli))') -lt $raw.IndexOf('Write-GlobalConfig') | Should Be $true
+    }
 }

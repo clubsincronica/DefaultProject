@@ -18,4 +18,7 @@ Describe 'Template pack' {
         $raw | Should Not Match 'sk-or-'
         $raw | Should Not Match 'eyJ'
     }
+    It 'ships the secrets-map template' {
+        (Join-Path $T 'secrets-map.template.md' | Test-Path) | Should Be $true
+    }
 }
