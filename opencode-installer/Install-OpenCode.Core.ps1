@@ -44,3 +44,21 @@ function Write-MemorySeeds($HomeRoot, $ProjectDir, $TemplatesDir) {
     Write-Utf8NoBom (Join-Path $HomeRoot '.config\opencode\memory.json') (Get-Content (Join-Path $TemplatesDir 'memory-global.seed.json') -Raw -Encoding UTF8)
     Write-Utf8NoBom (Join-Path $ProjectDir 'data\memory.json') (Get-Content (Join-Path $TemplatesDir 'memory-project.seed.json') -Raw -Encoding UTF8)
 }
+function Write-SkillSet($PayloadSkillsDir, $HomeRoot) {
+    $map = @{
+        'agent-reach'    = '.agents\skills'
+        'archify'        = '.agents\skills'
+        'graphify'       = '.config\opencode\skills'
+        'nlm-skill'      = '.config\opencode\skills'
+        'youtube-watcher'= '.config\opencode\skills'
+    }
+    foreach ($name in $map.Keys) {
+        $src = Join-Path $PayloadSkillsDir $name
+        if (-not (Test-Path $src)) { throw "payload skill missing: $name" }
+        $dst = Join-Path $HomeRoot (Join-Path $map[$name] $name)
+        if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
+        $parent = Split-Path $dst -Parent
+        if (-not (Test-Path $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
+        Copy-Item $src $dst -Recurse -Force
+    }
+}
