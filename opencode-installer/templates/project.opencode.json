@@ -1,0 +1,139 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    ".opencode/plugins/graphify.js",
+    "superpowers@git+https://github.com/obra/superpowers.git"
+  ],
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "<PROJECT_DIR>"
+      ],
+      "enabled": true,
+      "allowed_dirs": [
+        "content",
+        "scripts",
+        "assets",
+        "data",
+        "graphify-out",
+        ".opencode",
+        "node_modules"
+      ]
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://api.context7.vercel.app/mcp",
+      "enabled": true
+    },
+    "memory": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-memory",
+        "<PROJECT_DIR>/data/memory.json"
+      ],
+      "enabled": true
+    },
+    "headroom": {
+      "type": "local",
+      "command": [
+        "<HOME>/.local/bin/headroom.exe",
+        "mcp",
+        "serve"
+      ],
+      "enabled": true
+    },
+    "linkedin": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-server-linkedin@latest"
+      ],
+      "environment": {
+        "UV_HTTP_TIMEOUT": "300"
+      },
+      "enabled": true
+    }
+  },
+  "provider": {
+    "headroom": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Headroom Proxy",
+      "options": {
+        "baseURL": "http://127.0.0.1:8787/v1"
+      },
+      "models": {
+        "ddgw/gpt-4o-mini": {
+          "name": "GPT-4o mini",
+          "limit": { "context": 128000, "output": 16384 }
+        },
+        "auto/best-coding": {
+          "name": "Best Coding (auto)",
+          "limit": { "context": 1048576, "output": 512000 }
+        },
+        "aug/claude-haiku-4.5": {
+          "name": "Claude Haiku 4.5",
+          "limit": { "context": 200000, "output": 8192 }
+        },
+        "aug/claude-sonnet-4.6": {
+          "name": "Claude Sonnet 4.6",
+          "limit": { "context": 1000000, "output": 16384 }
+        }
+      }
+    },
+    "deepseek": {
+      "npm": "@ai-sdk/deepseek",
+      "name": "DeepSeek API",
+      "options": {},
+      "models": {
+        "deepseek/deepseek-v4-flash": {
+          "name": "DeepSeek V4 Flash",
+          "limit": { "context": 128000, "output": 32768 }
+        },
+        "deepseek/deepseek-coder-v2": {
+          "name": "DeepSeek Coder V2",
+          "limit": { "context": 128000, "output": 32768 }
+        }
+      }
+    },
+    "glm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "GLM-5.2 (Z.AI)",
+      "options": {
+        "baseURL": "https://api.z.ai/api/paas/v4"
+      },
+      "models": {
+        "zhipu/glm-5.2": {
+          "name": "GLM-5.2",
+          "limit": { "context": 1048576, "output": 131072 }
+        },
+        "zhipu/glm-4.7-flash": {
+          "name": "GLM-4.7 Flash (free)",
+          "limit": { "context": 1048576, "output": 131072 }
+        }
+      }
+    },
+    "groq": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Groq API",
+      "options": {
+        "baseURL": "https://api.groq.com/v1"
+      },
+      "models": {
+        "groq/llama-3.1-8b-instant": {
+          "name": "Llama 3.1 8B Instant",
+          "limit": { "context": 1000000, "output": 1000000 }
+        },
+        "groq/groqwlc-7b-instruct": {
+          "name": "Groq Llama 3.1 7B Instruct",
+          "limit": { "context": 1000000, "output": 1000000 }
+        }
+      }
+    }
+  }
+}

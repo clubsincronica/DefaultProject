@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "cooldownMs": 60000,
+  "fallbackMode": "cycle",
+  "enableSubagentFallback": true,
+  "fallbackModels": [
+    { "providerID": "opencode", "modelID": "deepseek-v4-flash-free" },
+    { "providerID": "nvidia", "modelID": "deepseek-ai/deepseek-v4-flash-0731" },
+    { "providerID": "openrouter", "modelID": "~deepseek/deepseek-v4-flash-latest" },
+    { "providerID": "nvidia", "modelID": "moonshotai/kimi-k2.6" },
+    { "providerID": "nvidia", "modelID": "nvidia/llama-3.3-nemotron-super-49b-v1" },
+    { "providerID": "nvidia", "modelID": "meta/llama-3.3-70b-instruct" }
+  ],
+  "retryPolicy": {
+    "maxRetries": 3,
+    "strategy": "exponential",
+    "baseDelayMs": 1000,
+    "maxDelayMs": 30000,
+    "jitterEnabled": true,
+    "jitterFactor": 0.1
+  },
+  "configReload": { "enabled": true }
+}

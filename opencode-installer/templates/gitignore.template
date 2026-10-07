@@ -1,0 +1,5 @@
+credentials/
+assets/credentials/
+*.env
+auth.json
+server-env.txt
