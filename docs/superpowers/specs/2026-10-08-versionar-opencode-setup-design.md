@@ -18,8 +18,12 @@ sin ningún secreto, y que `Build-Exe.ps1` siga funcionando sin cambios de ruta.
 ## Alcance
 
 **Versionado:**
-- `opencode-setup/` completo: `skills/` (agent-reach, archify, graphify, nlm-skill,
-  youtube-watcher), `config/`, `sync-skills.ps1`, `README.md`.
+- `opencode-setup/` como **submódulo** del repo raíz (`git submodule add` → su repo
+  propio `github.com/clubsincronica/opencode-setup`, gitlink en `c07d685`). Se descubrió
+  en la ejecución que era un repo git embebido (regla vieja del `.gitignore` lo tenía en
+  el bloque *Project repos*), así que versionarlo inline habría creado un gitlink
+  apuntando a un commit no publicado. Decisión de usuario: submódulo (conserva el repo
+  hermano que comparte Lahun22 y evita duplicar).
 - `.opencode/` parcial: `plugins/graphify.js`, `opencode.json`, `opencode.jsonc`,
   `.gitignore` propio.
 - Sin cambios: `opencode-installer/templates/*`, `opencode-installer/*.ps1`, `dist/`
@@ -71,6 +75,9 @@ Antes de `git add`:
 - Re-build: `powershell -ExecutionPolicy Bypass -File opencode-installer\Build-Exe.ps1`
   + suite Pester (`opencode-installer/tests/`) para confirmar que el payload se sigue
   empaquetando desde las rutas ahora versionadas.
+- **Push del submódulo antes que el del raíz:** `opencode-setup` estaba 1 ahead
+  (`c07d685`, skills). Sin push de ese commit, el gitlink del raíz no resuelve en un
+  clone fresco (`fatal: 'opencode-setup' does not contain a commit`).
 
 ## No objetivo
 
