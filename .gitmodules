@@ -1,0 +1,3 @@
+[submodule "opencode-setup"]
+	path = opencode-setup
+	url = https://github.com/clubsincronica/opencode-setup.git
