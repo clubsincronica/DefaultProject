@@ -3,7 +3,6 @@ club-sincronica/
 pipeline-viral/
 remotion-poc/
 cancionero-rojo/
-opencode-setup/
 Project/
 toolbox/
 
@@ -19,8 +18,13 @@ build/
 *.env
 credentials/
 
-# Tooling
-.opencode/
+# Tooling (harness OpenCode versionado; solo lo pesado/sensible queda fuera)
+.opencode/node_modules/
+.opencode/graphify-out/
+opencode-setup/skills/**/node_modules/
+opencode-setup/**/memory*.json
+opencode-setup/**/server-env.txt
+opencode-installer/OpenCode-Setup.zip
 
 # Auditor output (generated)
 audit-code-*.md
