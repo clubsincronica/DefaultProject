@@ -64,7 +64,8 @@ club-sincronica en modo solo-lectura). No publica.
 | rclone (Google Drive) | config local del sistema | usado por `deliver.js` |
 | OpenCode MCP memory | `opencode.json` → `data/memory.json` | store de memoria (no secreto) |
 | jcode auditor (DeepSeek NIM) | `scripts/jcode-auditor.config.json` (en club-sincronica) | key de API gratuita NIM |
-| `NVIDIA_API_KEY` | `%LOCALAPPDATA%\hermes\.env` (i.e. `C:\Users\tom_w\AppData\Local\hermes\.env`) | OpenCode `hermes` child agent (Hermes Agent provider `nvidia`); free-tier key from build.nvidia.com; value never written to the repo |
+| `NVIDIA_API_KEY` (provider `nvidia` de OpenCode) | Variable de entorno de **usuario** de Windows (alcance User; paso 10 del `opencode-installer/GUIDE.md`) | Alimenta `{env:NVIDIA_API_KEY}` del `opencode.json` global (`nvidia` / NVIDIA NIM); key gratuita de build.nvidia.com, rotada 2026-10-08 porque la anterior dejó de funcionar; valor nunca escrito en el repo |
+| `NVIDIA_API_KEY` (hermes child agent) | `%LOCALAPPDATA%\hermes\.env` (i.e. `C:\Users\tom_w\AppData\Local\hermes\.env`) | OpenCode `hermes` child agent (Hermes Agent provider `nvidia`); key gratuita de build.nvidia.com **distinta** de la de arriba; value never written to the repo. El env loader de hermes (`load_hermes_dotenv`) da prioridad a su `.env` sobre la variable de shell, así que ambas conviven sin pisarse |
 
 ---
 
