@@ -67,21 +67,25 @@ def main() -> None:
         beep(CONFIG["beep_inicio"])
 
     def fin() -> None:
-        pcm = rec.stop()
         estado["grabando"] = False
-        duracion = pcm.size / rate
-        beep(CONFIG["beep_fin"])
         try:
-            texto = transcriptor.transcribe(pcm, sample_rate=rate)
-        except Exception as exc:  # el bucle nunca debe morir
-            print(f"[dictado] Error transcribiendo: {exc}")
-            beep(CONFIG["beep_error"])
-            return
-        if planificar(duracion, texto, minimo) == "pegar":
-            pegar(texto, modo=CONFIG["atajo_pegado"])
-            print(f"[dictado] Pegado ({duracion:.1f}s de audio): {texto}")
-        else:
-            print(f"[dictado] Descartado (dur={duracion:.1f}s, texto={texto!r})")
+            pcm = rec.stop()
+            duracion = pcm.size / rate
+            beep(CONFIG["beep_fin"])
+            try:
+                texto = transcriptor.transcribe(pcm, sample_rate=rate)
+            except Exception as exc:  # el bucle nunca debe morir
+                print(f"[dictado] Error transcribiendo: {exc}")
+                beep(CONFIG["beep_error"])
+                return
+            if planificar(duracion, texto, minimo) == "pegar":
+                pegar(texto, modo=CONFIG["atajo_pegado"])
+                print(f"[dictado] Pegado ({duracion:.1f}s de audio): {texto}")
+            else:
+                print(f"[dictado] Descartado (dur={duracion:.1f}s, texto={texto!r})")
+                beep(CONFIG["beep_error"])
+        except Exception as exc:
+            print(f"[dictado] Error en fin(): {exc}")
             beep(CONFIG["beep_error"])
 
     def on_press(key) -> None:
