@@ -743,3 +743,9 @@ Task 4+ se implementó así; este documento se enmienda para quedar en sincroní
 - **Nota operativa:** soltar Shift antes de que termine la transcripción —
   si Shift sigue bajo al llegar el Enter, el TUI puede interpretarlo como
   Shift+Enter = salto de línea en vez de enviar.
+- **Hotkey por defecto ahora `mouse.middle`** (enmienda 2026-10-14): botón
+  central del mouse mantenido, vía pynput `mouse.Listener`; los combos de
+  teclado siguen soportados (`parsear_hotkey`, cualquier valor sin prefijo
+  `mouse.`).
+- Nota: testear que middle-click no pegue el portapapeles en el TUI (si lo
+  hace, probar `x1`/`x2` en `config.json`).

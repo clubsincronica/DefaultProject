@@ -132,3 +132,6 @@ se asume que el uso típico es tener enfocada la terminal de OpenCode.
   tecla del combo, así Shift está suelto antes del Enter.
 - `beep_fin` suena tras el envío ("mensaje enviado"), no antes de transcribir.
 - `Transcriptor.transcribe` exige `sample_rate == 16000` (ValueError).
+- Hotkey por defecto `mouse.middle` (botón central mantenido); combos de
+  teclado siguen disponibles (`shift+space` u otros valores sin prefijo
+  `mouse.`).

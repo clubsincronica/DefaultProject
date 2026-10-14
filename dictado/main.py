@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 from pynput.keyboard import Key, KeyCode
+from pynput.mouse import Button
 
 from pegar import pegar
 from recorder import Recorder, es_util
@@ -35,6 +36,22 @@ def parsear_hotkey(texto: str) -> set:
         else:
             raise ValueError(f"tecla desconocida en hotkey: {token!r}")
     return teclas
+
+
+_BOTONES_MOUSE = {
+    "middle": Button.middle,
+    "left": Button.left,
+    "right": Button.right,
+    "x1": Button.x1,
+    "x2": Button.x2,
+}
+
+
+def parsear_hotkey_mouse(texto: str) -> Button:
+    nombre = texto.removeprefix("mouse.").strip().lower()
+    if nombre not in _BOTONES_MOUSE:
+        raise ValueError(f"botón de mouse desconocido en hotkey: {nombre!r}")
+    return _BOTONES_MOUSE[nombre]
 
 
 def planificar(duracion_s: float, texto: str, duracion_minima_s: float) -> str:
@@ -71,30 +88,11 @@ def main() -> None:
         modo_prueba(seg)
         return
 
-    from pynput import keyboard
-
     transcriptor = Transcriptor(modelo_id=CONFIG["modelo"], idioma=CONFIG["idioma"])
     rec = Recorder(rate=CONFIG["rate"])
-    hotkey = parsear_hotkey(CONFIG["hotkey"])
-    keys_pulsadas: set = set()
     estado = {"grabando": False}
     rate = CONFIG["rate"]
     minimo = CONFIG["duracion_minima_s"]
-
-    # pynput entrega las variantes L/R (ctrl_l, shift_r...); el parser devuelve
-    # la forma canónica (ctrl, shift, alt) — normalizar antes de comparar.
-    _CANON = {
-        Key.ctrl_l: Key.ctrl,
-        Key.ctrl_r: Key.ctrl,
-        Key.shift_l: Key.shift,
-        Key.shift_r: Key.shift,
-        Key.alt_l: Key.alt,
-        Key.alt_r: Key.alt,
-        Key.alt_gr: Key.alt,
-    }
-
-    def _canon(key):
-        return _CANON.get(key, key)
 
     def inicio() -> None:
         try:
@@ -128,6 +126,45 @@ def main() -> None:
         except Exception as exc:
             print(f"[dictado] Error en fin(): {exc}")
             beep(CONFIG["beep_error"])
+
+    if CONFIG["hotkey"].startswith("mouse."):
+        from pynput import mouse
+
+        boton = parsear_hotkey_mouse(CONFIG["hotkey"])
+
+        def on_click(x, y, button, pressed) -> None:
+            if button != boton:
+                return
+            if pressed:
+                if not estado["grabando"]:
+                    inicio()
+            elif estado["grabando"]:
+                fin()
+
+        print(f"[dictado] Listo. {CONFIG['hotkey']} (mantén) para dictar.")
+        with mouse.Listener(on_click=on_click) as listener:
+            listener.join()
+        return
+
+    from pynput import keyboard
+
+    hotkey = parsear_hotkey(CONFIG["hotkey"])
+    keys_pulsadas: set = set()
+
+    # pynput entrega las variantes L/R (ctrl_l, shift_r...); el parser devuelve
+    # la forma canónica (ctrl, shift, alt) — normalizar antes de comparar.
+    _CANON = {
+        Key.ctrl_l: Key.ctrl,
+        Key.ctrl_r: Key.ctrl,
+        Key.shift_l: Key.shift,
+        Key.shift_r: Key.shift,
+        Key.alt_l: Key.alt,
+        Key.alt_r: Key.alt,
+        Key.alt_gr: Key.alt,
+    }
+
+    def _canon(key):
+        return _CANON.get(key, key)
 
     def on_press(key) -> None:
         key = _canon(key)
