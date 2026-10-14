@@ -5,12 +5,36 @@ import winsound
 from pathlib import Path
 
 import numpy as np
+from pynput.keyboard import Key, KeyCode
 
 from pegar import pegar
 from recorder import Recorder, es_util
 from transcribir import Transcriptor
 
 CONFIG = json.loads((Path(__file__).parent / "config.json").read_text(encoding="utf-8"))
+
+_ALIAS_TECLAS = {
+    "ctrl": Key.ctrl,
+    "shift": Key.shift,
+    "alt": Key.alt,
+    "space": Key.space,
+    "enter": Key.enter,
+}
+
+
+def parsear_hotkey(texto: str) -> set:
+    teclas = set()
+    for token in texto.lower().split("+"):
+        token = token.strip()
+        if token in _ALIAS_TECLAS:
+            teclas.add(_ALIAS_TECLAS[token])
+        elif len(token) == 1 and "a" <= token <= "z":
+            teclas.add(KeyCode.from_char(token))
+        elif token.startswith("f") and token[1:].isdigit() and 1 <= int(token[1:]) <= 12:
+            teclas.add(getattr(Key, token))
+        else:
+            raise ValueError(f"tecla desconocida en hotkey: {token!r}")
+    return teclas
 
 
 def planificar(duracion_s: float, texto: str, duracion_minima_s: float) -> str:
@@ -51,9 +75,26 @@ def main() -> None:
 
     transcriptor = Transcriptor(modelo_id=CONFIG["modelo"], idioma=CONFIG["idioma"])
     rec = Recorder(rate=CONFIG["rate"])
-    estado = {"grabando": False, "ctrl": False, "shift": False}
+    hotkey = parsear_hotkey(CONFIG["hotkey"])
+    keys_pulsadas: set = set()
+    estado = {"grabando": False}
     rate = CONFIG["rate"]
     minimo = CONFIG["duracion_minima_s"]
+
+    # pynput entrega las variantes L/R (ctrl_l, shift_r...); el parser devuelve
+    # la forma canónica (ctrl, shift, alt) — normalizar antes de comparar.
+    _CANON = {
+        Key.ctrl_l: Key.ctrl,
+        Key.ctrl_r: Key.ctrl,
+        Key.shift_l: Key.shift,
+        Key.shift_r: Key.shift,
+        Key.alt_l: Key.alt,
+        Key.alt_r: Key.alt,
+        Key.alt_gr: Key.alt,
+    }
+
+    def _canon(key):
+        return _CANON.get(key, key)
 
     def inicio() -> None:
         try:
@@ -71,7 +112,6 @@ def main() -> None:
         try:
             pcm = rec.stop()
             duracion = pcm.size / rate
-            beep(CONFIG["beep_fin"])
             try:
                 texto = transcriptor.transcribe(pcm, sample_rate=rate)
             except Exception as exc:  # el bucle nunca debe morir
@@ -80,6 +120,7 @@ def main() -> None:
                 return
             if planificar(duracion, texto, minimo) == "pegar":
                 pegar(texto, modo=CONFIG["atajo_pegado"])
+                beep(CONFIG["beep_fin"])
                 print(f"[dictado] Pegado ({duracion:.1f}s de audio): {texto}")
             else:
                 print(f"[dictado] Descartado (dur={duracion:.1f}s, texto={texto!r})")
@@ -89,23 +130,20 @@ def main() -> None:
             beep(CONFIG["beep_error"])
 
     def on_press(key) -> None:
-        if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
-            estado["ctrl"] = True
-        elif key in (keyboard.Key.shift_l, keyboard.Key.shift_r):
-            estado["shift"] = True
-        elif key == keyboard.Key.space:
-            if estado["ctrl"] and estado["shift"] and not estado["grabando"]:
-                inicio()
+        key = _canon(key)
+        if key not in hotkey:
+            return
+        keys_pulsadas.add(key)
+        if hotkey <= keys_pulsadas and not estado["grabando"]:
+            inicio()
 
     def on_release(key) -> None:
-        if key in (keyboard.Key.ctrl_l, keyboard.Key.ctrl_r):
-            estado["ctrl"] = False
-        elif key in (keyboard.Key.shift_l, keyboard.Key.shift_r):
-            estado["shift"] = False
-        elif key == keyboard.Key.space and estado["grabando"]:
+        key = _canon(key)
+        keys_pulsadas.discard(key)
+        if not (hotkey & keys_pulsadas) and estado["grabando"]:
             fin()
 
-    print("[dictado] Listo. Ctrl+Shift+Space (mantén) para dictar.")
+    print(f"[dictado] Listo. {CONFIG['hotkey']} (mantén) para dictar.")
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
         listener.join()
 

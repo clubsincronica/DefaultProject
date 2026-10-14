@@ -122,3 +122,13 @@ se asume que el uso típico es tener enfocada la terminal de OpenCode.
   eventos integrables para Osi y sin control fino.
 - **CLI `whisper` (torch) ya instalada:** sin dependencias nuevas pero 2-4×
   más lenta en CPU → peor UX.
+
+## Nota post-review (2026-10-14, usuario)
+
+- Hotkey por defecto ahora **`shift+space`**, parseada desde `config.json`
+  (`parsear_hotkey` en main.py; modificadores antes del espacio).
+- **Auto-send:** tras el pegado se envía `Enter` automáticamente
+  (`pegar(..., enviar=True)` por defecto) — soltar Shift antes de que termine
+  la transcripción, si no el TUI puede leer el Enter como Shift+Enter.
+- `beep_fin` suena tras el envío ("mensaje enviado"), no antes de transcribir.
+- `Transcriptor.transcribe` exige `sample_rate == 16000` (ValueError).

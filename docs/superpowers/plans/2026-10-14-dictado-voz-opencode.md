@@ -719,3 +719,27 @@ Añadir una entrada nueva al final (sección de hitos) con formato del archivo:
 git add PIPELINE-STATE.md dictado/config.json docs/superpowers/
 git commit -m "docs(dictado): calibration notes + pipeline state milestone"
 ```
+
+---
+
+## Enmienda post-review final (2026-10-14)
+
+Cambios aprobados por el usuario tras el review final de la rama (el código de
+Task 4+ se implementó así; este documento se enmienda para quedar en sincronía):
+
+- **Hotkey ahora `"shift+space"`** (antes `ctrl+shift+space`, hardcodeada).
+  `config.json` define `hotkey`; `main.py` la parsea con
+  `parsear_hotkey(texto) -> set` (tokens: `ctrl`/`shift`/`alt`/`space`/`enter`,
+  letras `a`-`z`, `f1`..`f12`; token desconocido → `ValueError`). El listener
+  normaliza las variantes L/R de pynput (`ctrl_l`/`shift_r`/...) a la forma
+  canónica antes de comparar; `inicio()` al pulsar el conjunto completo,
+  `fin()` al soltar el último.
+- **Auto-send tras pegado:** `pegar(..., enviar=True)` (default) pulsa
+  `Key.enter` después del pegado — el texto se pega Y se envía.
+- **`beep_fin` tras el envío** (no antes de transcribir): el tono de éxito
+  significa "mensaje enviado". Descarte/error siguen con `beep_error`.
+- **Guard `sample_rate`:** `Transcriptor.transcribe` lanza `ValueError` si
+  `sample_rate != 16000`.
+- **Nota operativa:** soltar Shift antes de que termine la transcripción —
+  si Shift sigue bajo al llegar el Enter, el TUI puede interpretarlo como
+  Shift+Enter = salto de línea en vez de enviar.

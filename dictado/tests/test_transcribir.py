@@ -1,6 +1,7 @@
 import types
 
 import numpy as np
+import pytest
 
 from transcribir import Transcriptor
 
@@ -35,3 +36,10 @@ def test_transcribe_pcm_vacio_devuelve_vacio():
     fake = ModeloFalso()
     t = Transcriptor(modelo=fake)
     assert t.transcribe(np.zeros(0, dtype=np.float32)) == ""
+
+
+def test_transcribe_rechaza_sample_rate_distinto_de_16000():
+    fake = ModeloFalso()
+    t = Transcriptor(modelo=fake)
+    with pytest.raises(ValueError, match="16000"):
+        t.transcribe(np.zeros(100, dtype=np.float32), sample_rate=8000)

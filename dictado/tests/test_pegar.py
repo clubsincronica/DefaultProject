@@ -40,3 +40,19 @@ def test_pegar_ctrl_shift_v_incluye_shift(monkeypatch):
     monkeypatch.setattr(pegar_mod, "_teclado", lambda: FakeKb(log))
     pegar_mod.pegar("x", modo="ctrl+shift+v")
     assert any(x == ("press", "Key.shift") for x in log)
+
+
+def test_pegar_envia_enter_al_final_por_defecto(monkeypatch):
+    log = []
+    monkeypatch.setattr(pegar_mod.pyperclip, "copy", lambda t: None)
+    monkeypatch.setattr(pegar_mod, "_teclado", lambda: FakeKb(log))
+    pegar_mod.pegar("hola", modo="ctrl+v")
+    assert log[-2:] == [("press", "Key.enter"), ("release", "Key.enter")]
+
+
+def test_pegar_no_envia_enter_si_enviar_false(monkeypatch):
+    log = []
+    monkeypatch.setattr(pegar_mod.pyperclip, "copy", lambda t: None)
+    monkeypatch.setattr(pegar_mod, "_teclado", lambda: FakeKb(log))
+    pegar_mod.pegar("hola", modo="ctrl+v", enviar=False)
+    assert not any(x[1] == "Key.enter" for x in log if x[0] in ("press", "release"))

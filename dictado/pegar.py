@@ -8,18 +8,20 @@ def _teclado() -> Controller:
     return Controller()
 
 
-def pegar(texto: str, modo: str = "ctrl+v") -> None:
-    if modo == "typing":
-        _teclado().type(texto)
-        return
-
-    pyperclip.copy(texto)
-    time.sleep(0.05)
+def pegar(texto: str, modo: str = "ctrl+v", enviar: bool = True) -> None:
     kb = _teclado()
-    teclas = { "ctrl+v": [Key.ctrl], "ctrl+shift+v": [Key.ctrl, Key.shift] }[modo]
-    for k in teclas:
-        kb.press(k)
-    kb.press("v")
-    kb.release("v")
-    for k in reversed(teclas):
-        kb.release(k)
+    if modo == "typing":
+        kb.type(texto)
+    else:
+        pyperclip.copy(texto)
+        time.sleep(0.05)
+        teclas = { "ctrl+v": [Key.ctrl], "ctrl+shift+v": [Key.ctrl, Key.shift] }[modo]
+        for k in teclas:
+            kb.press(k)
+        kb.press("v")
+        kb.release("v")
+        for k in reversed(teclas):
+            kb.release(k)
+    if enviar:
+        kb.press(Key.enter)
+        kb.release(Key.enter)

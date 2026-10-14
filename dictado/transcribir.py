@@ -16,6 +16,8 @@ class Transcriptor:
             print("[dictado] Modelo listo.")
 
     def transcribe(self, pcm: np.ndarray, sample_rate: int = 16000) -> str:
+        if sample_rate != 16000:
+            raise ValueError(f"sample_rate debe ser 16000, recibido {sample_rate}")
         if pcm.size == 0:
             return ""
         segmentos, _info = self._modelo.transcribe(
