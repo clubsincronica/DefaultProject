@@ -126,9 +126,9 @@ se asume que el uso típico es tener enfocada la terminal de OpenCode.
 ## Nota post-review (2026-10-14, usuario)
 
 - Hotkey por defecto ahora **`shift+space`**, parseada desde `config.json`
-  (`parsear_hotkey` en main.py; modificadores antes del espacio).
+  (`parsear_hotkey` en main.py; order-independent: sirve cualquier orden de teclas).
 - **Auto-send:** tras el pegado se envía `Enter` automáticamente
-  (`pegar(..., enviar=True)` por defecto) — soltar Shift antes de que termine
-  la transcripción, si no el TUI puede leer el Enter como Shift+Enter.
+  (`pegar(..., enviar=True)` por defecto) — `fin()` espera a soltar la última
+  tecla del combo, así Shift está suelto antes del Enter.
 - `beep_fin` suena tras el envío ("mensaje enviado"), no antes de transcribir.
 - `Transcriptor.transcribe` exige `sample_rate == 16000` (ValueError).

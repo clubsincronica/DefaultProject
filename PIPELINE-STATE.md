@@ -259,10 +259,10 @@ Hipótesis del usuario: usar los **Video Overviews** de NotebookLM como material
 
 - Spec: docs/superpowers/specs/2026-10-14-dictado-voz-opencode-design.md
 - Plan: docs/superpowers/plans/2026-10-14-dictado-voz-opencode.md
-- Uso: `python dictado/main.py` + Shift+Space mantenido (hotkey parseada desde config.json; modificadores ANTES del espacio). Prueba: `--prueba 5`.
+- Uso: `python dictado/main.py` + Shift+Space mantenido (hotkey parseada desde config.json; order-independent: sirve cualquier orden). Prueba: `--prueba 5`.
 - Auto-send: al soltar, el texto se pega Y se envía con Enter (el cursor debe estar en el chat de OpenCode).
 - Calibración: atajo_pegado=ctrl+v (pegó a la primera), latencia=0.19s medido en --prueba, modelo=small (int8, CPU; <2s en frases reales).
 - Verificado E2E 2026-10-14: grabación RAM → faster-whisper → pegado en el chat de OpenCode. Integración real (`pytest -m integration`) PASS.
 - DO-NOT-REPEAT: grabar audio a archivos (WAV/MP3) — va en RAM y se descarta.
 - DO-NOT-REPEAT: si transcribe vacío, sospechar el dispositivo default de Windows de entrada (¡Mezcla estéreo, no el micrófono!) antes que del modelo o del código.
-- Tests: `pytest dictado/tests -v` (15) · integración: `HF_HUB_OFFLINE=0 python -m pytest dictado/tests -m integration -v` (override 1-off, modelo ya cacheado).
+- Tests: `pytest dictado/tests -v` (21) · integración: `HF_HUB_OFFLINE=0 python -m pytest dictado/tests -m integration -v` (override 1-off, modelo ya cacheado).
