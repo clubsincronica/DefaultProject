@@ -1,0 +1,12 @@
+{
+  "hotkey": "ctrl+shift+space",
+  "modelo": "small",
+  "idioma": "es",
+  "rate": 16000,
+  "duracion_minima_s": 0.3,
+  "atajo_pegado": "ctrl+v",
+  "beep_inicio": 880,
+  "beep_fin": 1320,
+  "beep_error": 300,
+  "beep_ms": 80
+}
