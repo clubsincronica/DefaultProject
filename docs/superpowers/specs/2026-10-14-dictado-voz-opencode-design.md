@@ -136,4 +136,4 @@ se asume que el uso típico es tener enfocada la terminal de OpenCode.
   teclado siguen disponibles (`shift+space` u otros valores sin prefijo
   `mouse.`).
 - Secuencia de beeps actualizada: inicio 880 → transición 600/60ms →
-  enviado 1000/60ms; error 300.
+  enviado = chime 660→880 (60 ms c/u); error 300.

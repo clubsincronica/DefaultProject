@@ -750,4 +750,5 @@ Task 4+ se implementó así; este documento se enmienda para quedar en sincroní
 - Nota: testear que middle-click no pegue el portapapeles en el TUI (si lo
   hace, probar `x1`/`x2` en `config.json`).
 - Beeps (enmienda UX 2026-10-14): beep de transición suave (600Hz/60ms) al
-  soltar, beep_fin suavizado (1000Hz/60ms).
+  soltar; beep_fin ahora es un chime musical de dos notas [660, 880] Hz
+  (60 ms c/u, E5→A5 ascendente).
