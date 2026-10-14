@@ -23,7 +23,7 @@ node scripts/transcribe-timed.js YYYY-MM-DD   # 6. Whisper transcription
 node scripts/validate-astro.js YYYY-MM-DD     # 7. Gate: ¿datos inventados?
 node scripts/storyboard-audio.js YYYY-MM-DD   # 8. frames.json desde audio real
 # 9. Componer patrón Strudel + renderizar música
-node scripts/frames.js YYYY-MM-DD          # 10. SVG → PNG
+node scripts/render.js YYYY-MM-DD          # 10. Composición v2 → PNG (borrar assets/frames/<fecha>/ antes; frames.js = LEGADO, no usar)
 node scripts/assemble.js YYYY-MM-DD        # 11. Ken Burns + voz → video
 node scripts/publish-day.js YYYY-MM-DD     # 12. Textos + publicación
 ```
