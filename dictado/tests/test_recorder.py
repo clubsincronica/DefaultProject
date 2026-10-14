@@ -25,7 +25,8 @@ def test_concatenar_lista_vacia_da_array_vacio():
     assert out.size == 0
 
 
-def test_recorder_acumula_chunks_sin_archivo(tmp_path):
+def test_recorder_acumula_chunks_sin_archivo(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     rec = Recorder(rate=16000)
     rec.agregar_chunk(np.zeros(800, dtype=np.float32))
     rec.agregar_chunk(np.ones(800, dtype=np.float32))
