@@ -135,3 +135,5 @@ se asume que el uso típico es tener enfocada la terminal de OpenCode.
 - Hotkey por defecto `mouse.middle` (botón central mantenido); combos de
   teclado siguen disponibles (`shift+space` u otros valores sin prefijo
   `mouse.`).
+- Secuencia de beeps actualizada: inicio 880 → transición 600/60ms →
+  enviado 1000/60ms; error 300.

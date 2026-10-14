@@ -62,9 +62,9 @@ def planificar(duracion_s: float, texto: str, duracion_minima_s: float) -> str:
     return "pegar"
 
 
-def beep(frec: int) -> None:
+def beep(frec: int, ms: int | None = None) -> None:
     try:
-        winsound.Beep(frec, CONFIG["beep_ms"])
+        winsound.Beep(frec, CONFIG["beep_ms"] if ms is None else ms)
     except RuntimeError:
         pass
 
@@ -108,6 +108,7 @@ def main() -> None:
     def fin() -> None:
         estado["grabando"] = False
         try:
+            beep(CONFIG["beep_transicion"], CONFIG["beep_ms_suave"])
             pcm = rec.stop()
             duracion = pcm.size / rate
             try:
@@ -118,7 +119,7 @@ def main() -> None:
                 return
             if planificar(duracion, texto, minimo) == "pegar":
                 pegar(texto, modo=CONFIG["atajo_pegado"])
-                beep(CONFIG["beep_fin"])
+                beep(CONFIG["beep_fin"], CONFIG["beep_ms_suave"])
                 print(f"[dictado] Pegado ({duracion:.1f}s de audio): {texto}")
             else:
                 print(f"[dictado] Descartado (dur={duracion:.1f}s, texto={texto!r})")

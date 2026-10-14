@@ -749,3 +749,5 @@ Task 4+ se implementó así; este documento se enmienda para quedar en sincroní
   `mouse.`).
 - Nota: testear que middle-click no pegue el portapapeles en el TUI (si lo
   hace, probar `x1`/`x2` en `config.json`).
+- Beeps (enmienda UX 2026-10-14): beep de transición suave (600Hz/60ms) al
+  soltar, beep_fin suavizado (1000Hz/60ms).
