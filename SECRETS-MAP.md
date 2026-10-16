@@ -56,6 +56,17 @@ club-sincronica en modo solo-lectura). No publica.
 
 ---
 
+## 4b. Repo raíz — correo Osi (Gmail SMTP)
+
+| Qué contiene | Dónde vive | Usado por | Gitignored? |
+|--------------|-----------|-----------|-------------|
+| `user` + `app_password` de Gmail (contraseña de aplicación, generada 2026-10-15) | `credentials/gmail.json` (raíz) | `scripts/enviar-email.py` (envío de correos por pedido del Alquimista) | Sí (regla `credentials/`) |
+| Agenda de contactos (solo direcciones, sin secretos) | `docs/contacts.md` | Osi al resolver "escribile a X" | No (trackeado) |
+
+Nota: el envío es SOLO bajo pedido explícito del Alquimista. OAuth de YouTube NO se usa para esto (pipeline separado).
+
+---
+
 ## 5. Variables de entorno / externas
 
 | Servicio | Dónde se configura | Notas |
