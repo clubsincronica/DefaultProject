@@ -123,3 +123,36 @@ What bad looks like:
 
 When both lines are green, you are finished. Close the installer window
 with the X in the top corner and start using opencode on your project folder.
+
+---
+
+## Step 5 — Dream Ritual: make it yours (1 click, 11 fun questions)
+
+The **Dream Ritual** (Ritual del Sueño) writes a personal `AGENTS.md` for your
+project — your name, your dream, your rules — so your assistant already knows
+you on the first session.
+
+1. In the installer window, click **"Dream Ritual"** (the fourth button).
+2. Answer the 11 questions (they start easy; the big dream comes later —
+   expect a joke or two along the way).
+3. On the last question the button becomes **"Generate my AGENTS.md"** — click it.
+
+What happens next:
+
+- **If you set a free API key** (Step 3), the ritual asks it to write a
+  tailored `AGENTS.md` (takes ~1–2 minutes; it thinks a lot).
+- **If not, no problem** — a built-in template writes it instantly from your
+  answers. You can run the ritual again later for the AI version.
+
+Your files land in the project folder:
+
+- `AGENTS.md` — your personal assistant constitution (the previous one is
+  saved as `AGENTS.md.ritual-backup`).
+- `data/ritual-sueno.json` — your raw answers, for reference.
+
+Already have opencode installed? Run the ritual alone (same questions, same
+magic):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File Ritual-Del-Sueno.ps1 -ProjectDir "C:\ruta\a\tu\proyecto"
+```

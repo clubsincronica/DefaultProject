@@ -68,6 +68,12 @@ function Show-InstallerWizard {
     $keysButton.Size = New-Object System.Drawing.Size(120, 30)
     $form.Controls.Add($keysButton)
 
+    $ritualButton = New-Object System.Windows.Forms.Button
+    $ritualButton.Text = 'Dream Ritual'
+    $ritualButton.Location = New-Object System.Drawing.Point(402, 78)
+    $ritualButton.Size = New-Object System.Drawing.Size(120, 30)
+    $form.Controls.Add($ritualButton)
+
     $progressBar = New-Object System.Windows.Forms.ProgressBar
     $progressBar.Location = New-Object System.Drawing.Point(12, 120)
     $progressBar.Size = New-Object System.Drawing.Size(540, 22)
@@ -108,6 +114,7 @@ function Show-InstallerWizard {
         $installButton.Enabled = $false
         $testButton.Enabled = $false
         $keysButton.Enabled = $false
+        $ritualButton.Enabled = $false
         $form.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
         [System.Windows.Forms.Application]::DoEvents()
         try {
@@ -133,6 +140,7 @@ function Show-InstallerWizard {
                 $installButton.Enabled = $true
                 $testButton.Enabled = $true
                 $keysButton.Enabled = $true
+                $ritualButton.Enabled = $true
                 $form.Cursor = [System.Windows.Forms.Cursors]::Default
                 return
             }
@@ -154,6 +162,7 @@ function Show-InstallerWizard {
             [System.Windows.Forms.Application]::DoEvents()
             $progressBar.Value = 100
             & $addLog 'Done. Click Test to verify, Get free keys for provider keys.' 'Green'
+            & $addLog 'Tip: Dream Ritual (Ritual del Sueno) builds your personal AGENTS.md.' 'Black'
         } catch {
             & $addLog ("Install failed: $($_.Exception.Message)") 'Red'
         } finally {
@@ -161,6 +170,7 @@ function Show-InstallerWizard {
             $installButton.Enabled = $true
             $testButton.Enabled = $true
             $keysButton.Enabled = $true
+            $ritualButton.Enabled = $true
             $form.Cursor = [System.Windows.Forms.Cursors]::Default
             [System.Windows.Forms.Application]::DoEvents()
         }
@@ -170,6 +180,23 @@ function Show-InstallerWizard {
         Start-Process https://openrouter.ai/keys
         Start-Process https://build.nvidia.com/
         & $addLog 'Opened key pages in your browser. Keys stay on provider sites; nothing is stored here.' 'Black'
+    })
+
+    $ritualButton.Add_Click({
+        $ritualScript = Join-Path $script:InstallerBase 'Ritual-Del-Sueno.ps1'
+        if (-not (Test-Path -LiteralPath $ritualScript)) {
+            & $addLog 'Ritual script missing from payload (Ritual-Del-Sueno.ps1).' 'Red'
+            return
+        }
+        & $addLog "Launching the Dream Ritual for $($state.ProjectDir) ..." 'Black'
+        try {
+            & powershell.exe -ExecutionPolicy Bypass -File $ritualScript -ProjectDir $state.ProjectDir
+            if (Test-Path (Join-Path $state.ProjectDir 'AGENTS.md')) {
+                & $addLog 'Ritual done. Your personal AGENTS.md is ready.' 'Green'
+            }
+        } catch {
+            & $addLog ("Ritual failed: $($_.Exception.Message)") 'Red'
+        }
     })
 
     $testButton.Add_Click({

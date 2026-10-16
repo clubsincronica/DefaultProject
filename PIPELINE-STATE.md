@@ -1,4 +1,4 @@
-# PIPELINE-STATE.md — estado vivo de los 3 pipelines
+﻿# PIPELINE-STATE.md — estado vivo de los 3 pipelines
 
 Fuente de verdad del estado actual. Cargala y ACTUALIZALA antes/depsues de cada sesion de trabajo.
 Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deben repetirse).
@@ -266,3 +266,15 @@ Hipótesis del usuario: usar los **Video Overviews** de NotebookLM como material
 - DO-NOT-REPEAT: grabar audio a archivos (WAV/MP3) — va en RAM y se descarta.
 - DO-NOT-REPEAT: si transcribe vacío, sospechar el dispositivo default de Windows de entrada (¡Mezcla estéreo, no el micrófono!) antes que del modelo o del código.
 - Tests: `pytest dictado/tests -v` (24) · integración: `HF_HUB_OFFLINE=0 python -m pytest dictado/tests -m integration -v` (override 1-off, modelo ya cacheado).
+
+## HITO: Ritual del Sueno - instalador OpenCode (2026-10-15)
+
+- Spec: docs/superpowers/specs/2026-10-15-ritual-sueno-instalador-design.md
+- Producto: 11 preguntas lúdicas (orden aprobado por el Alquimista: nombre -> importan -> frena -> bueno -> tiempo -> SUEÑO -> por que -> tono -> NO hacer -> nombre asistente -> faro 1 anio) que generan un AGENTS.md personalizado. Fase 1 del "Pack Sueños" (gratis circulo interno; fase 2: web + i18n).
+- Archivos: `opencode-installer/Ritual-Del-Sueno.ps1` (UTF-8 CON BOM, runtime, NUNCA se compila al exe), boton "Dream Ritual" en `Install-OpenCode.ps1` (texto ASCII), staging en `Build-Exe.ps1`.
+- Flujo: boton -> 11 preguntas WinForms -> `Invoke-AgentsLlm` (si hay `NVIDIA_API_KEY`/`OPENROUTER_API_KEY` en env) -> si no, `Build-AgentsMdFallback` (plantilla deterministica) -> `Save-Ritual` escribe `AGENTS.md` (+backup `.ritual-backup`) y `data/ritual-sueno.json`. Re-ejecutable standalone: `powershell -File Ritual-Del-Sueno.ps1 -ProjectDir <dir>`.
+- Verificado 2026-10-15: suite Pester **22/22 PASS** (7 nuevos en `tests/Ritual.Tests.ps1`), E2E LLM real OK (2098 chars/113s vía NIM), exe re-compilado + zip `OpenCode-Setup.zip` re-generado (125 entries, incluye ritual).
+- DO-NOT-REPEAT: **NIM `deepseek-ai/deepseek-v4-flash` esta MUERTO (410 Gone, EOL 2026-08-07)**; `deepseek-v4.1-flash` y casi todo el catalogo dan 404/timeout en el gratuito. Funciona `z-ai/glm-5.3-flash` pero es de razonamiento: `content` viene `null` si `max_tokens` es bajo (la razon se come los tokens) -> `max_tokens=8000` y `TimeoutSec>=240` (respuestas 110-150s).
+- DO-NOT-REPEAT: handlers de WinForms en PS 5.1 -> estado mutable en hashtable `$st` + `GetNewClosure()`; variables escalares `$idx` sueltas quedan congeladas por valor y la navegacion del wizard no avanza.
+- DO-NOT-REPEAT: todo `.ps1` con acentos va UTF-8 CON BOM; el exe compilado (`Install-OpenCode.ps1`) se mantiene ASCII-only (regla de `Build-Exe.ps1`).
+- Key policy: el instalador/ritual SOLO leen keys del entorno; jamas las piden ni las guardan (regla guide-only vigente).

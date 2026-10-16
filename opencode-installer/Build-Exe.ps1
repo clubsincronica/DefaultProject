@@ -35,6 +35,10 @@ New-Item -ItemType Directory $payloadGraphify -Force | Out-Null
 $coreDst = Join-Path $payloadInstaller 'Install-OpenCode.Core.ps1'
 if (Test-Path -LiteralPath $coreDst) { Remove-Item -LiteralPath $coreDst -Recurse -Force }
 Copy-Item (Join-Path $PSScriptRoot 'Install-OpenCode.Core.ps1') $payloadInstaller -Force
+# Ritual del Sueno (UTF-8 with BOM; runtime file, not compiled into the exe).
+$ritualDst = Join-Path $payloadInstaller 'Ritual-Del-Sueno.ps1'
+if (Test-Path -LiteralPath $ritualDst) { Remove-Item -LiteralPath $ritualDst -Recurse -Force }
+Copy-Item (Join-Path $PSScriptRoot 'Ritual-Del-Sueno.ps1') $ritualDst -Force
 $payloadTemplates = Join-Path $payloadInstaller 'templates'
 if (Test-Path -LiteralPath $payloadTemplates) { Remove-Item -LiteralPath $payloadTemplates -Recurse -Force }
 Copy-Item (Join-Path $PSScriptRoot 'templates') $payloadTemplates -Recurse -Force
