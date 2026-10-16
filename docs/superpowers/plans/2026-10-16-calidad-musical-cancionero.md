@@ -87,7 +87,7 @@ test('extractTrackDevice encuentra el InstrumentGroupDevice top-level de Keys', 
   const xml = gunzipSync(readFileSync(TEMPLATE)).toString('utf8');
   const dev = extractTrackDevice(xml, 'Keys');
   assert.ok(dev, 'Keys device existe');
-  assert.ok(dev.includes('<InstrumentGroupDevice'), 'es InstrumentGroupDevice');
+  assert.ok(dev.xml.includes('<InstrumentGroupDevice'), 'es InstrumentGroupDevice');
   assert.equal(dev.indent, 7, 'indent top-level (DNR #9)');
 });
 
