@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CREDS = ROOT / "credentials" / "gmail.json"
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 587
+FIRMA = "Ozzy"  # regla global: TODO correo se firma como Ozzy (AGENTS.md)
 
 
 def cargar_credenciales():
@@ -55,6 +56,12 @@ def enviar(para, asunto, cuerpo, user, password):
         sys.exit(f"Error de envío SMTP: {e}")
 
 
+def firmar(cuerpo):
+    if FIRMA in cuerpo:
+        return cuerpo
+    return cuerpo.rstrip() + f"\n\n{FIRMA}\n"
+
+
 def main():
     p = argparse.ArgumentParser(description="Envía un correo con Gmail (SMTP).")
     p.add_argument("--para", required=True, help="Destinatario (email)")
@@ -62,7 +69,7 @@ def main():
     p.add_argument("--cuerpo", default=None, help="Cuerpo (si se omite, se lee de stdin)")
     args = p.parse_args()
 
-    cuerpo = args.cuerpo if args.cuerpo is not None else sys.stdin.read()
+    cuerpo = firmar(args.cuerpo if args.cuerpo is not None else sys.stdin.read())
     if not cuerpo.strip():
         sys.exit("El cuerpo está vacío (usá --cuerpo o pasá texto por stdin).")
 
