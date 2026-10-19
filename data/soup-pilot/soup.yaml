@@ -1,0 +1,24 @@
+# soup.yaml — pilot guiones Club Sincrónica (15 pares, smoke test).
+# NO ejecutar en la máquina local (sin NVIDIA, Python 3.13): ver runbook Colab
+# en docs/superpowers/specs/2026-10-10-soup-pilot-guiones-design.md.
+# Campos según README oficial de MakazhanAlpamys/Soup (base/task/data/training/output).
+
+base: meta-llama/Llama-3.1-8B-Instruct
+task: sft
+
+data:
+  train: ./data/soup-pilot/train.jsonl
+  format: alpaca
+  val_split: 0.1
+
+training:
+  epochs: 3
+  lr: 2e-5
+  batch_size: auto
+  stream_layers: true
+  lora:
+    r: 64
+    alpha: 16
+  quantization: 4bit
+
+output: ./output/soup-pilot-guiones

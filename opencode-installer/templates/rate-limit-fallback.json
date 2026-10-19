@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "cooldownMs": 60000,
+  "cooldownMs": 300000,
   "fallbackMode": "cycle",
   "enableSubagentFallback": true,
   "fallbackModels": [
@@ -12,12 +12,24 @@
     { "providerID": "nvidia", "modelID": "meta/llama-3.3-70b-instruct" }
   ],
   "retryPolicy": {
-    "maxRetries": 3,
+    "maxRetries": 5,
     "strategy": "exponential",
-    "baseDelayMs": 1000,
-    "maxDelayMs": 30000,
+    "baseDelayMs": 2000,
+    "maxDelayMs": 60000,
     "jitterEnabled": true,
-    "jitterFactor": 0.1
+    "jitterFactor": 0.25
+  },
+  "circuitBreaker": {
+    "enabled": true,
+    "failureThreshold": 5,
+    "resetTimeoutMs": 120000,
+    "halfOpenMaxAttempts": 2
+  },
+  "errorClassification": {
+    "retryable": ["429", "500", "502", "503", "504", "timeout", "connection_error"],
+    "auth": ["401", "403", "forbidden", "unauthorized"],
+    "quota": ["quotaexceeded", "quota limit", "quota exceed", "usage quota"],
+    "permanent": ["400", "content policy", "content_filter", "moderation"]
   },
   "configReload": { "enabled": true }
 }

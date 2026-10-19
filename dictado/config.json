@@ -1,5 +1,6 @@
 {
   "hotkey": "mouse.middle",
+  "dispositivo_entrada": "Microphone Array",
   "modelo": "small",
   "idioma": "es",
   "rate": 16000,

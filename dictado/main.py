@@ -1,5 +1,7 @@
 import json
+import os
 import sys
+import threading
 import time
 import winsound
 from pathlib import Path
@@ -8,11 +10,23 @@ import numpy as np
 from pynput.keyboard import Key, KeyCode
 from pynput.mouse import Button
 
+import vida
 from pegar import pegar
-from recorder import Recorder, es_util
+from recorder import Recorder, es_util, resolver_dispositivo
 from transcribir import Transcriptor
 
 CONFIG = json.loads((Path(__file__).parent / "config.json").read_text(encoding="utf-8"))
+LOCK = Path(__file__).parent / ".dictado.lock"
+
+
+def parsear_pid_vigilancia(argv: list[str]) -> int | None:
+    """Extrae el PID de `--vigilar-pid <pid>`; None si no se pasó."""
+    if "--vigilar-pid" not in argv:
+        return None
+    i = argv.index("--vigilar-pid")
+    if i + 1 >= len(argv):
+        raise ValueError("--vigilar-pid requiere un PID")
+    return int(argv[i + 1])
 
 _ALIAS_TECLAS = {
     "ctrl": Key.ctrl,
@@ -69,9 +83,23 @@ def beep(frec: int, ms: int | None = None) -> None:
         pass
 
 
+def avisar_dispositivo_entrada(cfg: dict) -> None:
+    nombre = cfg.get("dispositivo_entrada")
+    if not nombre:
+        print("[dictado] Entrada: dispositivo por defecto del sistema.")
+        return
+    import sounddevice as sd
+
+    idx = resolver_dispositivo(nombre, sd.query_devices())
+    if idx is None:
+        print(f"[dictado] Aviso: no se encontró {nombre!r}, uso el dispositivo por defecto.")
+    else:
+        print(f"[dictado] Entrada: {nombre!r} (dispositivo {idx}).")
+
+
 def modo_prueba(segundos: int) -> None:
     transcriptor = Transcriptor(modelo_id=CONFIG["modelo"], idioma=CONFIG["idioma"])
-    rec = Recorder(rate=CONFIG["rate"])
+    rec = Recorder(rate=CONFIG["rate"], dispositivo=CONFIG.get("dispositivo_entrada"))
     print(f"[dictado] Grabando {segundos}s... habla ahora.")
     rec.start()
     time.sleep(segundos)
@@ -82,14 +110,39 @@ def modo_prueba(segundos: int) -> None:
     print(f"[dictado] Transcrito en {dt:.2f}s: {texto!r}")
 
 
+def _vigilar_y_salir(pid: int, lock: Path) -> None:
+    """Hilo daemon: cierra dictado (y limpia el lock) cuando muere `pid`."""
+    vida.esperar_muerte(pid)
+    vida.borrar_lock(lock)
+    print(f"[dictado] El proceso vigilado (PID {pid}) terminó. Cerrando.")
+    os._exit(0)
+
+
 def main() -> None:
     if len(sys.argv) >= 2 and sys.argv[1] == "--prueba":
         seg = int(sys.argv[2]) if len(sys.argv) > 2 else 5
         modo_prueba(seg)
         return
 
+    if vida.instancia_activa(LOCK):
+        print("[dictado] Ya hay una instancia corriendo. Saliendo.")
+        return
+    vida.escribir_lock(LOCK)
+    try:
+        pid_vigilado = parsear_pid_vigilancia(sys.argv)
+        if pid_vigilado is not None:
+            threading.Thread(
+                target=_vigilar_y_salir, args=(pid_vigilado, LOCK), daemon=True
+            ).start()
+        _correr()
+    finally:
+        vida.borrar_lock(LOCK)
+
+
+def _correr() -> None:
+    avisar_dispositivo_entrada(CONFIG)
     transcriptor = Transcriptor(modelo_id=CONFIG["modelo"], idioma=CONFIG["idioma"])
-    rec = Recorder(rate=CONFIG["rate"])
+    rec = Recorder(rate=CONFIG["rate"], dispositivo=CONFIG.get("dispositivo_entrada"))
     estado = {"grabando": False}
     rate = CONFIG["rate"]
     minimo = CONFIG["duracion_minima_s"]

@@ -11,22 +11,41 @@ def concatenar(chunks: list[np.ndarray]) -> np.ndarray:
     return np.concatenate(chunks, axis=0).flatten().astype(np.float32)
 
 
+def resolver_dispositivo(nombre: str | None, dispositivos) -> int | None:
+    """Devuelve el índice del primer dispositivo de entrada cuyo nombre
+    contenga `nombre` (case-insensitive), o None para usar el default."""
+    if not nombre:
+        return None
+    objetivo = nombre.strip().lower()
+    for idx, dev in enumerate(dispositivos):
+        if dev.get("max_input_channels", 0) <= 0:
+            continue
+        if objetivo in str(dev.get("name", "")).lower():
+            return idx
+    return None
+
+
 class Recorder:
     """Captura PCM 16 kHz mono en memoria. Sin archivos en disco."""
 
-    def __init__(self, rate: int = 16000):
+    def __init__(self, rate: int = 16000, dispositivo: int | str | None = None):
         self.rate = rate
+        self.dispositivo = dispositivo
         self.chunks: list[np.ndarray] = []
         self._stream = None
 
     def start(self) -> None:
         import sounddevice as sd
 
+        device = self.dispositivo
+        if isinstance(device, str):
+            device = resolver_dispositivo(device, sd.query_devices())
         self.chunks = []
         self._stream = sd.InputStream(
             samplerate=self.rate,
             channels=1,
             dtype="float32",
+            device=device,
             callback=self._callback,
         )
         self._stream.start()

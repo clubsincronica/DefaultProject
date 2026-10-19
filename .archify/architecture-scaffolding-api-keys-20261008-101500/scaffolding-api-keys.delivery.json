@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "be4316bc-d1c4-4fe8-9088-f48aa510b3de",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\tom_w\\Documents\\Default Project\\.archify\\architecture-scaffolding-api-keys-20261008-101500\\candidate.json",
+  "output": "C:\\Users\\tom_w\\Documents\\Default Project\\.archify\\architecture-scaffolding-api-keys-20261008-101500\\scaffolding-api-keys.html",
+  "specification": {
+    "sha256": "174d1057afad54ef67f64bbc27af8c8ea35c10984ebdb392362770a177e2a155",
+    "bytes": 1658
+  },
+  "artifact": {
+    "sha256": "8989e26b715459c8ef76f098415cbccbb751ef8c1a637c4c3ee420433ffc16f0",
+    "bytes": 748296
+  }
+}

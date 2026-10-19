@@ -5,7 +5,10 @@
   "type": "module",
   "description": "Auditor de codigo cross-project para el scaffolding de Club Sincronica",
   "scripts": {
-    "test": "node --test test/auditor-codigo.test.js",
+    "test": "node --test test/*.js",
     "diagnostic": "node scripts/diagnostic-runner.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
   }
 }

@@ -2,7 +2,25 @@ import pytest
 from pynput.keyboard import Key
 from pynput.mouse import Button
 
-from main import parsear_hotkey, parsear_hotkey_mouse, planificar
+from main import (
+    parsear_hotkey,
+    parsear_hotkey_mouse,
+    parsear_pid_vigilancia,
+    planificar,
+)
+
+
+def test_parsear_pid_vigilancia_ausente():
+    assert parsear_pid_vigilancia(["main.py"]) is None
+
+
+def test_parsear_pid_vigilancia_presente():
+    assert parsear_pid_vigilancia(["main.py", "--vigilar-pid", "4242"]) == 4242
+
+
+def test_parsear_pid_vigilancia_sin_valor_lanza_value_error():
+    with pytest.raises(ValueError):
+        parsear_pid_vigilancia(["main.py", "--vigilar-pid"])
 
 
 def test_planificar_descarta_corta():

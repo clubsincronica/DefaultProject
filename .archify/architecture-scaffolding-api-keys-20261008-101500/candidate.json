@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Andamiaje Default Project y uso de API keys",
+    "output": "web-app-rendered.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "root",
+      "type": "backend",
+      "label": "Default Project",
+      "pos": [
+        40,
+        300
+      ],
+      "size": [
+        160,
+        60
+      ]
+    },
+    {
+      "id": "club",
+      "type": "backend",
+      "label": "club-sincronica",
+      "pos": [
+        260,
+        300
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "viral",
+      "type": "backend",
+      "label": "pipeline-viral",
+      "pos": [
+        460,
+        300
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "cred",
+      "type": "database",
+      "label": "credentials",
+      "pos": [
+        260,
+        440
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "git",
+      "type": "security",
+      "label": ".gitignore",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        130,
+        60
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "r_c",
+      "from": "root",
+      "to": "club",
+      "label": "orquesta"
+    },
+    {
+      "id": "r_v",
+      "from": "root",
+      "to": "viral"
+    },
+    {
+      "id": "c_cr",
+      "from": "club",
+      "to": "cred",
+      "label": "usa"
+    },
+    {
+      "id": "g_cr",
+      "from": "git",
+      "to": "cred",
+      "label": "protege"
+    }
+  ]
+}

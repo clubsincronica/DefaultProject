@@ -5,3 +5,4 @@ Agenda nombre → email para `scripts/enviar-email.py`. Sin secretos: solo direc
 | Nombre  | Email                          | Notas                        |
 |---------|--------------------------------|------------------------------|
 | LAHUN   | damianmartinezmusic@gmail.com  | = Damian Martínez, amigo del Alquimista |
+| MACHI   | agismercedes@gmail.com         | = Mercedes, amiga; se le dice Machi |
