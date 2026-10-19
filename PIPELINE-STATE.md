@@ -1,4 +1,4 @@
-﻿# PIPELINE-STATE.md — estado vivo de los 3 pipelines
+# PIPELINE-STATE.md — estado vivo de los 3 pipelines
 
 Fuente de verdad del estado actual. Cargala y ACTUALIZALA antes/depsues de cada sesion de trabajo.
 Formato: estado por proyecto + hitos + DO-NOT-REPEAT (correcciones que nunca deben repetirse).
@@ -75,6 +75,9 @@ Historial de fixes: `docs/Changelog.md`
 31. **NUNCA pipear `node scripts/render.js <fecha> | Select-Object -First N`** en PowerShell: `Select-Object -First` cierra el pipe y MATA el proceso Node en cuanto emite N líneas → deja `frames.json` escrito pero SIN los PNG `fNN-scene/overlay.png` (y `assemble.js` falla con "No such file or directory" en `f00-scene.png`). Usar `-Last N` o captura completa.
 32. **Corregir una palabra mal dicha → clip-edit del WAV, no regrabar:** localizar la palabra con word-timestamps (Groq `timestamp_granularities[]=word`) y cortarla con ffmpeg `atrim`+`acrossfade` (`d=0.05`), respaldando antes el WAV original (`…-narracion.orig.wav`), luego re-transcribir. Caso 2026-10-21: se quitó "sextil" (44,55-45,15s); quedó "Sol y nodo norte, perfecto, cero de orbe" (deja de afirmar un aspecto falso).
 33. **Variedad de frames SIN elementos aleatorios:** para beats sin mención semántica, rotar solo entre elementos que son verdad del día `['cartaAstral','kinCarta','onda']` con topes (kinCarta ≤25%, onda ≤25%), nunca repetir el anterior, y regla por palabra para `kinCarta` (`kin/guerrero/sello/tono/firma/matriz/color`). Prohibido volver al oráculo/luna "porque sí" (el Alquimista lo rechazó 2026-10-21) o dejar 50%+ del mismo fondo. DNR #3 ("cartaAstral max 2") queda superado por esta regla. Implementación: `pickNeutral()` + post-cap en `render.js`.
+
+34. **Cierre = ÚLTIMA aparición del lema + tope 8s.** `findIndex(/con el fin de/)` absorbía todo el bloque final en un solo frame (2026-10-23: cierre 41,5s = 40% del video; 2026-10-21: 15,4s). FIX 2026-10-19 en `render.js`: buscar el lema desde el final (`for i--`) y avanzar `lemaStart` hasta que el cierre dure <=8s; los beats previos del lema vuelven a ser frames. No volver a usar `findIndex`.
+35. **Revisar cola de silencio de la narración antes de ensamblar.** El audio 2026-10-21 tenía 11,8s de silencio final (última palabra 105,04s, WAV 116,83s) y `assemble.js` estiraba el cierre sobre el silencio (frame estático de ~13s). FIX: `silencedetect` + `atrim` al final de la última palabra (+0,2s) y re-ensamblar; el `transcripcion-timed.md` sigue válido.
 
 ### Issues abiertos
 
