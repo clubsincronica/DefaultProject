@@ -26,6 +26,22 @@ Historial de fixes: `docs/Changelog.md`
 
 ---
 
+## plugins OpenCode V2 (Graphify + Azumag rate-limit-fallback)
+
+Contexto: Desktop **2.2.1** solo carga plugins con la forma V2 (`export default Plugin.define({ id, setup })`). Los plugins V1 fallan con `PluginModule.LoadError: Plugin must export a default definition with an id and an effect or setup function`.
+
+- **GRAPHIFY PORTADO A V2 (2026-10-29):** `.opencode/plugins/graphify.js` reescrito de `export const GraphifyPlugin = async ({directory}) => ({"tool.execute.before": ...})` a `Plugin.define({ id: "graphify", setup(ctx) })` + `ctx.shell.hook("create.before", (event) => { event.command = 'echo "..." ; ' + event.command })`. Conserva el `;` (PowerShell 5.1 rechaza `&&`) y el texto sin backticks/`$()`. Verificado: el recordatorio aparece en la salida de shell y `opencode-cli plugin list` muestra `graphify local`. Se dispara **una vez por instancia** de plugin (recargar el archivo lo reinicia).
+- **AZUMAG RATE-LIMIT-FALLBACK EN V2 (2026-10-29):** el paquete `latest` (1.70.11) es V1 y V2 lo rechaza. La versión V2 está en el **dist-tag `@opencode-v2` → 2.1.1** (`dist/v2.js`, usa `session.hook("retry")`, `event.subscribe`, `session.switchModel`). Instalación: `~/.config/opencode/opencode.json` → `"plugins": ["@azumag/opencode-rate-limit-fallback@opencode-v2"]`. **La clave de config en V2 es `plugins` (plural), NO `plugin`.**
+- **CADENA DE FALLBACK ACTUALIZADA (2026-10-29, free-first):** `~/.config/opencode/rate-limit-fallback.json` → `opencode/deepseek-v4.1-flash-free` → `opencode/glm-5.3-flash-free` → `opencode/nemotron-3.5-lightning-free` → `openrouter/~deepseek/deepseek-v4-flash-latest` → `openrouter/~z-ai/glm-flash-latest`. Motivo: la cadena vieja apuntaba a modelos inexistentes/deshabilitados (`opencode/deepseek-v4-flash-free` ya no existe; `nvidia` está deshabilitado en `opencode.jsonc`). `fallbackMode: cycle`, `configReload.enabled: true`.
+- **DO-NOT-REPEAT:**
+  1. No instalar `@azumag/opencode-rate-limit-fallback@latest` en V2: es V1. Usar el tag `@opencode-v2`.
+  2. No usar `"plugin"` como clave en `opencode.json` de V2 → `"plugins"`.
+  3. La config del plugin se busca en `worktree/.opencode/`, `<dir>/.opencode/`, `~/.opencode/`, `~/.config/opencode/` (y la raíz de cada una) como `rate-limit-fallback.json`; `~/.config/opencode/` es válida.
+  4. Azumag v2 **solo** cambia de modelo si el modelo actual está en `fallbackModels` (con `otherModels` en `ignore`). Si se cambia el modelo por defecto, agregarlo a la lista o no habrá fallback.
+  5. El directorio fantasma `~/.config/opencode/plugins/dictado-loadtest` (borrado "pending" por el watcher del servicio) queda listado por `opencode-cli plugin list` y genera ruido EPERM en `/api/plugin/gui`; se limpia solo al reiniciar app/servicio. No recrearlo.
+
+---
+
 ## club-sincronica (shorts diarios)
 
 - **Etapa actual:** produccion diaria (Fase 1, aprobacion humana). **LOTE COMPLETADO (2026-09-08):** 7 videos Sep 10-16 (Kin 15-21) producidos. Publicacion via Buffer + YouTube directo.
