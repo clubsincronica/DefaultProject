@@ -60,3 +60,68 @@ Fecha: 2026-10-18 · Estado: implementado y verificado (41/41 tests + e2e)
 
 - Reiniciar la app de OpenCode y confirmar que (a) el plugin dispara dictado al
   abrir, y (b) al cerrar la app su proceso muere → dictado se cierra solo.
+
+---
+
+# Port a OpenCode V2 (2026-10-29)
+
+La app instalada es **OpenCode Desktop 2.2.1** (`opencode-cli` 2.2.1-x64). El
+CLI `opencode` del PATH (npm, 1.18.18) es V1 y no interviene.
+
+## Diagnóstico
+
+V2 descubre el plugin V1 (`~/.config/opencode/plugin/` se sigue escaneando),
+pero **no ejecuta implementaciones V1**:
+
+```text
+failed to load plugin target="...\plugin\dictado-autostart.js"
+cause=PluginModule.LoadError: Plugin must export a default definition with an
+id and an effect or setup function. (Missing key at ["default"])
+```
+
+Es decir: el dictado no arrancaba en V2 (verificado: sin proceso `pythonw`).
+
+## Decisión: parte GUI, no parte server
+
+En V2 los plugins de servidor corren en el **servicio de fondo**
+(`opencode-cli serve --service`, PID compartido que sobrevive al cierre de la
+app). Un `setup()` de servidor con `--vigilar-pid process.pid` ataría dictado
+al servicio, no a la app: al cerrar OpenCode el dictado seguiría vivo.
+
+La parte **GUI** (`./gui-experimental`) corre su `main()` una vez en el
+**proceso principal de Electron**, que sí muere con la app. Ahí
+`process.pid` es el PID correcto.
+
+## Implementación
+
+```text
+~/.config/opencode/plugins/dictado/
+├── index.js              server part: Plugin.define({ id: "dictado", setup() {} })
+└── gui-experimental.cjs  GUI part: main() lanza pythonw main.py --vigilar-pid <pid Electron>
+```
+
+- `gui-experimental.cjs` es CJS plano: `require("@opencode/plugin/gui")` +
+  `node:child_process`/`node:fs`/`node:path`. **No necesita build de Vite**
+  (no usa Solid/JSX); el loader de la app resuelve el módulo compartido.
+- El guard de `.dictado.lock` sigue evitando instancias duplicadas (el `main`
+  se re-ejecuta en cada reload del plugin).
+- El plugin V1 quedó como `~/.config/opencode/plugin/dictado-autostart.js.v1.bak`
+  (extensión no `.js`: V2 lo ignora; sirve de referencia).
+
+## Verificación (2026-10-29)
+
+- Plugin cargado sin errores: `loading plugin id="...\plugins\dictado"`.
+- `pythonw.exe main.py --vigilar-pid 6244` corriendo, padre = `OpenCode.exe`
+  principal (PID 6244). `.dictado.lock` = `{"pid": 10004, ...}`.
+- Prueba previa aislada: un `gui-experimental.cjs` de prueba ejecutó su
+  `main()` en PID 6244 y escribió con `node:fs` (Node disponible en main).
+
+## DO-NOT-REPEAT (V2)
+
+1. No portar este plugin como server part: `process.pid` sería el del servicio
+   de fondo y dictado no se cerraría con la app.
+2. El `gui-experimental.cjs` no debe importar Solid/JSX ni usar `import` ESM:
+   el loader espera CJS. Si algún día se agrega UI, recién ahí usar el preset
+   Vite de `@opencode/plugin/gui/vite`.
+3. No volver a poner el plugin en `~/.config/opencode/plugin/` con la forma V1
+   (`export const X = async () => ({})`): V2 lo rechaza.

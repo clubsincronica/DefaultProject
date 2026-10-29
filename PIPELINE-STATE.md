@@ -14,12 +14,15 @@ Historial de fixes: `docs/Changelog.md`
 
 - **Etapa:** FUNCIONAL + AUTO-ARRANQUE (2026-10-18). Hotkey = botón central del mouse (mantener para dictar). Código en `dictado/` (raíz del repo raíz), tests `pytest dictado/tests`.
 - **FIX MIC SILENCIO (2026-10-18):** el dispositivo de entrada *por defecto* de Windows se volvía la **Focusrite** al conectarla (mic apagado) → dictado capturaba silencio → `texto=''` → "descartado" + beep de error. Fix: `config.json` → `"dispositivo_entrada": "Microphone Array"` (Realtek, el mic real: rms 0.030/peak 0.52 vs 0.00002 del default); `Res`olver por NOMBRE en cada `start()` (`recorder.resolver_dispositivo`) para que enchufar/desenchufar la Focusrite no lo desconfigure.
-- **AUTO-ARRANQUE ATADO A OPENCODE (2026-10-18):** plugin global `~/.config/opencode/plugin/dictado-autostart.js` lanza `pythonw main.py --vigilar-pid <pid de OpenCode>` al abrir la app; dictado cierra solo cuando muere ese proceso (watchdog `dictado/vida.py`, enfoque A). Instancia única vía `.dictado.lock`. Verificado: 41/41 tests + e2e (al morir el padre, dictado sale y limpia el lock). Spec: `docs/superpowers/specs/2026-10-18-dictado-autostart-design.md`.
+- **AUTO-ARRANQUE ATADO A OPENCODE (2026-10-18, V1):** plugin global `~/.config/opencode/plugin/dictado-autostart.js` lanza `pythonw main.py --vigilar-pid <pid de OpenCode>` al abrir la app; dictado cierra solo cuando muere ese proceso (watchdog `dictado/vida.py`, enfoque A). Instancia única vía `.dictado.lock`. Verificado: 41/41 tests + e2e (al morir el padre, dictado sale y limpia el lock). Spec: `docs/superpowers/specs/2026-10-18-dictado-autostart-design.md`.
+- **PORT A OPENCODE V2 (2026-10-29, Desktop 2.2.1):** V2 NO ejecuta plugins V1 (`PluginModule.LoadError: Plugin must export a default definition...`), así que el dictado no arrancaba. Solución: plugin local `~/.config/opencode/plugins/dictado/` = `index.js` (server part `Plugin.define({id:"dictado"})`) + `gui-experimental.cjs` (CJS plano, `main()` corre en el proceso principal de Electron → `spawn(pythonw, ["main.py","--vigilar-pid", String(process.pid)])`). Verificado: `pythonw main.py --vigilar-pid 6244` (PID 6244 = OpenCode.exe main), lock pid 10004. El archivo V1 quedó como `dictado-autostart.js.v1.bak`. Detalle en la spec (sección "Port a OpenCode V2").
 - **DO-NOT-REPEAT:**
   1. **NO depender del dispositivo de entrada por defecto de Windows** — cambia al conectar interfaces (Focusrite). Pinnear SIEMPRE por nombre (`dispositivo_entrada`). Si el dictado "no pega y suena beep de error" → medir rms del default vs el mic real antes de tocar código.
   2. Si dictado ya está corriendo, **NO** lanzar otra instancia (hotkeys/mic duplicados): el guard de `.dictado.lock` + el plugin lo evitan.
   3. `pythonw.exe` está en `C:\Users\tom_w\AppData\Local\Programs\Python\Python313\` (sin venv). El plugin lo referencia hardcodeado.
-- **Pendiente:** confirmar en reinicio real de la app que el plugin dispara y que su PID muere al cerrar OpenCode.
+  4. **En OpenCode V2 el plugin va como GUI (`gui-experimental.cjs`), NO como server part.** El server part corre en el servicio de fondo (`opencode-cli serve --service`), que sobrevive al cierre de la app: `--vigilar-pid process.pid` dejaría el dictado vivo para siempre. El `main()` de la GUI corre en el proceso principal de Electron y muere con la app.
+  5. V2 rechaza la forma V1 de plugin (`export const X = async () => ({})`): usar `export default Plugin.define({ id, setup })` en el server part y `module.exports = Plugin.define({ main })` (CJS) en la GUI.
+- **Pendiente:** confirmar en reinicio real de la app V2 que el `main` de la GUI dispara y que el dictado muere al cerrar OpenCode.
 
 ---
 
@@ -78,6 +81,7 @@ Historial de fixes: `docs/Changelog.md`
 
 34. **Cierre = ÚLTIMA aparición del lema + tope 8s.** `findIndex(/con el fin de/)` absorbía todo el bloque final en un solo frame (2026-10-23: cierre 41,5s = 40% del video; 2026-10-21: 15,4s). FIX 2026-10-19 en `render.js`: buscar el lema desde el final (`for i--`) y avanzar `lemaStart` hasta que el cierre dure <=8s; los beats previos del lema vuelven a ser frames. No volver a usar `findIndex`.
 35. **Revisar cola de silencio de la narración antes de ensamblar.** El audio 2026-10-21 tenía 11,8s de silencio final (última palabra 105,04s, WAV 116,83s) y `assemble.js` estiraba el cierre sobre el silencio (frame estático de ~13s). FIX: `silencedetect` + `atrim` al final de la última palabra (+0,2s) y re-ensamblar; el `transcripcion-timed.md` sigue válido.
+36. **Logo del outro: `270×253`, `top=215`, `left=405`** (overlay 1080×1920). El viejo `360×337/top=250` tapaba el numeral de tono del `kinCard` del cierre. Regla fija en `club-sincronica/AGENTS.md`; no volver a agrandarlo ni bajarlo sin pedido explícito (pedido del Alquimista 2026-10-19).
 
 ### Issues abiertos
 
