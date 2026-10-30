@@ -31,6 +31,9 @@ audit-code-*.md
 audit-code-tasks.json
 audit-code-tareas.md
 
+# Health-check / task logs (generated)
+logs/
+
 # Python caches
 *.pyc
 
