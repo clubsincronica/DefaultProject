@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variante D — Mash-up A×C · microCósmos sans · Club Sincrónica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#357188; --deep:#1d3e4b; --earth:#fdae93; --clay:#99eef5;
+    --lilac:#afc6fe; --violet:#af8fb4; --gold:#f4c542;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:34px 20px 60px;background:#14161b;color:#c9ced8;font-family:'DM Sans',system-ui,sans-serif}
+  .chrome{max-width:1000px;margin:0 auto 30px}
+  .chrome h1{font-size:20px;color:#fff;margin:0 0 6px;font-weight:700}
+  .chrome p{margin:0;font-size:13px;color:#8b93a3;line-height:1.55;max-width:720px}
+  .swatches{display:flex;gap:6px;margin-top:14px;align-items:center}
+  .sw{width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,.16)}
+  .sw-label{font-size:10px;color:#6d7484;margin-left:8px;letter-spacing:.08em}
+  .label{max-width:1000px;margin:30px auto 12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7d8494}
+  .poster{width:420px;height:525px;margin:0 auto;position:relative;overflow:hidden;border-radius:10px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+  .hero{max-width:1000px;height:450px;margin:0 auto;position:relative;overflow:hidden;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+
+  /* ---------- BASE A: cielo luminoso, luna, flor de vida, grano ---------- */
+  .stars{position:absolute;inset:0;z-index:1;background-repeat:no-repeat;
+    background-image:
+      radial-gradient(1.8px 1.8px at 18% 16%,rgba(255,255,255,.95),transparent),
+      radial-gradient(1.3px 1.3px at 60% 10%,rgba(255,255,255,.7),transparent),
+      radial-gradient(1.6px 1.6px at 76% 28%,rgba(255,255,255,.8),transparent),
+      radial-gradient(1.3px 1.3px at 33% 32%,rgba(255,255,255,.6),transparent),
+      radial-gradient(1.3px 1.3px at 88% 7%,rgba(255,255,255,.65),transparent),
+      radial-gradient(1.1px 1.1px at 48% 22%,rgba(255,255,255,.55),transparent),
+      radial-gradient(1.1px 1.1px at 8% 40%,rgba(255,255,255,.5),transparent)}
+  .grain{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.06;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+  .moon-wrap{position:absolute;top:44px;right:40px;width:158px;height:158px;z-index:2}
+  .fof{position:absolute;inset:-34px;opacity:.3;pointer-events:none}
+  .fof svg{width:100%;height:100%}
+  .ring{position:absolute;inset:-13px;border-radius:50%;opacity:.95;animation:spin 26s linear infinite;
+    background:conic-gradient(#fdae93,#f4c542,#99e7bb,#99d2cf,#99eef5,#69b0d1,#afc6fe,#af8fb4,#fdae93);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px))}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .moon{position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,#fffefb 0%,#eef1ec 42%,#c6d2d7 74%,#9db1ba 100%);
+    box-shadow:0 0 70px rgba(228,246,250,.6),0 0 180px rgba(153,238,245,.32)}
+  .moon::before{content:'';position:absolute;inset:0;border-radius:50%;
+    box-shadow:inset 20px 14px 0 -15px rgba(110,132,142,.35),inset -24px -12px 0 -17px rgba(110,132,142,.3),inset 6px 30px 0 -25px rgba(110,132,142,.28)}
+
+  /* ---------- BASE C: glass, badge, botón ---------- */
+  .glass{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:24px}
+  .badge{display:inline-block;font-size:9px;letter-spacing:.22em;font-weight:700;padding:7px 14px;border-radius:999px;
+    background:linear-gradient(90deg,#99eef5,#afc6fe,#af8fb4);color:#0b0e15;margin-bottom:14px}
+  .btn{display:block;text-align:center;font-size:13px;font-weight:700;letter-spacing:.1em;padding:15px;border-radius:16px;
+    color:#0b0e15;background:linear-gradient(100deg,#99eef5,#afc6fe,#af8fb4,#fdae93,#99eef5);
+    background-size:300% 100%;animation:shimmer 7s linear infinite}
+  @keyframes shimmer{to{background-position:300% 0}}
+
+  /* ---------- POSTER D: A (cielo+luna) + tarjeta glass con lectura editorial ---------- */
+  .pd{background:linear-gradient(168deg,#16293a 0%,#2a4c60 38%,#357188 68%,#5d7d88 88%,#8f8b80 100%);
+    color:#fff;font-family:'Space Grotesk',sans-serif}
+  .pd::after{content:'';position:absolute;top:-140px;right:-100px;width:430px;height:430px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,238,245,.32),transparent 65%);z-index:1}
+  .pd::before{content:'';position:absolute;left:-20%;right:-20%;bottom:-110px;height:250px;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 100%,rgba(253,174,147,.5),rgba(244,197,66,.2) 45%,transparent 72%)}
+  .pd-card{position:absolute;z-index:3;left:26px;right:26px;bottom:96px;padding:24px 24px 22px}
+  .pd-card h2{font-size:42px;font-weight:500;letter-spacing:-.02em;line-height:1;margin:0 0 10px;text-shadow:0 2px 20px rgba(16,42,58,.4)}
+  .pd-card .sub{font-family:'DM Sans',sans-serif;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.88);margin:0}
+  .pd-meta{display:flex;gap:14px;font-size:10.5px;letter-spacing:.16em;color:rgba(255,255,255,.92);
+    border-top:1px solid rgba(255,255,255,.28);padding-top:13px;margin:16px 0 18px}
+  .pd-meta i{font-style:normal;color:rgba(255,255,255,.45)}
+  .brand{position:absolute;left:32px;bottom:26px;display:flex;align-items:center;gap:12px;z-index:3}
+  .logo-chip{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;flex:none}
+  .logo-chip img{width:35px;height:35px;object-fit:contain}
+  .brand strong{display:block;font-size:11px;letter-spacing:.26em;color:#fff;text-shadow:0 1px 10px rgba(16,42,58,.8)}
+  .brand small{font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.72)}
+
+  /* ---------- HERO D: mismo cielo, nav glass, tipografía C, datos con filete B ---------- */
+  .hd{background:linear-gradient(150deg,#16293a 0%,#2a4c60 44%,#357188 76%,#6d8189 100%);
+    color:#fff;font-family:'Space Grotesk',sans-serif}
+  .hd::after{content:'';position:absolute;top:-180px;right:-80px;width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,238,245,.26),transparent 65%);z-index:1}
+  .hd::before{content:'';position:absolute;left:-10%;right:-10%;bottom:-140px;height:280px;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 100%,rgba(253,174,147,.4),rgba(244,197,66,.16) 45%,transparent 72%)}
+  .hnav{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;
+    margin:18px 22px;padding:12px 22px;border-radius:999px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(16px)}
+  .hnav .left{display:flex;align-items:center;gap:11px}
+  .hnav .logo-chip{width:36px;height:36px}
+  .hnav .logo-chip img{width:30px;height:30px}
+  .hnav strong{font-size:11px;letter-spacing:.26em}
+  .hnav .links{display:flex;gap:24px;font-size:11.5px;color:rgba(255,255,255,.8)}
+  .hnav .links b{color:#fff;font-weight:500;border-bottom:1px solid #99eef5;padding-bottom:3px}
+  .hnav .nav-cta{font-size:10.5px;font-weight:700;letter-spacing:.14em;padding:10px 20px;border-radius:999px;
+    background:linear-gradient(90deg,#99eef5,#afc6fe);color:#10222c}
+  .hero-grid{position:relative;z-index:3;display:grid;grid-template-columns:1.12fr .88fr;height:calc(100% - 79px)}
+  .copy{padding:46px 20px 40px 56px}
+  .copy .eyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#99eef5;margin-bottom:16px;text-shadow:0 1px 12px rgba(16,42,58,.8)}
+  .copy h1{font-weight:500;font-size:46px;line-height:1.04;letter-spacing:-.02em;margin:0 0 16px;text-shadow:0 2px 22px rgba(16,42,58,.45)}
+  .copy h1 span{background:linear-gradient(90deg,#99eef5,#fdae93);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+  .copy p{font-family:'DM Sans',sans-serif;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.85);max-width:410px;margin:0 0 24px;text-shadow:0 1px 14px rgba(16,42,58,.6)}
+  .copy p b{color:#fff}
+  .wordmark{font-size:28px;font-weight:500;letter-spacing:-.01em;color:#fff;margin-bottom:4px}
+  .giant26{margin:8px 0 12px;font-weight:700;letter-spacing:-.03em;line-height:.95;font-size:60px;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.9)}
+  .giant26 .fill{-webkit-text-stroke:0;background:linear-gradient(90deg,#99eef5,#fdae93);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tagline{font-size:18px;font-weight:300;color:rgba(255,255,255,.95);margin:0 0 6px}
+  .copy .tagline2{font-family:'DM Sans',sans-serif;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.78);margin:0 0 20px;letter-spacing:.02em;max-width:360px}
+  .pd-stamp{font-size:14px;font-weight:700;letter-spacing:.22em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.85);margin:0 0 10px}
+  .cta-row{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+  .cta{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;padding:15px 28px;border-radius:16px;color:#0b0e15;
+    background:linear-gradient(100deg,#99eef5,#afc6fe,#af8fb4,#fdae93,#99eef5);background-size:300% 100%;
+    animation:shimmer 7s linear infinite;text-decoration:none}
+  .cta-ghost{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.85);text-decoration:none;
+    border:1px solid rgba(255,255,255,.35);padding:14px 24px;border-radius:16px}
+  .week{display:flex;gap:10px}
+  .week span{font-size:10.5px;letter-spacing:.12em;padding:9px 15px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);backdrop-filter:blur(6px);color:rgba(255,255,255,.92)}
+  .week b{color:#99eef5;font-weight:500}
+  .art{position:relative}
+  .art .moon-wrap{top:auto;bottom:66px;right:80px;width:200px;height:200px}
+  .art .fof{inset:-44px;opacity:.3}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <h1>Variante D — «Mash-up A×C» (microCósmos sans)</h1>
+  <p>Lo pedido: la paleta luminosa y la luna con flor de vida de A, la estructura glass y la tipografía Space Grotesk de C, y la claridad editorial de B — datos con filete, lectura en dos segundos. Sin serifas en ninguna parte: microCósmos vuelve a ser un logotipo sans.</p>
+  <div class="swatches">
+    <div class="sw" style="background:#16293a"></div>
+    <div class="sw" style="background:#357188"></div>
+    <div class="sw" style="background:#99eef5"></div>
+    <div class="sw" style="background:#fdae93"></div>
+    <div class="sw" style="background:#f4c542"></div>
+    <div class="sw" style="background:#afc6fe"></div>
+    <span class="sw-label">cielo amanecer · clay · earth · gold · anillo pastel</span>
+  </div>
+</div>
+
+<div class="label">Post de Instagram 4:5 — evento destacado</div>
+<div class="poster pd">
+  <div class="stars"></div>
+  <div class="grain"></div>
+  <div class="moon-wrap">
+    <div class="fof"><svg viewBox="0 0 120 120" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"><circle cx="60" cy="60" r="12"/><circle cx="72" cy="60" r="12"/><circle cx="66" cy="70.4" r="12"/><circle cx="54" cy="70.4" r="12"/><circle cx="48" cy="60" r="12"/><circle cx="54" cy="49.6" r="12"/><circle cx="66" cy="49.6" r="12"/><circle cx="78" cy="70.4" r="12"/><circle cx="60" cy="80.8" r="12"/><circle cx="42" cy="70.4" r="12"/><circle cx="42" cy="49.6" r="12"/><circle cx="60" cy="39.2" r="12"/><circle cx="78" cy="49.6" r="12"/><circle cx="84" cy="60" r="12"/><circle cx="72" cy="80.8" r="12"/><circle cx="48" cy="80.8" r="12"/><circle cx="36" cy="60" r="12"/><circle cx="48" cy="39.2" r="12"/><circle cx="72" cy="39.2" r="12"/></svg></div>
+    <div class="ring"></div><div class="moon"></div>
+  </div>
+  <div class="card glass pd-card" style="position:absolute;z-index:3;left:26px;right:26px;bottom:96px;padding:24px 24px 22px">
+    <span class="badge">NAVEGACIÓN CONSCIENTE · 10 AURICULARES</span>
+    <h2>microCósmos</h2>
+    <div class="pd-stamp">VERANO 26/27</div>
+    <p class="sub">Diez auriculares. Diez viajes. Cada uno hacia su propio universo.</p>
+    <div class="pd-meta"><span>VIE 19 DIC · 21 H</span><i>·</i><span>DESDE $35.000</span><i>·</i><span>CUPO 10</span></div>
+    <div class="btn">RESERVAR MI LUGAR</div>
+  </div>
+  <div class="brand">
+    <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+    <div><strong>CLUB SINCRÓNICA</strong><small>Arte y consciencia</small></div>
+  </div>
+</div>
+
+<div class="label">Hero de la página web de temporada</div>
+<div class="hero hd">
+  <div class="stars"></div>
+  <div class="grain"></div>
+  <div class="hnav">
+    <div class="left">
+      <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+      <strong>CLUB SINCRÓNICA</strong>
+    </div>
+    <div class="links"><b>Temporada</b><span>microCósmos</span><span>Yoga del Kin</span><span>Meditaciones</span></div>
+    <a class="nav-cta">RESERVAR</a>
+  </div>
+  <div class="hero-grid">
+    <div class="copy">
+      <div class="eyebrow">Mar del Plata</div>
+      <div class="wordmark">microCósmos</div>
+      <div class="giant26">VERANO<br><span class="fill">26/27</span></div>
+      <div class="tagline">tu universo interno despierta</div>
+      <p class="tagline2">navegaciones de la consciencia en 10 auriculares</p>
+      <div class="cta-row">
+        <a class="cta">RESERVAR TU LUGAR</a>
+        <a class="cta-ghost">¿Qué es microCósmos?</a>
+      </div>
+      <div class="week">
+        <span><b>MIÉ</b> · 19 H · YOGA DEL KIN</span>
+        <span><b>VIE</b> · 21 H · microCÓSMOS</span>
+        <span><b>DOM</b> · 7:30 H · MEDITACIÓN</span>
+      </div>
+    </div>
+    <div class="art">
+      <div class="moon-wrap">
+        <div class="fof"><svg viewBox="0 0 120 120" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"><circle cx="60" cy="60" r="12"/><circle cx="72" cy="60" r="12"/><circle cx="66" cy="70.4" r="12"/><circle cx="54" cy="70.4" r="12"/><circle cx="48" cy="60" r="12"/><circle cx="54" cy="49.6" r="12"/><circle cx="66" cy="49.6" r="12"/><circle cx="78" cy="70.4" r="12"/><circle cx="60" cy="80.8" r="12"/><circle cx="42" cy="70.4" r="12"/><circle cx="42" cy="49.6" r="12"/><circle cx="60" cy="39.2" r="12"/><circle cx="78" cy="49.6" r="12"/><circle cx="84" cy="60" r="12"/><circle cx="72" cy="80.8" r="12"/><circle cx="48" cy="80.8" r="12"/><circle cx="36" cy="60" r="12"/><circle cx="48" cy="39.2" r="12"/><circle cx="72" cy="39.2" r="12"/></svg></div>
+        <div class="ring"></div><div class="moon"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

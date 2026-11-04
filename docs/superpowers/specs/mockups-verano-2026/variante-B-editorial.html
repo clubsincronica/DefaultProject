@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variante B — Editorial Minimal · Club Sincrónica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&family=Fraunces:ital,opsz,wght@1,9..144,300..500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#357188; --deep:#1d3e4b; --earth:#fdae93; --clay:#99eef5;
+    --gold:#f4c542; --ink:#17181a; --paper:#efeae0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:34px 20px 60px;background:#14161b;color:#c9ced8;font-family:'Inter',system-ui,sans-serif}
+  .chrome{max-width:1000px;margin:0 auto 30px}
+  .chrome h1{font-size:20px;color:#fff;margin:0 0 6px;font-weight:700}
+  .chrome p{margin:0;font-size:13px;color:#8b93a3;line-height:1.55;max-width:720px}
+  .swatches{display:flex;gap:6px;margin-top:14px;align-items:center}
+  .sw{width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,.16)}
+  .sw-label{font-size:10px;color:#6d7484;margin-left:8px;letter-spacing:.08em}
+  .label{max-width:1000px;margin:30px auto 12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7d8494}
+  .poster{width:420px;height:525px;margin:0 auto;position:relative;overflow:hidden;border-radius:10px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+  .hero{max-width:1000px;height:450px;margin:0 auto;position:relative;overflow:hidden;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.55);display:grid;grid-template-columns:1.2fr .8fr}
+
+  /* ---------- POSTER 4:5 ---------- */
+  .pb{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;padding:30px 32px;display:flex;flex-direction:column}
+  .pb-top{display:flex;align-items:center;justify-content:space-between}
+  .pb-top .left{display:flex;align-items:center;gap:10px}
+  .logo-chip{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid rgba(23,24,26,.18);
+    display:grid;place-items:center;overflow:hidden;flex:none}
+  .logo-chip img{width:31px;height:31px;object-fit:contain}
+  .pb-top strong{font-size:10px;letter-spacing:.28em}
+  .pb-top .temp{font-size:9px;letter-spacing:.2em;color:rgba(23,24,26,.55)}
+  .rule{height:1px;background:var(--ink);opacity:.85;margin:18px 0}
+  .rule.thin{opacity:.22}
+  .pb-center{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .kicker{font-size:9.5px;letter-spacing:.3em;color:var(--accent);margin-bottom:16px}
+  .date{font-size:92px;font-weight:800;letter-spacing:-.045em;line-height:.9;margin:0}
+  .date small{font-size:22px;font-weight:700;letter-spacing:-.02em;vertical-align:super;margin-left:6px}
+  .dayline{font-size:11px;letter-spacing:.26em;color:rgba(23,24,26,.6);margin:12px 0 26px}
+  .pb h2{font-size:38px;font-weight:800;letter-spacing:-.025em;line-height:1;margin:0 0 14px;text-transform:uppercase}
+  .pb .ital{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:340;font-size:17px;line-height:1.45;color:rgba(23,24,26,.8);margin:0;max-width:280px}
+  .pb-bottom{display:flex;align-items:flex-end;justify-content:space-between}
+  .meta{font-size:10px;letter-spacing:.18em;line-height:2;color:rgba(23,24,26,.75)}
+  .meta b{color:var(--ink)}
+  .seal{width:52px;height:52px;border-radius:50%;background:var(--gold);display:grid;place-items:center;
+    font-size:20px;color:var(--ink);flex:none}
+
+  /* ---------- HERO WEB ---------- */
+  .hb-left{background:var(--paper);color:var(--ink);padding:38px 44px;display:flex;flex-direction:column}
+  .hb-left .hb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .hb-left .hb-top .left{display:flex;align-items:center;gap:10px}
+  .hb-left strong{font-size:10px;letter-spacing:.28em}
+  .hb-links{display:flex;gap:20px;font-size:10.5px;letter-spacing:.12em;color:rgba(23,24,26,.6)}
+  .hb-links b{color:var(--ink);border-bottom:1px solid var(--gold);padding-bottom:2px}
+  .giant{font-size:74px;font-weight:800;letter-spacing:-.04em;line-height:.92;margin:0;
+    color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+  .giant .fill{color:var(--ink);-webkit-text-stroke:0}
+  .hb-sub{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:15px;color:rgba(23,24,26,.75);margin:12px 0 24px}
+  .sched{margin-top:auto}
+  .sched-row{display:flex;align-items:baseline;gap:18px;padding:11px 0;border-top:1px solid rgba(23,24,26,.22)}
+  .sched-row .when{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent);width:110px;flex:none}
+  .sched-row .what{font-size:13px;font-weight:500;letter-spacing:.02em}
+  .sched-row .note{font-size:10px;color:rgba(23,24,26,.5);margin-left:auto;letter-spacing:.1em}
+  .hb-right{background:var(--ink);color:#fff;position:relative;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:22px;overflow:hidden}
+  .hb-right::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 38%,rgba(29,62,75,.9),transparent 70%)}
+  .thin-moon{position:relative;width:150px;height:150px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85)}
+  .thin-moon::before{content:'';position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(255,255,255,.35)}
+  .thin-moon::after{content:'';position:absolute;top:26px;left:30px;width:56px;height:56px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fdfcf7,#c9d4d9);box-shadow:0 0 40px rgba(214,238,244,.4)}
+  .hb-right .place{position:relative;font-size:10px;letter-spacing:.3em;color:rgba(255,255,255,.75);text-align:center;line-height:2}
+  .hb-right .place b{color:var(--gold);font-weight:500}
+  .hb-cta{position:relative;font-size:10.5px;letter-spacing:.18em;padding:12px 24px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.4);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <h1>Variante B — «Editorial Minimal»</h1>
+  <p>La línea minimalista de la marca llevada al extremo: papel hueso, tinta, un solo acento dorado (luz maíz de los videos) y reglas finas. La tipografía y el dato son el diseño — sin ilustración. La que mejor envejece y escala a cartel de vidriera, boletín y pack.</p>
+  <div class="swatches">
+    <div class="sw" style="background:#efeae0"></div>
+    <div class="sw" style="background:#17181a"></div>
+    <div class="sw" style="background:#f4c542"></div>
+    <div class="sw" style="background:#357188"></div>
+    <div class="sw" style="background:#1d3e4b"></div>
+    <span class="sw-label">paper · ink · gold (luz maíz) · accent · deep</span>
+  </div>
+</div>
+
+<div class="label">Post de Instagram 4:5 — evento destacado</div>
+<div class="poster pb">
+  <div class="pb-top">
+    <div class="left">
+      <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+      <strong>CLUB SINCRÓNICA</strong>
+    </div>
+    <span class="temp">VERANO 26/27</span>
+  </div>
+  <div class="rule"></div>
+  <div class="pb-center">
+    <div class="kicker">EXPERIENCIA SILENT · 10 AURICULARES</div>
+    <p class="date">19.12<small>VIE</small></p>
+    <div class="dayline">21:00 H · MAR DEL PLATA</div>
+    <h2>Viernes<br>en Susurro</h2>
+    <p class="ital">Diez personas. Diez auriculares. Un susurro.</p>
+  </div>
+  <div class="rule thin"></div>
+  <div class="pb-bottom">
+    <div class="meta"><b>$35.000</b> · CUPO 10<br>RESERVA POR LINK EN BIO</div>
+    <div class="seal">✶</div>
+  </div>
+</div>
+
+<div class="label">Hero de la página web de temporada</div>
+<div class="hero hb">
+  <div class="hb-left">
+    <div class="hb-top">
+      <div class="left">
+        <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+        <strong>CLUB SINCRÓNICA</strong>
+      </div>
+      <div class="hb-links"><b>TEMPORADA</b><span>YOGA DEL KIN</span><span>EN SUSURRO</span><span>MEDITACIONES</span></div>
+    </div>
+    <h1 class="giant">VERANO<br><span class="fill">26/27</span></h1>
+    <p class="hb-sub">Arte y consciencia · Mar del Plata · tres espacios, diez lugares</p>
+    <div class="sched">
+      <div class="sched-row"><span class="when">MIÉ · 19 H</span><span class="what">Yoga del Kin</span><span class="note">10 cupos</span></div>
+      <div class="sched-row"><span class="when">VIE · 21 H</span><span class="what">En Susurro — meditación silent</span><span class="note">premium</span></div>
+      <div class="sched-row"><span class="when">DOM · 7:30 H</span><span class="what">Meditación de la mañana</span><span class="note">acompañada</span></div>
+      <div class="sched-row"><span class="when">SÁB · 1× MES</span><span class="what">Circuito Postas — 3 espacios</span><span class="note">turnos</span></div>
+    </div>
+  </div>
+  <div class="hb-right">
+    <div class="thin-moon"></div>
+    <div class="place">MAR DEL PLATA<br><b>DICIEMBRE — FEBRERO</b></div>
+    <a class="hb-cta">RESERVAR</a>
+  </div>
+</div>
+
+</body>
+</html>

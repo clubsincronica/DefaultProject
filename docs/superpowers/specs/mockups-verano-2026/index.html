@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockups Verano 2026-27 — Club Sincrónica · comparador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Inter:wght@300;400;500;700;800&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ================= CHROME DEL COMPARADOR ================= */
+  *{box-sizing:border-box}
+  body{margin:0;padding:40px 24px 70px;background:#14161b;color:#c9ced8;font-family:'DM Sans',system-ui,sans-serif}
+  .wrap{max-width:1060px;margin:0 auto}
+  .wrap>h1{color:#fff;font-size:26px;margin:0 0 8px;font-weight:700}
+  .lead{font-size:14px;color:#8b93a3;line-height:1.6;max-width:780px;margin:0 0 34px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .col{background:#1b1e25;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px 20px}
+  .col h2{color:#fff;font-size:17px;margin:0 0 4px;font-weight:700}
+  .col .tag{font-size:10px;letter-spacing:.2em;color:#6d7484;text-transform:uppercase;display:block;margin-bottom:14px}
+  .strip{display:flex;gap:4px;margin-bottom:16px}
+  .strip i{flex:1;height:10px;border-radius:3px}
+  .desc{font-size:12.5px;line-height:1.6;color:#a7aebc;margin:0 0 14px}
+  .col ul{margin:0;padding-left:16px}
+  .col li{font-size:12px;line-height:1.55;color:#8b93a3;margin-bottom:5px}
+  .col li b{color:#c9ced8;font-weight:500}
+  .sec-title{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#7d8494;margin:44px 0 16px;
+    border-top:1px solid rgba(255,255,255,.08);padding-top:22px}
+  .row3{display:flex;gap:22px;justify-content:center;flex-wrap:wrap}
+  .fp{width:303px;height:379px;overflow:hidden;border-radius:10px;box-shadow:0 22px 60px rgba(0,0,0,.55);position:relative;flex:none}
+  .fp .poster{transform:scale(.72);transform-origin:top left;margin:0}
+  .fh{width:900px;height:405px;overflow:hidden;border-radius:12px;box-shadow:0 22px 60px rgba(0,0,0,.55);position:relative;margin:0 auto 26px}
+  .fh .hero{transform:scale(.9);transform-origin:top left;margin:0}
+  .footnote{margin-top:36px;font-size:12px;color:#6d7484;line-height:1.7;border-top:1px solid rgba(255,255,255,.08);padding-top:16px}
+  .footnote b{color:#a7aebc;font-weight:500}
+
+  /* ================= BASE POSTER/HERO ================= */
+  .poster{width:420px;height:525px;position:relative;overflow:hidden;border-radius:10px}
+  .hero{width:1000px;height:450px;position:relative;overflow:hidden;border-radius:14px}
+
+  /* ================= VARIANTE A — LUNA MODERNA ================= */
+  .grain{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.07;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+  .stars{position:absolute;inset:0;z-index:1;background-repeat:no-repeat;
+    background-image:
+      radial-gradient(1.6px 1.6px at 18% 16%,rgba(255,255,255,.85),transparent),
+      radial-gradient(1.2px 1.2px at 60% 10%,rgba(255,255,255,.6),transparent),
+      radial-gradient(1.5px 1.5px at 76% 28%,rgba(255,255,255,.7),transparent),
+      radial-gradient(1.2px 1.2px at 33% 32%,rgba(255,255,255,.5),transparent),
+      radial-gradient(1.2px 1.2px at 88% 7%,rgba(255,255,255,.55),transparent),
+      radial-gradient(1px 1px at 48% 22%,rgba(255,255,255,.45),transparent),
+      radial-gradient(1px 1px at 8% 40%,rgba(255,255,255,.4),transparent)}
+  .pa{background:linear-gradient(168deg,#16293a 0%,#2a4c60 38%,#357188 68%,#5d7d88 88%,#8f8b80 100%);color:#fff;font-family:'DM Sans',sans-serif}
+  .pa::after{content:'';position:absolute;top:-140px;right:-100px;width:430px;height:430px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,238,245,.32),transparent 65%);z-index:1}
+  .pa::before{content:'';position:absolute;left:-20%;right:-20%;bottom:-110px;height:250px;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 100%,rgba(253,174,147,.5),rgba(244,197,66,.2) 45%,transparent 72%)}
+  .moon-wrap{position:absolute;top:48px;right:42px;width:164px;height:164px;z-index:2}
+  .fof{position:absolute;inset:-36px;opacity:.32;pointer-events:none}
+  .fof svg{width:100%;height:100%}
+  .ring{position:absolute;inset:-15px;border-radius:50%;opacity:.92;animation:spin 26s linear infinite;
+    background:conic-gradient(#fdae93,#f4c542,#99e7bb,#99d2cf,#99eef5,#69b0d1,#afc6fe,#af8fb4,#fdae93);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px))}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .moon{position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,#fffefb 0%,#eef1ec 42%,#c6d2d7 74%,#9db1ba 100%);
+    box-shadow:0 0 70px rgba(228,246,250,.6),0 0 180px rgba(153,238,245,.32)}
+  .moon::before{content:'';position:absolute;inset:0;border-radius:50%;
+    box-shadow:inset 20px 14px 0 -15px rgba(110,132,142,.4),inset -24px -12px 0 -17px rgba(110,132,142,.35),inset 6px 30px 0 -25px rgba(110,132,142,.3)}
+  .pa-content{position:absolute;left:32px;right:30px;bottom:100px;z-index:3}
+  .eyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#99eef5;margin-bottom:14px;text-shadow:0 1px 12px rgba(16,42,58,.8)}
+  .pa h2{font-family:'Fraunces',Georgia,serif;font-weight:340;font-size:58px;line-height:1;margin:0 0 12px;letter-spacing:-.015em;text-shadow:0 2px 24px rgba(16,42,58,.55)}
+  .pa h2 em{font-style:italic;color:#fdae93}
+  .pa .sub{font-size:14px;line-height:1.55;color:rgba(255,255,255,.88);max-width:295px;margin:0 0 20px;text-shadow:0 1px 14px rgba(16,42,58,.7)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chips span{font-size:9.5px;letter-spacing:.14em;padding:7px 12px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.06);backdrop-filter:blur(6px)}
+  .logo-chip{border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;flex:none}
+  .logo-chip img{width:84%;height:84%;object-fit:contain}
+  .brand{position:absolute;left:32px;bottom:26px;display:flex;align-items:center;gap:12px;z-index:3}
+  .pa .brand .logo-chip{width:44px;height:44px}
+  .brand strong{display:block;font-size:11px;letter-spacing:.26em;color:#fff}
+  .brand small{font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.6)}
+  .kin-tag{position:absolute;right:32px;bottom:32px;z-index:3;font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.55);text-align:right;line-height:1.7}
+  .ha{background:linear-gradient(150deg,#16293a 0%,#2a4c60 44%,#357188 76%,#6d8189 100%);color:#fff;font-family:'DM Sans',sans-serif}
+  .ha::after{content:'';position:absolute;top:-180px;right:-80px;width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,238,245,.26),transparent 65%);z-index:1}
+  .ha::before{content:'';position:absolute;left:-10%;right:-10%;bottom:-140px;height:280px;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 100%,rgba(253,174,147,.4),rgba(244,197,66,.16) 45%,transparent 72%)}
+  .hnav{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;
+    padding:20px 44px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .hnav .left{display:flex;align-items:center;gap:12px}
+  .hnav .logo-chip{width:38px;height:38px}
+  .hnav strong{font-size:12px;letter-spacing:.26em}
+  .hnav .links{display:flex;gap:26px;font-size:12px;color:rgba(255,255,255,.7)}
+  .hnav .links b{color:#fff;font-weight:500;border-bottom:1px solid #fdae93;padding-bottom:3px}
+  .hnav .nav-cta{font-size:11px;letter-spacing:.14em;padding:10px 18px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.35);color:#fff}
+  .hero-grid{position:relative;z-index:3;display:grid;grid-template-columns:1.15fr .85fr;height:calc(100% - 79px)}
+  .copy{padding:52px 20px 40px 56px}
+  .ha .copy h1{font-family:'Fraunces',Georgia,serif;font-weight:340;font-size:46px;line-height:1.06;margin:0 0 16px;letter-spacing:-.01em}
+  .copy h1 em{font-style:italic;color:#fdae93}
+  .copy p{font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.75);max-width:400px;margin:0 0 26px}
+  .ha .cta-row{display:flex;gap:14px;align-items:center}
+  .ha .cta{display:inline-block;font-size:12px;letter-spacing:.14em;padding:14px 26px;border-radius:999px;
+    background:linear-gradient(90deg,#99eef5,#afc6fe);color:#10222c;font-weight:700;text-decoration:none}
+  .ha .cta-ghost{font-size:12px;letter-spacing:.14em;color:rgba(255,255,255,.75);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:3px}
+  .art{position:relative}
+  .art .moon-wrap{top:auto;bottom:60px;right:88px;width:205px;height:205px}
+  .art .fof{inset:-46px;opacity:.3}
+  .week{position:absolute;bottom:34px;left:0;right:0;display:flex;justify-content:center;gap:10px;z-index:3}
+  .week span{font-size:10px;letter-spacing:.12em;padding:8px 14px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.05);backdrop-filter:blur(6px);color:rgba(255,255,255,.85)}
+  .week b{color:#99eef5;font-weight:500}
+
+  /* ================= VARIANTE B — EDITORIAL MINIMAL ================= */
+  .pb{background:#efeae0;color:#17181a;font-family:'Inter',sans-serif;padding:30px 32px;display:flex;flex-direction:column}
+  .pb-top{display:flex;align-items:center;justify-content:space-between}
+  .pb-top .left{display:flex;align-items:center;gap:10px}
+  .pb .logo-chip{width:38px;height:38px;border:1px solid rgba(23,24,26,.18)}
+  .pb-top strong{font-size:10px;letter-spacing:.28em}
+  .pb-top .temp{font-size:9px;letter-spacing:.2em;color:rgba(23,24,26,.55)}
+  .rule{height:1px;background:#17181a;opacity:.85;margin:18px 0}
+  .rule.thin{opacity:.22}
+  .pb-center{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .kicker{font-size:9.5px;letter-spacing:.3em;color:#357188;margin-bottom:16px}
+  .date{font-size:92px;font-weight:800;letter-spacing:-.045em;line-height:.9;margin:0}
+  .date small{font-size:22px;font-weight:700;letter-spacing:-.02em;vertical-align:super;margin-left:6px}
+  .dayline{font-size:11px;letter-spacing:.26em;color:rgba(23,24,26,.6);margin:12px 0 26px}
+  .pb h2{font-size:38px;font-weight:800;letter-spacing:-.025em;line-height:1;margin:0 0 14px;text-transform:uppercase}
+  .pb .ital{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:340;font-size:17px;line-height:1.45;color:rgba(23,24,26,.8);margin:0;max-width:280px}
+  .pb-bottom{display:flex;align-items:flex-end;justify-content:space-between}
+  .meta{font-size:10px;letter-spacing:.18em;line-height:2;color:rgba(23,24,26,.75)}
+  .meta b{color:#17181a}
+  .seal{width:52px;height:52px;border-radius:50%;background:#f4c542;display:grid;place-items:center;
+    font-size:20px;color:#17181a;flex:none}
+  .hb{background:#efeae0;display:grid;grid-template-columns:1.2fr .8fr}
+  .hb-left{color:#17181a;font-family:'Inter',sans-serif;padding:38px 44px;display:flex;flex-direction:column}
+  .hb-left .hb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .hb-left .hb-top .left{display:flex;align-items:center;gap:10px}
+  .hb-left .logo-chip{width:38px;height:38px;border:1px solid rgba(23,24,26,.18)}
+  .hb-left strong{font-size:10px;letter-spacing:.28em}
+  .hb-links{display:flex;gap:20px;font-size:10.5px;letter-spacing:.12em;color:rgba(23,24,26,.6)}
+  .hb-links b{color:#17181a;border-bottom:1px solid #f4c542;padding-bottom:2px}
+  .giant{font-size:74px;font-weight:800;letter-spacing:-.04em;line-height:.92;margin:0;
+    color:transparent;-webkit-text-stroke:1.5px #17181a}
+  .giant .fill{color:#17181a;-webkit-text-stroke:0}
+  .hb-sub{font-family:'Fraunces',Georgia,serif;font-style:italic;font-size:15px;color:rgba(23,24,26,.75);margin:12px 0 24px}
+  .sched{margin-top:auto}
+  .sched-row{display:flex;align-items:baseline;gap:18px;padding:11px 0;border-top:1px solid rgba(23,24,26,.22)}
+  .sched-row .when{font-size:11px;font-weight:700;letter-spacing:.16em;color:#357188;width:110px;flex:none}
+  .sched-row .what{font-size:13px;font-weight:500;letter-spacing:.02em}
+  .sched-row .note{font-size:10px;color:rgba(23,24,26,.5);margin-left:auto;letter-spacing:.1em}
+  .hb-right{background:#17181a;color:#fff;position:relative;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:22px;overflow:hidden;font-family:'Inter',sans-serif}
+  .hb-right::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 38%,rgba(29,62,75,.9),transparent 70%)}
+  .thin-moon{position:relative;width:150px;height:150px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85)}
+  .thin-moon::before{content:'';position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(255,255,255,.35)}
+  .thin-moon::after{content:'';position:absolute;top:26px;left:30px;width:56px;height:56px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fdfcf7,#c9d4d9);box-shadow:0 0 40px rgba(214,238,244,.4)}
+  .hb-right .place{position:relative;font-size:10px;letter-spacing:.3em;color:rgba(255,255,255,.75);text-align:center;line-height:2}
+  .hb-right .place b{color:#f4c542;font-weight:500}
+  .hb-cta{position:relative;font-size:10.5px;letter-spacing:.18em;padding:12px 24px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.4);color:#fff}
+
+  /* ================= VARIANTE C — CRISTAL IRIDESCENTE ================= */
+  .aurora{position:absolute;inset:0;z-index:0;background:#0b0e15}
+  .blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.55}
+  .b1{width:300px;height:300px;top:-90px;left:-70px;background:#99eef5;animation:float1 19s ease-in-out infinite alternate}
+  .b2{width:340px;height:340px;top:120px;right:-120px;background:#af8fb4;animation:float2 23s ease-in-out infinite alternate}
+  .b3{width:260px;height:260px;bottom:-100px;left:90px;background:#fdae93;animation:float3 21s ease-in-out infinite alternate}
+  .b4{width:200px;height:200px;top:40px;left:150px;background:#99e7bb;opacity:.35;animation:float2 26s ease-in-out infinite alternate-reverse}
+  @keyframes float1{to{transform:translate(60px,50px) scale(1.15)}}
+  @keyframes float2{to{transform:translate(-70px,-40px) scale(1.1)}}
+  @keyframes float3{to{transform:translate(50px,-60px) scale(1.2)}}
+  .glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:26px}
+  .pc{position:relative;color:#fff;font-family:'Space Grotesk',sans-serif}
+  .pc .topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
+  .pc .topbar .left{display:flex;align-items:center;gap:10px}
+  .pc .logo-chip{width:36px;height:36px}
+  .pc .topbar strong{font-size:10.5px;letter-spacing:.26em}
+  .dots{display:flex;gap:5px}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5)}
+  .card{position:absolute;z-index:2;left:26px;right:26px;top:96px;padding:26px 24px 24px}
+  .badge{display:inline-block;font-size:9px;letter-spacing:.22em;font-weight:700;padding:7px 14px;border-radius:999px;
+    background:linear-gradient(90deg,#99eef5,#afc6fe,#af8fb4);color:#0b0e15;margin-bottom:18px}
+  .pc h2{font-size:41px;font-weight:500;line-height:1.04;letter-spacing:-.02em;margin:0 0 12px}
+  .pc h2 span{background:linear-gradient(90deg,#99eef5,#fdae93);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .pc .sub{font-family:'DM Sans',sans-serif;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.75);margin:0 0 18px;max-width:290px}
+  .mini-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+  .mini-row{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.06em;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 14px}
+  .mini-row .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .mini-row .d1{background:#99e7bb} .mini-row .d2{background:#99eef5} .mini-row .d3{background:#fdae93}
+  .mini-row b{font-weight:500}
+  .mini-row em{font-style:normal;color:rgba(255,255,255,.55);margin-left:auto;font-size:10px}
+  .btn{display:block;text-align:center;font-size:13px;font-weight:700;letter-spacing:.1em;padding:16px;border-radius:16px;
+    color:#0b0e15;background:linear-gradient(100deg,#99eef5,#afc6fe,#af8fb4,#fdae93,#99eef5);
+    background-size:300% 100%;animation:shimmer 7s linear infinite}
+  @keyframes shimmer{to{background-position:300% 0}}
+  .pc-foot{position:absolute;z-index:2;left:26px;right:26px;bottom:24px;display:flex;justify-content:space-between;
+    align-items:center;font-family:'DM Sans',sans-serif;font-size:9.5px;letter-spacing:.16em;color:rgba(255,255,255,.6)}
+  .hc{position:relative;color:#fff;font-family:'Space Grotesk',sans-serif}
+  .hc-nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;
+    margin:18px 22px;padding:12px 20px;border-radius:999px}
+  .hc-nav .left{display:flex;align-items:center;gap:10px}
+  .hc-nav .logo-chip{width:36px;height:36px}
+  .hc-nav strong{font-size:11px;letter-spacing:.26em}
+  .hc-nav .links{display:flex;gap:22px;font-size:11px;color:rgba(255,255,255,.75)}
+  .hc-nav .links b{color:#fff;font-weight:500}
+  .hc-nav .pill{font-size:10px;letter-spacing:.14em;font-weight:700;padding:9px 18px;border-radius:999px;
+    background:linear-gradient(90deg,#99eef5,#afc6fe);color:#0b0e15}
+  .hc-body{position:relative;z-index:2;padding:26px 56px 0}
+  .hc-body h1{font-size:52px;font-weight:500;line-height:1.02;letter-spacing:-.02em;margin:0 0 14px;max-width:560px}
+  .hc-body h1 span{background:linear-gradient(90deg,#99eef5,#fdae93);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hc-body p{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;color:rgba(255,255,255,.75);max-width:440px;margin:0 0 22px}
+  .hc .cta-row{display:flex;gap:14px;align-items:center;margin-bottom:30px}
+  .hc .cta{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.1em;padding:15px 28px;border-radius:16px;color:#0b0e15;
+    background:linear-gradient(100deg,#99eef5,#afc6fe,#af8fb4,#fdae93,#99eef5);
+    background-size:300% 100%;animation:shimmer 7s linear infinite;text-decoration:none}
+  .hc .cta-ghost{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.8);text-decoration:none;
+    border:1px solid rgba(255,255,255,.3);padding:14px 24px;border-radius:16px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 56px 40px;position:relative;z-index:2}
+  .fcard{padding:18px 18px 16px;border-radius:20px}
+  .fcard .day{font-size:10px;letter-spacing:.24em;color:#99eef5;margin-bottom:8px}
+  .fcard h3{font-size:17px;font-weight:500;margin:0 0 6px}
+  .fcard p{font-family:'DM Sans',sans-serif;font-size:11.5px;color:rgba(255,255,255,.65);margin:0;line-height:1.5}
+
+  /* ================= VARIANTE D — MASH-UP A×C ================= */
+  .pd{background:linear-gradient(168deg,#16293a 0%,#2a4c60 38%,#357188 68%,#5d7d88 88%,#8f8b80 100%);
+    color:#fff;font-family:'Space Grotesk',sans-serif}
+  .pd::after{content:'';position:absolute;top:-140px;right:-100px;width:430px;height:430px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,238,245,.32),transparent 65%);z-index:1}
+  .pd::before{content:'';position:absolute;left:-20%;right:-20%;bottom:-110px;height:250px;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 100%,rgba(253,174,147,.5),rgba(244,197,66,.2) 45%,transparent 72%)}
+  .pd .brand .logo-chip{width:42px;height:42px}
+  .pd-card{top:auto;bottom:96px;padding:24px 24px 22px}
+  .pd-card h2{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:500;letter-spacing:-.02em;line-height:1;margin:0 0 8px;text-shadow:0 2px 20px rgba(16,42,58,.4)}
+  .pd-card .sub{font-family:'DM Sans',sans-serif;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.88);margin:0}
+  .pd-stamp{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;letter-spacing:.22em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.85);margin:0 0 10px}
+  .pd-meta{display:flex;gap:14px;font-size:10.5px;letter-spacing:.16em;color:rgba(255,255,255,.92);
+    border-top:1px solid rgba(255,255,255,.28);padding-top:13px;margin:16px 0 18px}
+  .pd-meta i{font-style:normal;color:rgba(255,255,255,.45)}
+  .hd{font-family:'Space Grotesk',sans-serif}
+  .hd .hnav{border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(16px);margin:18px 22px;padding:12px 22px}
+  .hd .copy h1{font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.02em}
+  .hd .copy h1 span{background:linear-gradient(90deg,#99eef5,#fdae93);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+  .hd .wordmark{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:500;letter-spacing:-.01em;color:#fff;margin-bottom:4px}
+  .hd .giant26{font-family:'Space Grotesk',sans-serif;margin:8px 0 12px;font-weight:700;letter-spacing:-.03em;line-height:.95;font-size:60px;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.9)}
+  .hd .giant26 .fill{-webkit-text-stroke:0;background:linear-gradient(90deg,#99eef5,#fdae93);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hd .tagline{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:300;color:rgba(255,255,255,.95);margin:0 0 6px}
+  .hd .copy .tagline2{font-family:'DM Sans',sans-serif;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.78);margin:0 0 20px;letter-spacing:.02em;max-width:360px}
+  .hd .copy p{font-family:'DM Sans',sans-serif}
+  .hd .cta-row{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+  .hd .cta{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.12em;padding:15px 28px;border-radius:16px;color:#0b0e15;
+    background:linear-gradient(100deg,#99eef5,#afc6fe,#af8fb4,#fdae93,#99eef5);background-size:300% 100%;
+    animation:shimmer 7s linear infinite;text-decoration:none}
+  .hd .cta-ghost{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.85);text-decoration:none;
+    border:1px solid rgba(255,255,255,.35);padding:14px 24px;border-radius:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Mockups — Temporada Verano 2026-27</h1>
+  <p class="lead">Cuatro rumbos de diseño para la temporada, construidos sobre la paleta del logo y las reglas de <i>marca.md</i>. Cada variante muestra el post de Instagram (4:5) del evento destacado y el hero de la web de temporada. Todo está embebido en esta página — si querés ver una a tamaño completo, abrí su archivo (<i>variante-A…html</i>) con doble clic desde el Explorador.</p>
+
+  <div class="grid">
+    <div class="col">
+      <h2>A · microCósmos — Luna Luminosa</h2>
+      <span class="tag">evolución de Luna en Coya · más luminosa</span>
+      <div class="strip">
+        <i style="background:#1d3e4b"></i><i style="background:#357188"></i><i style="background:#99eef5"></i><i style="background:#fdae93"></i><i style="background:#af8fb4"></i>
+      </div>
+      <p class="desc">Amanecer sobre el mar de MdP: cielo más luminoso, luna con corona grande, flor de vida del logo de fondo y anillo pastel girando. microCósmos nombra la línea silent: diez auriculares, diez viajes.</p>
+      <ul>
+        <li><b>Plus:</b> la más cálida y fotogénica; continuidad con lo que ya gusta.</li>
+        <li><b>Riesgo:</b> la más parecida a lo actual — moderniza pero no diferencia del todo.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>B · Editorial Minimal</h2>
+      <span class="tag">papel · tinta · oro</span>
+      <div class="strip">
+        <i style="background:#efeae0"></i><i style="background:#17181a"></i><i style="background:#f4c542"></i><i style="background:#357188"></i>
+      </div>
+      <p class="desc">La línea minimalista B/N de la marca llevada al extremo: papel hueso, tinta, luz maíz, reglas finas. El dato y la tipografía son el diseño.</p>
+      <ul>
+        <li><b>Plus:</b> escala a cartel de vidriera, boletín y pack; envejece bien.</li>
+        <li><b>Riesgo:</b> menos "mística" — puede sentirse fría para el nicho.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>C · Cristal Iridescente</h2>
+      <span class="tag">cara de app / marketplace</span>
+      <div class="strip">
+        <i style="background:#0b0e15"></i><i style="background:#99eef5"></i><i style="background:#afc6fe"></i><i style="background:#af8fb4"></i><i style="background:#fdae93"></i>
+      </div>
+      <p class="desc">Glassmorphism + aurora con los pasteles del logo en movimiento. Chips, cards y botones tipo producto digital: la cara de la web y la app.</p>
+      <ul>
+        <li><b>Plus:</b> predispone a reservar desde el celular; lista para el marketplace.</li>
+        <li><b>Riesgo:</b> la más "gen tech" — requiere fotos buenas para no quedar plantilla.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h2>D · Mash-up A×C</h2>
+      <span class="tag">paleta+luna de A · tipo+estructura de C · claridad de B</span>
+      <div class="strip">
+        <i style="background:#16293a"></i><i style="background:#357188"></i><i style="background:#99eef5"></i><i style="background:#fdae93"></i><i style="background:#f4c542"></i>
+      </div>
+      <p class="desc">Cielo de amanecer y luna con flor de vida; encima, tarjeta glass con Space Grotesk y datos con filete. Sin serifas: microCósmos vuelve a ser logotipo sans, lectura en dos segundos.</p>
+      <ul>
+        <li><b>Plus:</b> la más clara y la más "tu marca"; escala a plantilla de todos los eventos.</li>
+        <li><b>Riesgo:</b> pedir disciplina: mismo molde, pocos elementos, nada de poesía de más.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-title">Post de Instagram 4:5 — evento destacado</div>
+  <div class="row3">
+
+    <div class="fp">
+      <div class="poster pa">
+        <div class="stars"></div>
+        <div class="grain"></div>
+        <div class="moon-wrap"><div class="fof"><svg viewBox="0 0 120 120" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"><circle cx="60" cy="60" r="12"/><circle cx="72" cy="60" r="12"/><circle cx="66" cy="70.4" r="12"/><circle cx="54" cy="70.4" r="12"/><circle cx="48" cy="60" r="12"/><circle cx="54" cy="49.6" r="12"/><circle cx="66" cy="49.6" r="12"/><circle cx="78" cy="70.4" r="12"/><circle cx="60" cy="80.8" r="12"/><circle cx="42" cy="70.4" r="12"/><circle cx="42" cy="49.6" r="12"/><circle cx="60" cy="39.2" r="12"/><circle cx="78" cy="49.6" r="12"/><circle cx="84" cy="60" r="12"/><circle cx="72" cy="80.8" r="12"/><circle cx="48" cy="80.8" r="12"/><circle cx="36" cy="60" r="12"/><circle cx="48" cy="39.2" r="12"/><circle cx="72" cy="39.2" r="12"/></svg></div><div class="ring"></div><div class="moon"></div></div>
+        <div class="pa-content">
+          <div class="eyebrow">La experiencia silent de Club Sincrónica</div>
+          <h2>micro<em>Cósmos</em></h2>
+          <p class="sub">Diez auriculares. Diez viajes. Cada uno hacia su propio universo.</p>
+          <div class="chips"><span>VIE 19 DIC · 21 H</span><span>DESDE $35.000</span><span>CUPO 10</span></div>
+        </div>
+        <div class="brand">
+          <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+          <div><strong>CLUB SINCRÓNICA</strong><small>Arte y consciencia</small></div>
+        </div>
+        <div class="kin-tag">CADA VIAJE, UNA<br>FASE DE LA LUNA</div>
+      </div>
+    </div>
+
+    <div class="fp">
+      <div class="poster pb">
+        <div class="pb-top">
+          <div class="left">
+            <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+            <strong>CLUB SINCRÓNICA</strong>
+          </div>
+          <span class="temp">VERANO 26/27</span>
+        </div>
+        <div class="rule"></div>
+        <div class="pb-center">
+          <div class="kicker">EXPERIENCIA SILENT · 10 AURICULARES</div>
+          <p class="date">19.12<small>VIE</small></p>
+          <div class="dayline">21:00 H · MAR DEL PLATA</div>
+          <h2>Viernes<br>en Susurro</h2>
+          <p class="ital">Diez personas. Diez auriculares. Un susurro.</p>
+        </div>
+        <div class="rule thin"></div>
+        <div class="pb-bottom">
+          <div class="meta"><b>$35.000</b> · CUPO 10<br>RESERVA POR LINK EN BIO</div>
+          <div class="seal">✶</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fp">
+      <div class="poster pc">
+        <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+        <div class="topbar">
+          <div class="left">
+            <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+            <strong>CLUB SINCRÓNICA</strong>
+          </div>
+          <div class="dots"><i></i><i></i><i></i></div>
+        </div>
+        <div class="card glass">
+          <span class="badge">NUEVO · CIRCUITO POSTAS</span>
+          <h2>Una casa.<br>Tres espacios.<br><span>Diez susurros.</span></h2>
+          <p class="sub">Se empieza tomando algo, sigue con movimiento y termina en meditación con auriculares.</p>
+          <div class="mini-rows">
+            <div class="mini-row"><span class="dot d1"></span><b>SÁB 20 DIC · TURNO TARDE</b><em>10 cupos</em></div>
+            <div class="mini-row"><span class="dot d2"></span><b>SÁB 20 DIC · TURNO NOCHE</b><em>10 cupos</em></div>
+            <div class="mini-row"><span class="dot d3"></span><b>DOM 21 · MEDITACIÓN 7:30</b><em>libre</em></div>
+          </div>
+          <div class="btn">RESERVAR MI LUGAR</div>
+        </div>
+        <div class="pc-foot"><span>ARTE Y CONSCIENCIA · MAR DEL PLATA</span><span>@CLUBSINCRONICA</span></div>
+      </div>
+    </div>
+
+    <div class="fp">
+      <div class="poster pd">
+        <div class="stars"></div>
+        <div class="grain"></div>
+        <div class="moon-wrap"><div class="fof"><svg viewBox="0 0 120 120" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"><circle cx="60" cy="60" r="12"/><circle cx="72" cy="60" r="12"/><circle cx="66" cy="70.4" r="12"/><circle cx="54" cy="70.4" r="12"/><circle cx="48" cy="60" r="12"/><circle cx="54" cy="49.6" r="12"/><circle cx="66" cy="49.6" r="12"/><circle cx="78" cy="70.4" r="12"/><circle cx="60" cy="80.8" r="12"/><circle cx="42" cy="70.4" r="12"/><circle cx="42" cy="49.6" r="12"/><circle cx="60" cy="39.2" r="12"/><circle cx="78" cy="49.6" r="12"/><circle cx="84" cy="60" r="12"/><circle cx="72" cy="80.8" r="12"/><circle cx="48" cy="80.8" r="12"/><circle cx="36" cy="60" r="12"/><circle cx="48" cy="39.2" r="12"/><circle cx="72" cy="39.2" r="12"/></svg></div><div class="ring"></div><div class="moon"></div></div>
+        <div class="card glass pd-card">
+          <span class="badge">NAVEGACIÓN CONSCIENTE · 10 AURICULARES</span>
+          <h2>microCósmos</h2>
+          <div class="pd-stamp">VERANO 26/27</div>
+          <p class="sub">Diez auriculares. Diez viajes. Cada uno hacia su propio universo.</p>
+          <div class="pd-meta"><span>VIE 19 DIC · 21 H</span><i>·</i><span>DESDE $35.000</span><i>·</i><span>CUPO 10</span></div>
+          <div class="btn">RESERVAR MI LUGAR</div>
+        </div>
+        <div class="brand">
+          <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+          <div><strong>CLUB SINCRÓNICA</strong><small>Arte y consciencia</small></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec-title">Hero de la página web de temporada</div>
+
+  <div class="fh">
+    <div class="hero ha">
+      <div class="stars"></div>
+      <div class="grain"></div>
+      <div class="hnav">
+        <div class="left">
+          <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+          <strong>CLUB SINCRÓNICA</strong>
+        </div>
+        <div class="links"><b>Temporada</b><span>microCósmos</span><span>Yoga del Kin</span><span>Meditaciones</span></div>
+        <a class="nav-cta">RESERVAR</a>
+      </div>
+      <div class="hero-grid">
+        <div class="copy">
+          <div class="eyebrow">Temporada Verano 2026 · 27 — Mar del Plata</div>
+          <h1>El verano que se <em>escucha</em> por dentro</h1>
+          <p><b>microCósmos:</b> navegaciones de la consciencia en 10 auriculares. Tres encuentros por semana en una casa con tres espacios — movimiento, susurro y el kin del día.</p>
+          <div class="cta-row">
+            <a class="cta">RESERVAR TU LUGAR</a>
+            <a class="cta-ghost">Ver calendario</a>
+          </div>
+        </div>
+        <div class="art">
+          <div class="moon-wrap"><div class="fof"><svg viewBox="0 0 120 120" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"><circle cx="60" cy="60" r="12"/><circle cx="72" cy="60" r="12"/><circle cx="66" cy="70.4" r="12"/><circle cx="54" cy="70.4" r="12"/><circle cx="48" cy="60" r="12"/><circle cx="54" cy="49.6" r="12"/><circle cx="66" cy="49.6" r="12"/><circle cx="78" cy="70.4" r="12"/><circle cx="60" cy="80.8" r="12"/><circle cx="42" cy="70.4" r="12"/><circle cx="42" cy="49.6" r="12"/><circle cx="60" cy="39.2" r="12"/><circle cx="78" cy="49.6" r="12"/><circle cx="84" cy="60" r="12"/><circle cx="72" cy="80.8" r="12"/><circle cx="48" cy="80.8" r="12"/><circle cx="36" cy="60" r="12"/><circle cx="48" cy="39.2" r="12"/><circle cx="72" cy="39.2" r="12"/></svg></div><div class="ring"></div><div class="moon"></div></div>
+        </div>
+      </div>
+      <div class="week">
+        <span><b>MIÉ</b> · 19 H · YOGA DEL KIN</span>
+        <span><b>VIE</b> · 21 H · microCÓSMOS</span>
+        <span><b>DOM</b> · 7:30 H · MEDITACIÓN</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="fh">
+    <div class="hero hb">
+      <div class="hb-left">
+        <div class="hb-top">
+          <div class="left">
+            <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+            <strong>CLUB SINCRÓNICA</strong>
+          </div>
+          <div class="hb-links"><b>TEMPORADA</b><span>YOGA DEL KIN</span><span>EN SUSURRO</span><span>MEDITACIONES</span></div>
+        </div>
+        <h1 class="giant">VERANO<br><span class="fill">26/27</span></h1>
+        <p class="hb-sub">Arte y consciencia · Mar del Plata · tres espacios, diez lugares</p>
+        <div class="sched">
+          <div class="sched-row"><span class="when">MIÉ · 19 H</span><span class="what">Yoga del Kin</span><span class="note">10 cupos</span></div>
+          <div class="sched-row"><span class="when">VIE · 21 H</span><span class="what">En Susurro — meditación silent</span><span class="note">premium</span></div>
+          <div class="sched-row"><span class="when">DOM · 7:30 H</span><span class="what">Meditación de la mañana</span><span class="note">acompañada</span></div>
+          <div class="sched-row"><span class="when">SÁB · 1× MES</span><span class="what">Circuito Postas — 3 espacios</span><span class="note">turnos</span></div>
+        </div>
+      </div>
+      <div class="hb-right">
+        <div class="thin-moon"></div>
+        <div class="place">MAR DEL PLATA<br><b>DICIEMBRE — FEBRERO</b></div>
+        <a class="hb-cta">RESERVAR</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fh">
+    <div class="hero hc">
+      <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+      <div class="hc-nav glass">
+        <div class="left">
+          <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+          <strong>CLUB SINCRÓNICA</strong>
+        </div>
+        <div class="links"><b>Temporada</b><span>Experiencias</span><span>Comunidad</span><span>Meditaciones</span></div>
+        <a class="pill">RESERVAR</a>
+      </div>
+      <div class="hc-body">
+        <div class="eyebrow">TEMPORADA VERANO 2026 · 27 — MAR DEL PLATA</div>
+        <h1>El verano <span>se escucha</span> por dentro</h1>
+        <p>Meditación en susurro, movimiento y el kin del día. Reservás desde el celular, entrás sin app, y el cupo es de diez.</p>
+        <div class="cta-row">
+          <a class="cta">VER LA TEMPORADA</a>
+          <a class="cta-ghost">¿Qué es el susurro?</a>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="fcard glass"><div class="day">MIÉ · 19 H</div><h3>Yoga del Kin</h3><p>La energía del día, en el cuerpo. 10 lugares.</p></div>
+        <div class="fcard glass"><div class="day">VIE · 21 H</div><h3>En Susurro</h3><p>Meditación silent-disco premium. 10 lugares.</p></div>
+        <div class="fcard glass"><div class="day">DOM · 7:30 H</div><h3>Meditación de la mañana</h3><p>Acompañada, a la luz de la mañana.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fh">
+    <div class="hero hd">
+      <div class="stars"></div>
+      <div class="grain"></div>
+      <div class="hnav">
+        <div class="left">
+          <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+          <strong>CLUB SINCRÓNICA</strong>
+        </div>
+        <div class="links"><b>Temporada</b><span>microCósmos</span><span>Yoga del Kin</span><span>Meditaciones</span></div>
+        <a class="nav-cta">RESERVAR</a>
+      </div>
+      <div class="hero-grid">
+        <div class="copy">
+          <div class="eyebrow">Mar del Plata</div>
+          <div class="wordmark">microCósmos</div>
+          <div class="giant26">VERANO<br><span class="fill">26/27</span></div>
+          <div class="tagline">tu universo interno despierta</div>
+          <p class="tagline2">navegaciones de la consciencia en 10 auriculares</p>
+          <div class="cta-row">
+            <a class="cta">RESERVAR TU LUGAR</a>
+            <a class="cta-ghost">¿Qué es microCósmos?</a>
+          </div>
+        </div>
+        <div class="art">
+          <div class="moon-wrap"><div class="fof"><svg viewBox="0 0 120 120" fill="none" stroke="rgba(255,255,255,.6)" stroke-width=".7"><circle cx="60" cy="60" r="12"/><circle cx="72" cy="60" r="12"/><circle cx="66" cy="70.4" r="12"/><circle cx="54" cy="70.4" r="12"/><circle cx="48" cy="60" r="12"/><circle cx="54" cy="49.6" r="12"/><circle cx="66" cy="49.6" r="12"/><circle cx="78" cy="70.4" r="12"/><circle cx="60" cy="80.8" r="12"/><circle cx="42" cy="70.4" r="12"/><circle cx="42" cy="49.6" r="12"/><circle cx="60" cy="39.2" r="12"/><circle cx="78" cy="49.6" r="12"/><circle cx="84" cy="60" r="12"/><circle cx="72" cy="80.8" r="12"/><circle cx="48" cy="80.8" r="12"/><circle cx="36" cy="60" r="12"/><circle cx="48" cy="39.2" r="12"/><circle cx="72" cy="39.2" r="12"/></svg></div><div class="ring"></div><div class="moon"></div></div>
+        </div>
+      </div>
+      <div class="week">
+        <span><b>MIÉ</b> · 19 H · YOGA DEL KIN</span>
+        <span><b>VIE</b> · 21 H · microCÓSMOS</span>
+        <span><b>DOM</b> · 7:30 H · MEDITACIÓN</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="footnote"><b>Tipografías:</b> Fraunces + DM Sans (A) · Inter + Fraunces (B) · Space Grotesk + DM Sans (C y D — D es el mash-up pedido, sin serifas) — todas gratuitas vía Google Fonts. Los cuatro usan el logo real dentro de un chip blanco para funcionar sobre cualquier fondo. <b>Contenido de ejemplo</b> (Viernes en Susurro, 19 dic, $35.000, cupo 10) — se reemplaza por el cronograma fechado definitivo. <b>microCósmos</b> = nombre de la línea silent: cada luna del calendario abre una "travesía" distinta (evolución del molde de Luna en Coya, sin cerámica) y el pack de meditaciones H1–H14 se vende como "14 travesías microCósmos".</p>
+</div>
+</body>
+</html>

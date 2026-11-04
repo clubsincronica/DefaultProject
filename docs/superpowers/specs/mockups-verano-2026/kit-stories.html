@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit — stories 9:16 · microCósmos · Club Sincrónica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;padding:34px 20px 60px;background:#14161b;color:#c9ced8;font-family:'DM Sans',system-ui,sans-serif}
+  .chrome{max-width:1100px;margin:0 auto 30px}
+  .chrome h1{font-size:20px;color:#fff;margin:0 0 6px;font-weight:700}
+  .chrome p{margin:0;font-size:13px;color:#8b93a3;line-height:1.55;max-width:760px}
+  .label{max-width:1100px;margin:28px auto 12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7d8494}
+  .row{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;max-width:1100px;margin:0 auto}
+  .story{width:248px;height:440px;position:relative;overflow:hidden;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.55);
+    color:#fff;font-family:'Space Grotesk',sans-serif}
+
+  .sky{background:linear-gradient(168deg,#16293a 0%,#2a4c60 38%,#357188 68%,#5d7d88 88%,#8f8b80 100%)}
+  .sky::after{content:'';position:absolute;top:-90px;right:-70px;width:280px;height:280px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,238,245,.32),transparent 65%);z-index:1}
+  .sky::before{content:'';position:absolute;left:-20%;right:-20%;bottom:-70px;height:170px;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 100%,rgba(253,174,147,.5),rgba(244,197,66,.2) 45%,transparent 72%)}
+  .stars{position:absolute;inset:0;z-index:1;background-repeat:no-repeat;
+    background-image:
+      radial-gradient(1.4px 1.4px at 18% 16%,rgba(255,255,255,.95),transparent),
+      radial-gradient(1px 1px at 60% 10%,rgba(255,255,255,.7),transparent),
+      radial-gradient(1.2px 1.2px at 76% 28%,rgba(255,255,255,.8),transparent),
+      radial-gradient(1px 1px at 33% 32%,rgba(255,255,255,.6),transparent),
+      radial-gradient(1px 1px at 88% 7%,rgba(255,255,255,.65),transparent)}
+  .grain{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.06;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+  .ring{position:absolute;border-radius:50%;opacity:.95;animation:spin 26s linear infinite;
+    background:conic-gradient(#fdae93,#f4c542,#99e7bb,#99d2cf,#99eef5,#69b0d1,#afc6fe,#af8fb4,#fdae93);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px))}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .moon{position:absolute;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,#fffefb 0%,#eef1ec 42%,#c6d2d7 74%,#9db1ba 100%);
+    box-shadow:0 0 44px rgba(228,246,250,.6),0 0 110px rgba(153,238,245,.32)}
+  .moon::before{content:'';position:absolute;inset:0;border-radius:50%;
+    box-shadow:inset 12px 9px 0 -9px rgba(110,132,142,.35),inset -15px -8px 0 -11px rgba(110,132,142,.3),inset 4px 19px 0 -16px rgba(110,132,142,.28)}
+
+  .content{position:absolute;inset:0;z-index:3;padding:30px 22px 26px;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:9px}
+  .logo-chip{width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;flex:none}
+  .logo-chip img{width:25px;height:25px;object-fit:contain}
+  .brand strong{font-size:9px;letter-spacing:.26em}
+  .giant{font-weight:700;letter-spacing:-.03em;line-height:.93;font-size:52px;color:transparent;-webkit-text-stroke:1.3px rgba(255,255,255,.9)}
+  .giant .fill{-webkit-text-stroke:0;background:linear-gradient(90deg,#99eef5,#fdae93);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .wordmark{font-size:22px;font-weight:500;letter-spacing:-.01em;margin-bottom:4px}
+  .tagline{font-size:14px;font-weight:300;color:rgba(255,255,255,.95);margin-top:8px;line-height:1.35}
+  .small{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.75);line-height:1.5;margin-top:8px}
+  .spacer{flex:1}
+  .meta{font-size:9px;letter-spacing:.16em;color:rgba(255,255,255,.9);border-top:1px solid rgba(255,255,255,.28);padding-top:10px;margin-bottom:12px}
+  .btn{display:block;text-align:center;font-size:11px;font-weight:700;letter-spacing:.1em;padding:12px;border-radius:14px;
+    color:#0b0e15;background:linear-gradient(100deg,#99eef5,#afc6fe,#af8fb4,#fdae93,#99eef5);
+    background-size:300% 100%;animation:shimmer 7s linear infinite}
+  @keyframes shimmer{to{background-position:300% 0}}
+  .swipe{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.85);text-align:center;margin-top:10px}
+  .swipe::after{content:' ↑';font-size:12px}
+  .badge{display:inline-block;align-self:flex-start;font-size:8px;letter-spacing:.2em;font-weight:700;padding:6px 12px;border-radius:999px;
+    background:linear-gradient(90deg,#99eef5,#afc6fe,#af8fb4);color:#0b0e15;margin-bottom:12px}
+
+  /* story del calendario: fila de fases */
+  .phases{display:flex;gap:8px;justify-content:center;margin:16px 0}
+  .ph{width:34px;text-align:center;font-family:'DM Sans',sans-serif;font-size:8px;letter-spacing:.08em;color:rgba(255,255,255,.75)}
+  .ph .disc{width:30px;height:30px;border-radius:50%;margin:0 auto 5px;
+    background:radial-gradient(circle at 34% 30%,#fffefb,#c6d2d7 80%,#9db1ba)}
+  .ph.dim .disc{background:radial-gradient(circle at 34% 30%,#5b7280,#31505f)}
+  .ph.mid .disc{background:radial-gradient(circle at 34% 30%,#fffefb,#c6d2d7 50%,#31505f 52%)}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <h1>Kit — stories 9:16 (tres piezas: presentación · calendario · cierre)</h1>
+  <p>Mismo sistema D en proporción vertical. Exportar a 1080×1920 px. La story 1 presenta microCósmos, la 2 muestra las 14 travesías como si fueran fases (el calendario es producto), la 3 cierra con reserva. Las 3 son plantillas: cambia fecha/precio/travesía y listo.</p>
+</div>
+
+<div class="label">Stories del sistema</div>
+<div class="row">
+
+  <!-- STORY 1 · presentación -->
+  <div class="story sky">
+    <div class="stars"></div>
+    <div class="grain"></div>
+    <div class="content">
+      <div class="brand">
+        <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+        <strong>CLUB SINCRÓNICA</strong>
+      </div>
+      <div class="spacer"></div>
+      <div class="wordmark">microCósmos</div>
+      <div class="giant">VERANO<br><span class="fill">26/27</span></div>
+      <div class="tagline">tu universo interno despierta</div>
+      <div class="small">navegaciones de la consciencia en 10 auriculares · Mar del Plata</div>
+      <div class="spacer"></div>
+      <div class="meta">VIE 21 H · CUPO 10 · DESDE $35.000</div>
+      <div class="btn">CONOCÉ MÁS</div>
+      <div class="swipe">DESLIZÁ</div>
+    </div>
+  </div>
+
+  <!-- STORY 2 · las 14 travesías / fases -->
+  <div class="story sky">
+    <div class="stars"></div>
+    <div class="grain"></div>
+    <div class="content">
+      <div class="brand">
+        <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+        <strong>CLUB SINCRÓNICA</strong>
+      </div>
+      <div style="height:26px"></div>
+      <span class="badge">LA SERIE COMPLETA</span>
+      <div class="wordmark" style="font-size:26px">14 travesías</div>
+      <div class="tagline" style="margin-top:2px">una por cada fase de la luna</div>
+      <div class="phases">
+        <div class="ph dim"><div class="disc"></div>01</div>
+        <div class="ph mid"><div class="disc"></div>02</div>
+        <div class="ph"><div class="disc"></div>03</div>
+        <div class="ph mid"><div class="disc"></div>04</div>
+        <div class="ph dim"><div class="disc"></div>05</div>
+      </div>
+      <div class="small">Ya grabadas. Cada luna del calendario abre una nueva — la luna real del cielo de MdP manda.</div>
+      <div class="spacer"></div>
+      <div class="moon" style="position:relative;width:110px;height:110px;align-self:center;margin-bottom:14px"></div>
+      <div class="btn">QUIERO EL PACK</div>
+    </div>
+  </div>
+
+  <!-- STORY 3 · cierre / reserva -->
+  <div class="story sky">
+    <div class="stars"></div>
+    <div class="grain"></div>
+    <div class="content">
+      <div class="brand">
+        <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+        <strong>CLUB SINCRÓNICA</strong>
+      </div>
+      <div class="spacer"></div>
+      <div class="giant" style="font-size:44px">QUEDAN<br><span class="fill">3 LUGARES</span></div>
+      <div class="tagline">Diez auriculares. Diez viajes. No hay lugar 11.</div>
+      <div class="spacer"></div>
+      <div class="ring" style="position:relative;width:88px;height:88px;align-self:center;margin-bottom:16px"></div>
+      <div class="meta">PRÓXIMA TRAVESÍA · VIE 19 DIC · 21 H</div>
+      <div class="btn">RESERVAR MI LUGAR</div>
+      <div class="swipe">DESLIZÁ PARA RESERVAR</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variante C — Cristal Iridescente · Club Sincrónica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#357188; --deep:#1d3e4b; --earth:#fdae93; --clay:#99eef5;
+    --lilac:#afc6fe; --violet:#af8fb4; --mint:#99e7bb; --gold:#f4c542;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:34px 20px 60px;background:#14161b;color:#c9ced8;font-family:'DM Sans',system-ui,sans-serif}
+  .chrome{max-width:1000px;margin:0 auto 30px}
+  .chrome h1{font-size:20px;color:#fff;margin:0 0 6px;font-weight:700}
+  .chrome p{margin:0;font-size:13px;color:#8b93a3;line-height:1.55;max-width:720px}
+  .swatches{display:flex;gap:6px;margin-top:14px;align-items:center}
+  .sw{width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,.16)}
+  .sw-label{font-size:10px;color:#6d7484;margin-left:8px;letter-spacing:.08em}
+  .label{max-width:1000px;margin:30px auto 12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7d8494}
+  .poster{width:420px;height:525px;margin:0 auto;position:relative;overflow:hidden;border-radius:10px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+  .hero{max-width:1000px;height:450px;margin:0 auto;position:relative;overflow:hidden;border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.55)}
+
+  /* aurora compartida = anillo pastel del logo en movimiento */
+  .aurora{position:absolute;inset:0;z-index:0;background:#0b0e15}
+  .blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.55}
+  .b1{width:300px;height:300px;top:-90px;left:-70px;background:var(--clay);animation:float1 19s ease-in-out infinite alternate}
+  .b2{width:340px;height:340px;top:120px;right:-120px;background:var(--violet);animation:float2 23s ease-in-out infinite alternate}
+  .b3{width:260px;height:260px;bottom:-100px;left:90px;background:var(--earth);animation:float3 21s ease-in-out infinite alternate}
+  .b4{width:200px;height:200px;top:40px;left:150px;background:var(--mint);opacity:.35;animation:float2 26s ease-in-out infinite alternate-reverse}
+  @keyframes float1{to{transform:translate(60px,50px) scale(1.15)}}
+  @keyframes float2{to{transform:translate(-70px,-40px) scale(1.1)}}
+  @keyframes float3{to{transform:translate(50px,-60px) scale(1.2)}}
+
+  .glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:26px}
+
+  /* ---------- POSTER 4:5 ---------- */
+  .pc{position:relative;color:#fff;font-family:'Space Grotesk',sans-serif}
+  .pc .topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:22px 26px}
+  .pc .topbar .left{display:flex;align-items:center;gap:10px}
+  .logo-chip{width:36px;height:36px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;flex:none}
+  .logo-chip img{width:29px;height:29px;object-fit:contain}
+  .pc .topbar strong{font-size:10.5px;letter-spacing:.26em}
+  .dots{display:flex;gap:5px}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5)}
+  .card{position:absolute;z-index:2;left:26px;right:26px;top:96px;padding:26px 24px 24px}
+  .badge{display:inline-block;font-size:9px;letter-spacing:.22em;font-weight:700;padding:7px 14px;border-radius:999px;
+    background:linear-gradient(90deg,var(--clay),var(--lilac),var(--violet));color:#0b0e15;margin-bottom:18px}
+  .pc h2{font-size:41px;font-weight:500;line-height:1.04;letter-spacing:-.02em;margin:0 0 12px}
+  .pc h2 span{background:linear-gradient(90deg,var(--clay),var(--earth));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .pc .sub{font-family:'DM Sans',sans-serif;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.75);margin:0 0 18px;max-width:290px}
+  .mini-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+  .mini-row{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.06em;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px 14px}
+  .mini-row .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .mini-row .d1{background:var(--mint)} .mini-row .d2{background:var(--clay)} .mini-row .d3{background:var(--earth)}
+  .mini-row b{font-weight:500}
+  .mini-row em{font-style:normal;color:rgba(255,255,255,.55);margin-left:auto;font-size:10px}
+  .btn{display:block;text-align:center;font-size:13px;font-weight:700;letter-spacing:.1em;padding:16px;border-radius:16px;
+    color:#0b0e15;background:linear-gradient(100deg,var(--clay),var(--lilac),var(--violet),var(--earth),var(--clay));
+    background-size:300% 100%;animation:shimmer 7s linear infinite}
+  @keyframes shimmer{to{background-position:300% 0}}
+  .pc-foot{position:absolute;z-index:2;left:26px;right:26px;bottom:24px;display:flex;justify-content:space-between;
+    align-items:center;font-family:'DM Sans',sans-serif;font-size:9.5px;letter-spacing:.16em;color:rgba(255,255,255,.6)}
+
+  /* ---------- HERO WEB ---------- */
+  .hc{position:relative;color:#fff;font-family:'Space Grotesk',sans-serif}
+  .hc-nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;
+    margin:18px 22px;padding:12px 20px;border-radius:999px}
+  .hc-nav .left{display:flex;align-items:center;gap:10px}
+  .hc-nav strong{font-size:11px;letter-spacing:.26em}
+  .hc-nav .links{display:flex;gap:22px;font-size:11px;color:rgba(255,255,255,.75)}
+  .hc-nav .links b{color:#fff;font-weight:500}
+  .hc-nav .pill{font-size:10px;letter-spacing:.14em;font-weight:700;padding:9px 18px;border-radius:999px;
+    background:linear-gradient(90deg,var(--clay),var(--lilac));color:#0b0e15}
+  .hc-body{position:relative;z-index:2;padding:26px 56px 0}
+  .hc-body .eyebrow{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.3em;color:var(--clay);margin-bottom:14px}
+  .hc-body h1{font-size:52px;font-weight:500;line-height:1.02;letter-spacing:-.02em;margin:0 0 14px;max-width:560px}
+  .hc-body h1 span{background:linear-gradient(90deg,var(--clay),var(--earth));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hc-body p{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;color:rgba(255,255,255,.75);max-width:440px;margin:0 0 22px}
+  .cta-row{display:flex;gap:14px;align-items:center;margin-bottom:30px}
+  .cta{display:inline-block;font-size:12.5px;font-weight:700;letter-spacing:.1em;padding:15px 28px;border-radius:16px;color:#0b0e15;
+    background:linear-gradient(100deg,var(--clay),var(--lilac),var(--violet),var(--earth),var(--clay));
+    background-size:300% 100%;animation:shimmer 7s linear infinite;text-decoration:none}
+  .cta-ghost{font-size:12px;letter-spacing:.12em;color:rgba(255,255,255,.8);text-decoration:none;
+    border:1px solid rgba(255,255,255,.3);padding:14px 24px;border-radius:16px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 56px 40px;position:relative;z-index:2}
+  .fcard{padding:18px 18px 16px;border-radius:20px}
+  .fcard .day{font-size:10px;letter-spacing:.24em;color:var(--clay);margin-bottom:8px}
+  .fcard h3{font-size:17px;font-weight:500;margin:0 0 6px}
+  .fcard p{font-family:'DM Sans',sans-serif;font-size:11.5px;color:rgba(255,255,255,.65);margin:0;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <h1>Variante C — «Cristal Iridescente»</h1>
+  <p>La cara de app y marketplace: glassmorphism, aurora con los pasteles pastel del logo en movimiento, chips y botones tipo producto digital. Es la que mejor predispone a reservar desde el celular y a que la comunidad ofrezca lo suyo dentro de un mes.</p>
+  <div class="swatches">
+    <div class="sw" style="background:#0b0e15"></div>
+    <div class="sw" style="background:#99eef5"></div>
+    <div class="sw" style="background:#afc6fe"></div>
+    <div class="sw" style="background:#af8fb4"></div>
+    <div class="sw" style="background:#fdae93"></div>
+    <div class="sw" style="background:#99e7bb"></div>
+    <span class="sw-label">fondo noche + pasteles del logo en gradiente aurora</span>
+  </div>
+</div>
+
+<div class="label">Post de Instagram 4:5 — evento destacado</div>
+<div class="poster pc">
+  <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+  <div class="topbar">
+    <div class="left">
+      <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+      <strong>CLUB SINCRÓNICA</strong>
+    </div>
+    <div class="dots"><i></i><i></i><i></i></div>
+  </div>
+  <div class="card glass">
+    <span class="badge">NUEVO · CIRCUITO POSTAS</span>
+    <h2>Una casa.<br>Tres espacios.<br><span>Diez susurros.</span></h2>
+    <p class="sub">Se empieza tomando algo, sigue con movimiento y termina en meditación con auriculares.</p>
+    <div class="mini-rows">
+      <div class="mini-row"><span class="dot d1"></span><b>SÁB 20 DIC · TURNO TARDE</b><em>10 cupos</em></div>
+      <div class="mini-row"><span class="dot d2"></span><b>SÁB 20 DIC · TURNO NOCHE</b><em>10 cupos</em></div>
+      <div class="mini-row"><span class="dot d3"></span><b>DOM 21 · MEDITACIÓN 7:30</b><em>libre</em></div>
+    </div>
+    <div class="btn">RESERVAR MI LUGAR</div>
+  </div>
+  <div class="pc-foot"><span>ARTE Y CONSCIENCIA · MAR DEL PLATA</span><span>@CLUBSINCRONICA</span></div>
+</div>
+
+<div class="label">Hero de la página web de temporada</div>
+<div class="hero hc">
+  <div class="aurora"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+  <div class="hc-nav glass">
+    <div class="left">
+      <span class="logo-chip"><img src="../../../../club-sincronica/assets/logo/logo-transparent.png" alt="logo"></span>
+      <strong>CLUB SINCRÓNICA</strong>
+    </div>
+    <div class="links"><b>Temporada</b><span>Experiencias</span><span>Comunidad</span><span>Meditaciones</span></div>
+    <a class="pill">RESERVAR</a>
+  </div>
+  <div class="hc-body">
+    <div class="eyebrow">TEMPORADA VERANO 2026 · 27 — MAR DEL PLATA</div>
+    <h1>El verano <span>se escucha</span> por dentro</h1>
+    <p>Meditación en susurro, movimiento y el kin del día. Reservás desde el celular, entrás sin app, y el cupo es de diez.</p>
+    <div class="cta-row">
+      <a class="cta">VER LA TEMPORADA</a>
+      <a class="cta-ghost">¿Qué es el susurro?</a>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="fcard glass"><div class="day">MIÉ · 19 H</div><h3>Yoga del Kin</h3><p>La energía del día, en el cuerpo. 10 lugares.</p></div>
+    <div class="fcard glass"><div class="day">VIE · 21 H</div><h3>En Susurro</h3><p>Meditación silent-disco premium. 10 lugares.</p></div>
+    <div class="fcard glass"><div class="day">DOM · 7:30 H</div><h3>Meditación de la mañana</h3><p>Acompañada, a la luz de la mañana.</p></div>
+  </div>
+</div>
+
+</body>
+</html>
