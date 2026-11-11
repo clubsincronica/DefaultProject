@@ -165,6 +165,8 @@ Contexto: Desktop **2.2.1** solo carga plugins con la forma V2 (`export default 
 
 50. **`verify-guion.js` duplicaba la frase GAP.** El script hacía `lema = contexto.lema + gapPhrase` cuando `isGap`, pero `tzolkin.js → mediacion()` YA incluye "Soy un Portal de Activación Galáctica, entra en mí." en el lema → todo día GAP fallaba con `LEMA DIFIERE` (detectado 2026-11-10 con kin 85 y 88). Fix: agregar la frase solo si el lema no la contiene. **Regla:** si un gate falla en TODOS los días GAP y en ninguno más, buscar duplicación de la frase, no tocar el guion.
 
+51. **App rork en WEB: alinear React 19 + Expo 53 ANTES de diagnosticar `(0 , react_1.use) is not a function`.** Ese error NO es de `react-native-web` ni del bundler: `expo-router` usa el hook `use` de React 19 y el runtime era React 18.2.0 (con `@types/react` ya en 19). **Fix verificado 2026-11-11:** `npx expo install --fix --npm` (SIN `--npm` intenta `bun`, que no existe en este Windows, y falla) + `npm install expo-constants@~17.1.8 expo-image@~2.4.1 expo-router@~5.1.11 react-native@0.79.6 react-native-safe-area-context@5.4.0 react-native-screens@~4.11.1 --legacy-peer-deps` → react 19.0.0 / react-dom 19.0.0 / react-native 0.79.6 / expo 53.0.27 / expo-router 5.1.11 / react-native-web 0.20.0. **Servidor web:** `npx expo start --web -c --port 8081` (el `--tunnel` de ngrok tarda y muere: "ngrok tunnel took too long to connect"). Verificar con `Test-NetConnection 127.0.0.1 -Port 8081` antes de abrir el browser.
+
 ### Issues abiertos
 
 - **CRITICAL: Guion inventa aspectos astrales** — 7 videos (Sep 10-16) con datos falsos. Regrabaciones pendientes (humano). Guiones regrabacion escritos y auto-validados.
@@ -177,6 +179,20 @@ Contexto: Desktop **2.2.1** solo carga plugins con la forma V2 (`export default 
 - **DailyShort durationInFrames hardcodeado** — 3000 frames trunca videos >100s. TODO: dinamico desde frames.json.
 - **Publicación Oct 1-14 EN CURSO (2026-09-30):** 48/70 posts en Buffer; 22 restantes los ponen las tareas `ClubSinc-FillOct-1/2` a lo largo de Sep 30 → Oct 4 (cap 10/canal). **Gate final pendiente (cuando las tareas terminen):** `node scripts/verify-queue.js` = 70 posts Oct 1-14 (5/5 por fecha) + 14 `publicado.json` + 0 duplicados → entonces `schtasks /Delete /TN ClubSinc-FillOct-1 /F` y `-2`. Si un día falla: revisar `club-sincronica/logs/fill-oct.log`.
 - **MEJORA PENDIENTE: Frames de aspecto necesitan carta astral** — los frames actuales muestran los planetas del aspecto pero sin círculo/marca en la carta astral. Propuesta: duplicar frame — uno con símbolos de planetas solos, otro con la carta marcando el aspecto. (Feedback Alquimista, 2026-09-16)
+
+---
+
+## app rork (marketplace club · APK + web)
+
+- **Ruta:** `C:\Users\tom_w\my-app\rork-short-club-sincr-nica-community` (Expo 53 + expo-router 5 + react-native-web). Datos mock locales (AsyncStorage), sin backend propio todavía.
+- **APP CORRIENDO EN WEB (2026-11-11):** resuelto el error `(0 , react_1.use) is not a function` (ver DNR #51) → `npx expo start --web -c --port 8081` levanta y las 8 rutas renderizan: `/`, `/discover`, `/calendar`, `/cart`, `/checkout`, `/payment`, `/vendor-dashboard`, `/orders`. Consola sin errores (solo warnings de `pointerEvents` y un `No route named "modal"` en `_layout`).
+- **Cómo se ve:** paleta microCósmos ya aplicada (`colors.ts`) — gradiente `darkToLight` `#16293a → #357188 → #5d7d88`, botones `#99eef5 → #fdae93`, fondos `#0f1a24`, tarjetas glass. 49 SVG renderizados (FlowerOfLife/constelaciones).
+- **Pendientes para que sea la app de la temporada:**
+  1. **Moneda:** 28 lugares con `€` hardcodeado en 8 archivos (`calendar.tsx`, `payment.tsx`, `services.tsx`, `add-event.tsx`, `vendor-dashboard.tsx`, `order-history.tsx`, `order-tracking/[id].tsx`) → pasar a `$` ARS (usar una constante `CURRENCY`).
+  2. **Contenido:** los `mockCalendarEvents` usan `todayStr` + horas fijas (14:00–20:30) y el filtro `upcomingEvents` exige `eventDate > now` → después de esa hora el tablero "HOY EN VIVO" queda vacío ("Debug: 0 eventos totales"). Para demo/temporada: generar eventos de la temporada (vie 21h microCósmos, dom 7:30 meditación, mié 19h yoga) con fechas futuras reales.
+  3. **Copy:** el hero dice "Hola, bienvenido / Club Sincrónica / Encuentra tu bienestar" — reemplazar por el copy D (`microCósmos` + `VERANO 26/27` + "tu universo interno despierta" + "navegaciones de la consciencia en 10 auriculares") cuando se cierre el contenido.
+  4. **URL pública:** falta deploy (hoy sólo `localhost:8081`). Ruta corta: `npx expo export --platform web` → subir `dist/` a Netlify/Vercel/Cloudflare Pages (gratis) o `cloudflared tunnel`.
+- **APK del móvil:** sigue con la versión anterior al restyle; requiere build nuevo (`npx expo run:android`) para ver la estética D.
 
 ---
 
