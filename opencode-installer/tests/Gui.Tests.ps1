@@ -21,8 +21,19 @@ Describe 'Wizard script' {
         $raw | Should Match '\$PSScriptRoot'
     }
     It 'aborts before writers when npm install fails (static)' {
-        $raw = Get-Content (Join-Path $PSScriptRoot '..\Install-OpenCode.ps1') -Raw
-        $raw | Should Match ([regex]::Escape('if (-not (Install-OpencodeCli))'))
-        $raw.IndexOf('if (-not (Install-OpencodeCli))') -lt $raw.IndexOf('Write-GlobalConfig') | Should Be $true
+        # The install sequence lives in Invoke-InstallSteps (Core.ps1) since the
+        # refactor, because the build self-test must run the same code path as
+        # the Install button. The invariant still holds inside that function.
+        $core = Get-Content (Join-Path $PSScriptRoot '..\Install-OpenCode.Core.ps1') -Raw
+        $start = $core.IndexOf('function Invoke-InstallSteps')
+        $end = $core.IndexOf('function Write-Utf8NoBom')
+        ($start -ge 0 -and $end -gt $start) | Should Be $true
+        $body = $core.Substring($start, $end - $start)
+        $body | Should Match ([regex]::Escape('} elseif (-not (Install-OpencodeCli)) {'))
+        $body.IndexOf('Install-OpencodeCli') -lt $body.IndexOf('Write-GlobalConfig') | Should Be $true
+        # And the button really calls that function, not the writers directly.
+        $wiz = Get-Content (Join-Path $PSScriptRoot '..\Install-OpenCode.ps1') -Raw
+        $wiz | Should Match ([regex]::Escape('Invoke-InstallSteps -ProjectDir $state.ProjectDir'))
+        $wiz.Contains('Write-GlobalConfig') | Should Be $false
     }
 }

@@ -11,11 +11,21 @@ Nothing secret is ever pasted into the installer.
 
 ---
 
-## Step 1 — Open the installer (1 double-click)
+## Step 1 — Unzip, then open the installer (2 clicks)
 
-1. Find the file named OpenCode-Setup.exe (usually in Downloads).
-2. Double-click OpenCode-Setup.exe.
-3. The installer window opens. Its title reads "opencode Windows Installer".
+The download is a ZIP, not a single file. The installer needs the folder
+called `payload` that sits next to it.
+
+1. Find the downloaded `OpenCode-Setup.zip` (usually in Downloads).
+2. Right-click it, choose "Extract All...", then click "Extract".
+   Leave the box "Show extracted files when complete" ticked.
+   Windows opens a folder that contains `OpenCode-Setup.exe` AND `payload`.
+3. In that folder, double-click `OpenCode-Setup.exe`.
+4. The installer window opens. Its title reads "opencode Windows Installer".
+
+Do NOT open the exe from inside the zip preview window, and do not move the
+exe somewhere else on its own: it would not find `payload` and it would stop
+with a red "The installer payload is missing" message.
 
 If Windows shows a blue "Windows protected your PC" screen:
 
@@ -41,7 +51,10 @@ The installer window appears right after you click "Run anyway".
    opencode-project, and pick that empty folder.)
 4. Back in the installer window, click the button labeled "Install".
 5. Watch the bar fill up and lines appear in the big white box.
-6. Wait until a green line appears saying everything is done and telling you
+6. If the PC has no Node.js yet, the installer adds it for you: the box says
+   "Installing Node.js LTS automatically", the window may show a Windows
+   permission prompt, and you click "Yes" if it does. It takes 1 to 3 minutes.
+7. Wait until a green line appears saying everything is done and telling you
    to click Test next.
 
 > Screenshot slot 2 — placeholder the USER fills:
@@ -57,8 +70,10 @@ The installer window appears right after you click "Run anyway".
 If a red line appears instead, read it in plain language:
 
 - a red line about the network means: check your internet, then click Install again.
-- a red line about missing tools means: install Node.js LTS first
-  (from its normal website download button), then click Install again.
+- a red line saying Node.js could not be installed automatically means: the
+  installer opened nodejs.org for you. Click the big "LTS" download button,
+  run the file it downloads (Next, Next, Finish), then click Install again
+  in the installer window.
 
 ---
 

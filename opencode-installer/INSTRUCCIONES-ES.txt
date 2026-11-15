@@ -1,0 +1,117 @@
+INSTRUCCIONES - INSTALAR OPENCODE EN WINDOWS
+=============================================
+
+Hola Mercedes. Esto instala OpenCode en tu computadora con unos pocos clics.
+No hace falta saber nada de programacion y NO te va a pedir claves ni
+contrasenas en ningun momento. Si te pide una clave, es que no es este
+programa: cerralo y avisame.
+
+Tiempo total: entre 3 y 8 minutos (casi todo es esperar).
+
+
+PASO 1 - DESCOMPRIMIR EL ZIP COMPLETO
+-------------------------------------
+
+1. Guarda el archivo que te mando (OpenCode-Setup.zip) en el Escritorio.
+2. Click derecho sobre el zip.
+3. Elegi "Extraer todo..." (o "Extraer aqui").
+4. En la ventana que aparece, click en "Extraer".
+
+IMPORTANTE: no abras el programa desde la ventana del zip. Windows deja
+"mirar" el zip sin descomprimir y entonces el programa no encuentra sus
+archivos y falla. Primero se descomprime, despues se abre.
+
+Vas a quedar con una carpeta adentro con estos archivos:
+
+    OpenCode-Setup.exe      <- el programa que se abre
+    payload\                <- una CARPETA (no la toques ni la muevas)
+    GUIDE.md
+    INSTRUCCIONES-ES.txt    <- este archivo
+    SHA256.txt
+
+Los archivos tienen que quedar todos juntos, en la misma carpeta.
+Si moves el .exe solo a otro lado, deja de funcionar. Si queres mover todo,
+moves la carpeta completa.
+
+
+PASO 2 - ABRIR EL INSTALADOR
+----------------------------
+
+1. Doble click en OpenCode-Setup.exe.
+2. Si Windows muestra un cartel azul que dice "Windows protegio tu PC":
+   click en "Mas informacion" y despues en "Ejecutar de todas formas".
+   (Ese cartel aparece porque el programa es nuevo y no lo firma una empresa;
+   no significa que tenga virus.)
+3. Se abre una ventana que dice "opencode Windows Installer".
+
+
+PASO 3 - ELEGIR LA CARPETA
+--------------------------
+
+1. En la linea "Project folder:" ves la carpeta donde va a trabajar OpenCode.
+2. Si queres cambiarla, click en "Browse..." y elegi una carpeta.
+   Lo mas simple: crear una carpeta nueva vacia (por ejemplo en Documentos,
+   se llama opencode-project) y elegir esa.
+3. La carpeta puede estar en el disco D: sin problema. No importa el nombre
+   ni en que disco este.
+
+
+PASO 4 - INSTALAR
+-----------------
+
+1. Click en el boton "Install".
+2. La barra empieza a llenarse y aparecen lineas en el recuadro blanco.
+3. Si tu PC no tiene Node.js (la mayoria no lo tiene), el instalador lo pone
+   solo. Vas a ver la linea "Installing Node.js LTS automatically..." y puede
+   aparecer un cartel de Windows pidiendo permiso: click en "Si".
+   Eso tarda entre 1 y 3 minutos. Es normal que parezca trabado un rato.
+4. Espera hasta ver una linea VERDE que dice:
+   "Done. Click Test to verify, Get free keys for provider keys."
+
+Si en cambio ves una linea ROJA, no cierres nada: sacale una foto a la
+ventana y mandamela. Las dos rojas mas probables son:
+
+  - "network unreachable" -> no hay internet. Revisa la conexion y
+    volve a clickear "Install".
+  - "Could not install Node.js automatically" -> se abrio la pagina de
+    Node.js en el navegador. Click en el boton verde "LTS", se descarga un
+    archivo, lo abris, le das Siguiente / Siguiente / Finalizar, y volves a
+    clickear "Install" en la ventana del instalador.
+
+
+PASO 5 - VERIFICAR
+------------------
+
+1. Click en el boton "Test".
+2. Tiene que aparecer una linea verde diciendo que todo esta OK.
+
+
+PASO 6 - CLAVES (OPCIONAL, CUANDO QUIERAS)
+------------------------------------------
+
+1. El boton "Get free keys" te lleva a las paginas donde se sacan las claves
+   de los proveedores. Las claves se pegan despues, adentro de OpenCode.
+2. Las claves son tuyas: el instalador no las pide, no las guarda y no las
+   manda a ningun lado.
+
+
+QUE HACE ESTE INSTALADOR (por si te pregunta el antivirus)
+---------------------------------------------------------
+
+- Revisa si hay internet.
+- Instala Node.js si falta (desde la pagina oficial nodejs.org, o con la
+  herramienta de Windows).
+- Instala el programa "opencode" con npm.
+- Crea dos archivos de configuracion: uno en tu usuario y una carpeta de
+  proyecto con archivos de arranque.
+No toca tus documentos, no borra nada y no pide permisos raros.
+
+
+SI ALGO NO SALE
+---------------
+
+Mandame una foto de la ventana completa (se ve el recuadro blanco con las
+lineas). Con eso te digo exactamente que pasa. Y contame:
+
+  - en que carpeta lo descomprimiste
+  - si abriste el .exe desde la ventana del zip o desde la carpeta extraida

@@ -19,17 +19,22 @@ if ($null -eq (Get-Module -ListAvailable ps2exe)) {
 Import-Module ps2exe
 
 # 2. Compile the wizard entry point to a GUI exe (no console window).
-$out = Join-Path $PSScriptRoot 'dist\OpenCode-Setup.exe'
-New-Item -ItemType Directory (Split-Path $out) -Force | Out-Null
+# Output goes to dist\build\ (not dist\): some AV engines keep a per-path block
+# on ...\dist\OpenCode-Setup.exe once they false-positive the ps2exe stub, and
+# the build then dies with "CS0016: cannot write to output file, access denied".
+$stageDir = Join-Path $PSScriptRoot 'dist\build'
+$out = Join-Path $stageDir 'OpenCode-Setup.exe'
+New-Item -ItemType Directory $stageDir -Force | Out-Null
 Invoke-ps2exe -inputFile (Join-Path $PSScriptRoot 'Install-OpenCode.ps1') `
     -outputFile $out -noConsole -title 'opencode Setup' -version '1.0.0'
 
 # 3. Stage the runtime payload next to the exe.
-# The compiled exe dot-sources Install-OpenCode.Core.ps1 via $PSScriptRoot and
-# the core resolves graphify.js at (Split-Path $PSScriptRoot -Parent)/.opencode/plugins/graphify.js,
-# so dist/payload acts as the fake repo root: payload/opencode-installer/ + payload/.opencode/.
-$payloadInstaller = Join-Path $PSScriptRoot 'dist\payload\opencode-installer'
-$payloadGraphify = Join-Path $PSScriptRoot 'dist\payload\.opencode\plugins'
+# The compiled exe finds Install-OpenCode.Core.ps1 via the folder of the running
+# exe (the ps2exe host) and the core resolves graphify.js one level above, so
+# dist\build\payload acts as the fake repo root:
+#   payload\opencode-installer\ + payload\.opencode\ + payload\skills\
+$payloadInstaller = Join-Path $stageDir 'payload\opencode-installer'
+$payloadGraphify = Join-Path $stageDir 'payload\.opencode\plugins'
 New-Item -ItemType Directory $payloadInstaller -Force | Out-Null
 New-Item -ItemType Directory $payloadGraphify -Force | Out-Null
 $coreDst = Join-Path $payloadInstaller 'Install-OpenCode.Core.ps1'
@@ -60,7 +65,7 @@ $skillsSrcRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'opencode-setup\sk
 if (-not (Test-Path -LiteralPath $skillsSrcRoot)) {
     $skillsSrcRoot = 'C:\Users\tom_w\Documents\Default Project\opencode-setup\skills'
 }
-$payloadSkills = Join-Path $PSScriptRoot 'dist\payload\skills'
+$payloadSkills = Join-Path $stageDir 'payload\skills'
 New-Item -ItemType Directory $payloadSkills -Force | Out-Null
 $skillNames = @('agent-reach', 'archify', 'graphify', 'nlm-skill', 'youtube-watcher')
 foreach ($name in $skillNames) {
@@ -78,15 +83,51 @@ foreach ($name in $skillNames) {
 Get-FileHash $out -Algorithm SHA256 | Format-Table Hash, Path
 $hash = (Get-FileHash $out -Algorithm SHA256).Hash
 $hashLine = "$hash  OpenCode-Setup.exe"
-[System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'dist\SHA256.txt'), ($hashLine + "`r`n"), [System.Text.UTF8Encoding]::new($false))
+[System.IO.File]::WriteAllText((Join-Path $stageDir 'SHA256.txt'), ($hashLine + "`r`n"), [System.Text.UTF8Encoding]::new($false))
 Write-Output $hashLine
 
-# 5. Smoke-verify without launching the GUI.
-$exists = Test-Path $out
-Write-Output "Smoke verify Test-Path dist/OpenCode-Setup.exe: $exists"
-if (-not $exists) { throw "Build failed: $out not found." }
-$size = (Get-Item $out).Length
-Write-Output ("Exe size bytes: {0}" -f $size)
-if ($size -lt 1MB) {
-    Write-Warning "Exe size $size bytes is under the brief's 1MB expectation (ps2exe 1.0.18 emits a small stub for this script); Test-Path True is the pass gate."
+# 5. Real smoke gate: run the compiled exe in self-test mode.
+# This is the only check that proves the payload resolver works inside a ps2exe
+# exe (where $PSScriptRoot is empty) and that the writers produce every file.
+# Test-Path on the exe alone let a broken build ship once: never again.
+$report = Join-Path $stageDir 'selftest.txt'
+if (Test-Path -LiteralPath $report) { Remove-Item -LiteralPath $report -Force }
+# ps2exe swallows "-name" arguments as PowerShell parameters, so the switch is
+# passed as an environment variable that the exe reads at startup.
+$env:OPENCODE_SETUP_SELFTEST = $report
+try {
+    $proc = Start-Process -FilePath $out -PassThru
+    if (-not $proc.WaitForExit(180000)) {
+        try { $proc.Kill() } catch { }
+        throw "Self-test timed out after 180s: the exe did not honour the self-test switch (it probably opened the GUI)."
+    }
+} finally {
+    Remove-Item Env:\OPENCODE_SETUP_SELFTEST -ErrorAction SilentlyContinue
 }
+$code = $proc.ExitCode
+if (Test-Path -LiteralPath $report) {
+    Get-Content -LiteralPath $report | ForEach-Object { Write-Output "  $_" }
+} else {
+    throw "Self-test wrote no report at $report (exit $code)."
+}
+if ($code -ne 0) { throw "Self-test FAILED (exit $code). See $report" }
+if (-not (Select-String -LiteralPath $report -Pattern 'RESULT=PASS' -Quiet)) {
+    throw "Self-test report has no RESULT=PASS: $report"
+}
+Write-Output 'Self-test: PASS'
+
+# 6. Package the zip that actually gets shared (exe + payload + GUIDE + hash).
+# The -ES instructions ship inside the zip: the person receiving it unzips and
+# finds plain-language steps right next to the exe.
+$stage = Join-Path $stageDir 'ziproot'
+if (Test-Path -LiteralPath $stage) { Remove-Item -LiteralPath $stage -Recurse -Force }
+New-Item -ItemType Directory -Path $stage -Force | Out-Null
+Copy-Item -LiteralPath $out -Destination $stage -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'GUIDE.md') -Destination $stage -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'INSTRUCCIONES-ES.txt') -Destination $stage -Force
+Copy-Item -LiteralPath (Join-Path $stageDir 'SHA256.txt') -Destination $stage -Force
+Copy-Item -LiteralPath (Join-Path $stageDir 'payload') -Destination (Join-Path $stage 'payload') -Recurse -Force
+$zip = Join-Path $PSScriptRoot 'OpenCode-Setup.zip'
+if (Test-Path -LiteralPath $zip) { Remove-Item -LiteralPath $zip -Force }
+Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -CompressionLevel Optimal
+Write-Output ("Zip: {0} ({1:N0} bytes)" -f $zip, (Get-Item -LiteralPath $zip).Length)
